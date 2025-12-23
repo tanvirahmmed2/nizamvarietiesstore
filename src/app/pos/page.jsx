@@ -6,26 +6,32 @@ const categories = [
   {
     id: 1,
     category: 'Meals',
+    value: 'meals'
   },
   {
     id: 2,
-    category: 'Snacks'
+    category: 'Snacks',
+    value: 'snacks'
   },
   {
     id: 3,
-    category: 'Pasta'
+    category: 'Pasta',
+    value: 'pasta'
   },
   {
     id: 4,
-    category: 'Salad'
+    category: 'Salad',
+    value: 'salad'
   },
   {
     id: 5,
-    category: 'Drinks'
+    category: 'Drinks',
+    value: 'drinks'
   },
   {
     id: 6,
-    category: 'Dessert'
+    category: 'Dessert',
+    value: 'dessert'
   }
 ]
 
@@ -40,7 +46,7 @@ const PosPage = () => {
         <div className="w-full grid grid-cols-6 justify-items-center gap-1">
           {
             categories && categories.map((cat) => (
-              <p key={cat.id} onClick={() => setCategory(cat.category)} className={`p-4  w-full text-center ${category === cat.category && 'bg-green-400 text-white'}  cursor-pointer shadow-sm shadow-black/10 rounded-lg`}> {cat.category}</p>
+              <p key={cat.id} onClick={() => setCategory(cat.value)} className={`p-4  w-full text-center ${category === cat.value && 'bg-green-400 text-white'}  cursor-pointer shadow-sm shadow-black/10 rounded-lg`}> {cat.category}</p>
             ))
           }
         </div>
