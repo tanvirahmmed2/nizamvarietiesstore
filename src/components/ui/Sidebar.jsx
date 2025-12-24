@@ -13,7 +13,7 @@ const Sidebar = ({ isSidebar, setIsSidebar }) => {
             <Link href={'/manage'} onClick={()=> setIsSidebar(false)}>Manage</Link>
             <Link href={'/sales'} onClick={()=> setIsSidebar(false)}>Sales</Link>
             <Link href={'/profile'} onClick={()=> setIsSidebar(false)}>Profile</Link>
-            <button onClick={()=> setIsSidebar(false)}><Logout /></button>
+            <p onClick={()=> setIsSidebar(false)}><Logout /></p>
 
 
         </div>
