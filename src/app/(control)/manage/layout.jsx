@@ -6,7 +6,7 @@ const PosLayout = ({children, }) => {
   return (
     <div className='w-full flex flex-col'>
         <ManageNavbar/>
-        <div className=" flex flex-row w-full  justify-between">
+        <div className=" flex flex-row w-full justify-between">
             <ManageSidebar/>
             {children}
         </div>
