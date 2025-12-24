@@ -2,6 +2,7 @@ import ConnectDB from "@/lib/database/mongo";
 import User from "@/lib/models/user";
 import { NextResponse } from "next/server";
 import bcrypt from 'bcryptjs'
+import { JWT_SECRET } from "@/lib/database/secret";
 
 
 export async function POST(req) {
@@ -35,6 +36,31 @@ export async function POST(req) {
             }, { status: 400 })
         }
 
+        const payload = { id: user._id, email: user.email, role: user.role }
+
+        const token = jwt.sign(
+            payload,
+            JWT_SECRET,
+            { expiresIn: "7d" }
+        );
+
+        const response = NextResponse.json(
+            {
+                success: true,
+                message: "Successfully logged in",
+                payload: user,
+            },
+            { status: 200 }
+        );
+
+        response.cookies.set("user_token", token, {
+            httpOnly: true,
+            secure: NODE_ENV,
+            path: "/",
+            maxAge: 60 * 60 * 24 * 7,
+        });
+
+        return response;
 
     } catch (error) {
 

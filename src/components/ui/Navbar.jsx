@@ -26,7 +26,7 @@ const Navbar = () => {
           <Logout/>
           <Profile/>
         </div>
-        <button onClick={()=> setIsSidebar(!isSidebar)} className='text-xl'>
+        <button onClick={()=> setIsSidebar(!isSidebar)} className='text-xl block md:hidden'>
           {
             isSidebar? <RxCross2/>:
             <FaBars/>

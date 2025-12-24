@@ -39,3 +39,42 @@ export async function POST(req) {
     }
 
 }
+
+
+export async function DELETE(req) {
+    try {
+        await ConnectDB()
+
+        const {id}= await req.json()
+        if(!id){
+            return NextResponse.json({
+                success: false,
+                message: "User id not found"
+            }, {status: 400})
+        }
+
+        const user= await User.findById(id)
+        if(!user){
+            return NextResponse.json({
+                success: false,
+                message: 'User not found'
+            }, {status: 400})
+        }
+
+        await User.findByIdAndDelete(id)
+
+        return NextResponse.json({
+            success: true,
+            message: 'Account has been deleted'
+        }, {status:200})
+
+    } catch (error) {
+        return NextResponse.json({
+            success: false,
+            message: 'Failed to delete user',
+            error: error.message
+        },{status:500})
+        
+    }
+    
+}

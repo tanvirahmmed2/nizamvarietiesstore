@@ -5,7 +5,7 @@ import Logout from '../buttons/Logout'
 
 const Sidebar = ({ isSidebar, setIsSidebar }) => {
     return (
-        <div className={`w-full flex items-center flex-col justify-center gap-2 p-4 ${isSidebar ? 'flex' : 'hidden'}`}>
+        <div className={`w-full flex md:hidden items-center flex-col justify-center gap-2 p-4 ${isSidebar ? 'flex' : 'hidden'}`}>
             <Link href={'/'} onClick={()=> setIsSidebar(false)}>Home</Link>
             <Link href={'/menu'} onClick={()=> setIsSidebar(false)}>Menu</Link>
             <Link href={'/login'} onClick={()=> setIsSidebar(false)}>Login</Link>
