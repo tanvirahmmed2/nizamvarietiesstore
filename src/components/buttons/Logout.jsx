@@ -5,7 +5,7 @@ import { CiLogout } from "react-icons/ci";
 
 const Logout = () => {
   return (
-    <button className='w-auto flex flex-row items-center gap-3 cursor-pointer'><CiLogout/> Logout</button>
+    <button className='w-full flex flex-row items-center justify-between gap-3 cursor-pointer'><CiLogout/> Logout</button>
   )
 }
 

@@ -1,7 +1,8 @@
-import Orderform from '@/components/forms/Orderform'
-import React from 'react'
 
-const Cart = () => {
+import React from 'react'
+import Orderform from '../forms/Orderform'
+
+const SalesCart = () => {
   return (
     <div className='w-1/4 border-l-2 border-black/10 p-4 flex flex-col items-center gap-6'>
       <h1 className='text-xl font-semibold'>Order details</h1>
@@ -10,4 +11,4 @@ const Cart = () => {
   )
 }
 
-export default Cart
+export default SalesCart

@@ -1,4 +1,5 @@
 
+import Navbar from "@/components/ui/Navbar";
 import "./globals.css";
 
 
@@ -13,6 +14,7 @@ export default function RootLayout({ children }) {
       <body
         className={``}
       >
+        <Navbar/>
         {children}
       </body>
     </html>

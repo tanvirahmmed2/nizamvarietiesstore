@@ -14,7 +14,7 @@ import { SiGoogleanalytics } from "react-icons/si";
 import { FaRegMessage } from "react-icons/fa6";
 import { MdOutlineLocalOffer } from "react-icons/md";
 
-const Sidebar = () => {
+const ManageSidebar = () => {
   return (
     <div className='w-auto min-h-[calc(100vh-64px)] p-4 flex flex-col justify-between border-r-2 border-black/10'>
       <div className='w-auto flex flex-col gap-2'>
@@ -38,4 +38,4 @@ const Sidebar = () => {
   )
 }
 
-export default Sidebar
+export default ManageSidebar

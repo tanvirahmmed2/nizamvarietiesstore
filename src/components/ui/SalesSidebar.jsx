@@ -1,5 +1,4 @@
 'use client'
-import Logout from '@/components/buttons/Logout'
 import Link from 'next/link'
 import React from 'react'
 
@@ -8,25 +7,25 @@ import { IoHomeOutline } from "react-icons/io5";
 import { PiFinnTheHumanLight } from "react-icons/pi";
 import { FaHistory } from "react-icons/fa";
 import { IoSettingsOutline } from "react-icons/io5";
-import { CiLogout } from "react-icons/ci";
+import Logout from '../buttons/Logout';
 
-const Sidebar = () => {
+const SalesSidebar = () => {
   return (
     <div className='w-auto min-h-[calc(100vh-64px)] p-4 flex flex-col justify-between border-r-2 border-black/10'>
       <div className='w-auto flex flex-col gap-2'>
-        <Link href={'/pos'} className='w-auto flex flex-row items-center gap-3 cursor-pointer'><IoHomeOutline/> Home</Link>
-        <Link href={'/pos/orders'} className='w-auto flex flex-row items-center gap-3 cursor-pointer'><AiOutlineUnorderedList/> Orders</Link>
-        <Link href={'/pos/history'} className='w-auto flex flex-row items-center gap-3 cursor-pointer'><FaHistory/> History</Link>
+        <Link href={'/sales'} className='w-auto flex flex-row items-center gap-3 cursor-pointer'><IoHomeOutline/> Home</Link>
+        <Link href={'/sales/orders'} className='w-auto flex flex-row items-center gap-3 cursor-pointer'><AiOutlineUnorderedList/> Orders</Link>
+        <Link href={'/sales/history'} className='w-auto flex flex-row items-center gap-3 cursor-pointer'><FaHistory/> History</Link>
       </div>
 
       <div className='w-auto flex flex-col gap-2'>
         <Link href={'/settings'} className='w-auto flex flex-row items-center gap-3 cursor-pointer'><IoSettingsOutline/>Setting</Link>
         <Link href={'/profile'} className='w-auto flex flex-row items-center gap-3 cursor-pointer'><PiFinnTheHumanLight/> Profile</Link>
-        <button className='w-auto flex flex-row items-center gap-3 cursor-pointer'><CiLogout/> Logout</button>
+        <Logout/>
 
       </div>
     </div>
   )
 }
 
-export default Sidebar
+export default SalesSidebar
