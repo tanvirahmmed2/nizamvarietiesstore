@@ -22,7 +22,8 @@ const UpdateProductForm = ({ product }) => {
     const updateData = async (e) => {
         e.preventDefault()
         try {
-
+            const response= await axios.post('/api/product/update', formData, {withCredentials: true})
+            alert(response.data.message)
         } catch (error) {
             console.log(error)
             alert(error?.response?.data?.error)
@@ -41,6 +42,8 @@ const UpdateProductForm = ({ product }) => {
         }
         
     }
+    
+    
     return (
         <div className='w-full flex flex-col items-center gap-4'>
             <form onSubmit={updateData} className='w-full flex flex-col items-center gap-2'>

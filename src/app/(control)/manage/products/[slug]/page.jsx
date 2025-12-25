@@ -10,6 +10,9 @@ const UpdateProduct = async ({ params }) => {
   })
   const data = await res.json()
   const product= data.payload
+  if(!product) {
+    return <p>No data found</p>
+  }
 
   return (
     <div className='w-full flex flex-col items-center p-4 gap-6'>

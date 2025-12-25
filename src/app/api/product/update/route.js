@@ -37,7 +37,7 @@ export async function POST(req) {
 
         return NextResponse.json({
             success: true,
-            messgae: 'Successfully updated data'
+            message: 'Successfully updated data'
         }, { status: 200 })
 
 
