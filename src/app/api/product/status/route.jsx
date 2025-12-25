@@ -24,15 +24,21 @@ export async function POST(req) {
 
         if (product.isAvailable) {
             product.isAvailable = false
-        } else {
-            product.isAvailable = true
+
+            await product.save()
+
+            return NextResponse.json({
+                success: true,
+                message: "Product is unavailable now"
+            }, { status: 200 })
         }
 
+        product.isAvailable = true
         await product.save()
 
         return NextResponse.json({
             success: true,
-            message: "Changed status"
+            message: "Product is available now"
         }, { status: 200 })
 
 
