@@ -1,40 +1,31 @@
 'use client'
-
 import axios from 'axios'
-import React, { useState, useTransition } from 'react'
+import React, { useState } from 'react'
 import { MdDeleteOutline } from 'react-icons/md'
 import { toast } from 'react-toastify'
-import { useRouter } from 'next/navigation'
 
-const RemoveFromCart = ({ productId }) => {
-  const router = useRouter()
+const RemoveFromCart = ({ productId, onRemove }) => {
   const [loading, setLoading] = useState(false)
 
   const removeItem = async () => {
     if (loading) return
-
     setLoading(true)
     try {
-      const response = await axios.delete('/api/user/cart', {
+      const res = await axios.delete('/api/user/cart', {
         data: { productId },
         withCredentials: true
       })
-
-      toast.success(response.data.message)
-      router.refresh()
-    } catch (error) {
-      toast.error(error?.response?.data?.message || 'Something went wrong')
+      toast.success(res.data.message)
+      if (onRemove) onRemove() // ✅ REFRESH parent cart
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Failed to remove')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <button
-      className={`text-xl cursor-pointer ${loading ? 'opacity-50' : ''}`}
-      onClick={removeItem}
-      disabled={loading}
-    >
+    <button onClick={removeItem} disabled={loading} className={`text-xl cursor-pointer ${loading ? 'opacity-50' : ''}`}>
       <MdDeleteOutline />
     </button>
   )

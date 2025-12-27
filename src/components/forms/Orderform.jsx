@@ -2,63 +2,63 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import RemoveFromCart from '../buttons/RemoveFromCart'
+import { useCart } from '../context/CartContext'
 
 const Orderform = ({ cartItems }) => {
-
+    const { fetchCart } = useCart()
     const [data, setData] = useState({
         name: '',
         phone: '',
         delivery: 'dinein',
         table: '',
-        items: cartItems || [],
-        subTotal: '',
-        discount: '',
-        tax: '',
-        totlePrice: '',
+        discount: 0,
+        tax: 0,
+        totlePrice: 0,
         payment: ''
     })
 
-    
+    const [totals, setTotals] = useState({
+        subTotal: 0,
+        discount: 0,
+        tax: 0,
+        totlePrice: 0
+    })
+
     useEffect(() => {
-        setData(prev => ({
-            ...prev,
-            items: cartItems || []
-        }))
+        let subTotal = 0
+        for (let i = 0; i < cartItems.length; i++) {
+            subTotal += cartItems[i].price
+        }
+        const discountRate = 0 
+        const discount = subTotal * discountRate
+        const taxRate = 0.02
+        const tax = (subTotal - discount) * taxRate
+        const totlePrice = subTotal - discount + tax
+
+        setTotals({ subTotal, discount, tax, totlePrice })
     }, [cartItems])
 
     const handleChange = (e) => {
         const { name, value } = e.target
-        setData((prev) => ({ ...prev, [name]: value }))
+        setData(prev => ({ ...prev, [name]: value }))
     }
 
     const handleMethodChange = (method) => {
-        setData((prev) => ({ ...prev, delivery: method }))
-    }
-
-    const handleRemoveItem = (removedProductId) => {
-        setData(prev => ({
-            ...prev,
-            items: prev.items.filter(item => item.productId !== removedProductId)
-        }))
+        setData(prev => ({ ...prev, delivery: method }))
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log(data)
+        console.log({ ...data, items: cartItems, ...totals })
     }
 
     return (
         <form onSubmit={handleSubmit} className='w-full flex flex-col items-center justify-between gap-6 text-sm'>
+           
             <div className='w-full flex flex-col items-center justify-center gap-2'>
                 <div className="flex flex-row items-center justify-between w-full">
-                    <p
-                        onClick={() => handleMethodChange('dinein')}
-                        className={`cursor-pointer px-4 py-1 rounded-full border ${data.delivery === 'dinein' ? 'bg-black text-white' : 'border-gray-300'}`}
-                    > Dine In </p>
-                    <p
-                        onClick={() => handleMethodChange('takeout')}
-                        className={`cursor-pointer px-4 py-1 rounded-full border ${data.delivery === 'takeout' ? 'bg-black text-white' : 'border-gray-300'}`}
-                    > Take Out </p>
+                    <p onClick={() => handleMethodChange('dinein')} className={`cursor-pointer px-4 py-1 rounded-full border ${data.delivery === 'dinein' ? 'bg-black text-white' : 'border-gray-300'}`} > Dine In </p>
+                    <p onClick={() => handleMethodChange('takeout')} className={`cursor-pointer px-4 py-1 rounded-full border ${data.delivery === 'takeout' ? 'bg-black text-white' : 'border-gray-300'}`} > Take Out </p>
                 </div>
                 <div className='w-full flex flex-row items-center justify-between'>
                     <label htmlFor="name">Name</label>
@@ -68,7 +68,6 @@ const Orderform = ({ cartItems }) => {
                     <label htmlFor="phone">Phone</label>
                     <input type="number" id='phone' name='phone' value={data.phone} onChange={handleChange} min={1} className='px-3 border-2 border-black/10 rounded-lg outline-none' />
                 </div>
-
                 {data.delivery === 'dinein' &&
                     <div className='w-full flex flex-row items-center justify-between'>
                         <label htmlFor="table">Table</label>
@@ -77,39 +76,40 @@ const Orderform = ({ cartItems }) => {
                 }
             </div>
 
-            {data.items && data.items.length > 0 && data.items.map((item) => (
+
+            {cartItems.length > 0 && cartItems.map(item => (
                 <div key={item.productId} className='w-full grid-cols-2 grid border border-black/10 p-1 rounded-lg gap-2'>
                     <p className='text-xs'>{item.title}</p>
-                    <div className='w-full flex flex-row items-center justify-between'>
+                    <div className='w-full flex flex-row items-center justify-between px-2'>
                         <p>{item.quantity}</p>
                         <p>{item.price}</p>
                         <RemoveFromCart
                             productId={item.productId}
-                            onRemove={() => handleRemoveItem(item.productId)} // ✅ update UI
+                            onRemove={fetchCart} 
                         />
                     </div>
                 </div>
             ))}
 
-            {/* Summary */}
+           
             <div className='w-full flex flex-col gap-6 items-center justify-center'>
                 <div className='w-full flex flex-col gap-2 border-b-2 border-black/10 items-center justify-center'>
                     <div className='w-full flex flex-row items-center justify-between'>
                         <p>Sub Total</p>
-                        <p>123</p>
+                        <p>{totals.subTotal.toFixed(2)}</p>
                     </div>
                     <div className='w-full flex flex-row items-center justify-between'>
                         <p>Discount</p>
-                        <p>123</p>
+                        <p>{totals.discount.toFixed(2)}</p>
                     </div>
                     <div className='w-full flex flex-row items-center justify-between'>
                         <p>Tax</p>
-                        <p>123</p>
+                        <p>{totals.tax.toFixed(2)}</p>
                     </div>
                 </div>
                 <div className='w-full flex flex-row items-center justify-between'>
                     <p>Total</p>
-                    <p>123</p>
+                    <p>{totals.totlePrice.toFixed(2)}</p>
                 </div>
             </div>
 

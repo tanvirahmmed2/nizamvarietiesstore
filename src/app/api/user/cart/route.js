@@ -92,9 +92,9 @@ export async function DELETE(req) {
                 message: 'Please login first'
             }, { status: 400 })
         }
-        const decoded =  jwt.verify(token, JWT_SECRET)
+        const decoded = jwt.verify(token, JWT_SECRET)
 
-        const {  productId } = await req.json();
+        const { productId } = await req.json();
 
         if (!productId) {
             return NextResponse.json({
@@ -102,7 +102,7 @@ export async function DELETE(req) {
                 message: ' Product ID  required'
             }, { status: 400 });
         }
-        const userId= decoded.id
+        const userId = decoded.id
 
         const updatedUser = await User.findByIdAndUpdate(
             userId,
@@ -132,4 +132,40 @@ export async function DELETE(req) {
             error: error.message
         }, { status: 500 });
     }
+}
+
+export async function GET() {
+    try {
+        await ConnectDB()
+        const token = (await cookies()).get('user_token')?.value
+        if (!token) {
+            return NextResponse.json({
+                success: false,
+                message: 'Please login first'
+            }, { status: 400 })
+        }
+        const decoded = jwt.verify(token, JWT_SECRET)
+        const user = await User.findById(decoded.id)
+
+        if (!user) {
+            return NextResponse.json({
+                success: false,
+                message: 'User not found'
+            }, { status: 400 })
+        }
+
+        return NextResponse.json({
+            success: true,
+            message: 'Successfully fetched cart data',
+            payload: user.cart
+        }, { status: 200 })
+    } catch (error) {
+        return NextResponse.json({
+            success: false,
+            message: 'Failed to fetc cart data',
+            error: error.message
+        }, { status: 500 })
+
+    }
+
 }

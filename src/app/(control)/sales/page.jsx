@@ -1,5 +1,6 @@
 'use client'
 
+import { useCart } from "@/components/context/CartContext"
 import SalesAddToCart from "@/components/forms/SalesAddToCart"
 import axios from "axios"
 import { useEffect, useState, useMemo } from "react"
@@ -35,6 +36,14 @@ const PosPage = () => {
     return allProducts.filter((item) => item.category === category);
   }, [category, allProducts]);
 
+    
+  const {fetchCart} = useCart()
+
+  useEffect(() => {
+    fetchCart()
+  }, [])
+
+
 
   return (
     <div className="w-full p-4">
@@ -58,7 +67,7 @@ const PosPage = () => {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-8 w-full">
           {filteredData.length > 0 ? (
             filteredData.map((item) => (
-              <SalesAddToCart key={item._id} product={item}/>
+              <SalesAddToCart key={item._id} product={item} fetchCart={fetchCart}/>
             ))
           ) : (
             <p className="col-span-full text-center text-gray-400">No items found in this category.</p>
