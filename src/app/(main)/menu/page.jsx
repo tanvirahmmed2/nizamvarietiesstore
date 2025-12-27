@@ -49,7 +49,7 @@ const Menu = () => {
               key={cat.id}
               onClick={() => setCategory(cat.value)}
               className={`p-4 w-full text-center cursor-pointer shadow-sm rounded-lg transition-colors
-                ${category === cat.value ? 'bg-green-400 text-white' : 'bg-white text-gray-700'}
+                ${category === cat.value ? 'bg-indigo-300 text-white' : 'bg-white text-gray-700'}
               `}
             >
               {cat.category}
@@ -60,13 +60,13 @@ const Menu = () => {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-8 w-full">
           {filteredData.length > 0 ? (
             filteredData.map((item) => (
-              <div key={item._id} className="p-1 border rounded shadow-sm w-full flex flex-col items-center justify-center">
+              <div key={item._id} className="p-1 border-black/10 border rounded shadow-sm w-full flex flex-col items-center justify-center">
 
                 <Link href={`/menu/${item.slug}`} className="w-full flex flex-col items-center justify-center">
                   <Image src={item.image} alt={item.title} width={1000} height={1000} className="" />
-                  <div className="w-full flex flex-row items-center justify-between">
-                    <h1>{item.title}</h1>
-                    <p><span className="text-[8px] italic">BDT</span> {item.price}</p>
+                  <div className="w-full flex flex-row items-start justify-between gap-2 py-3">
+                    <h1 className="text-xs">{item.title}</h1>
+                    <p className="text-sm flex flex-row items-center gap-2"><span className="text-[8px] italic ">BDT</span> {item.price}</p>
                   </div>
                 </Link>
                 <AddtoCart />

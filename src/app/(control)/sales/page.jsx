@@ -1,5 +1,6 @@
 'use client'
 
+import SalesAddToCart from "@/components/forms/SalesAddToCart"
 import axios from "axios"
 import { useEffect, useState, useMemo } from "react"
 
@@ -46,7 +47,7 @@ const PosPage = () => {
               key={cat.id} 
               onClick={() => setCategory(cat.value)} 
               className={`p-4 w-full text-center cursor-pointer shadow-sm rounded-lg transition-colors
-                ${category === cat.value ? 'bg-green-400 text-white' : 'bg-white text-gray-700'}
+                ${category === cat.value ? 'bg-indigo-300 text-white' : 'bg-white text-gray-700'}
               `}
             > 
               {cat.category}
@@ -54,13 +55,10 @@ const PosPage = () => {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 w-full">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-8 w-full">
           {filteredData.length > 0 ? (
             filteredData.map((item) => (
-              <div key={item._id} className="p-4 border rounded shadow-sm">
-                <h3 className="font-bold">{item.name}</h3>
-                <p className="text-sm text-gray-500">{item.category}</p>
-              </div>
+              <SalesAddToCart key={item._id} product={item}/>
             ))
           ) : (
             <p className="col-span-full text-center text-gray-400">No items found in this category.</p>

@@ -1,4 +1,6 @@
 import ConnectDB from "@/lib/database/mongo";
+import { isLogin } from "@/lib/middleware";
+import Product from "@/lib/models/product";
 import User from "@/lib/models/user";
 import { NextResponse } from "next/server";
 
@@ -6,16 +8,37 @@ export async function POST(req) {
     try {
         await ConnectDB();
 
-        const { userId, title, productId, quantity } = await req.json();
+        const auth = await isLogin()
+        if (!auth.success) {
+            return NextResponse.json({
+                success: false, message: 'Please log in'
+            }, { status: 400 })
+        }
 
-        if (!userId || !productId) {
+        const { title, productId, quantity } = await req.json();
+
+        if (!productId) {
             return NextResponse.json({ success: false, message: 'Missing data' }, { status: 400 });
         }
 
-        const user = await User.findById(userId);
-        if (!user) {
-            return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });
+        const product = await Product.findById(productId)
+
+        if (!product) {
+            return NextResponse.json({
+                success: false,
+                message: 'Product not found'
+            }, { status: 400 })
         }
+
+
+        if (!product.isAvailable) {
+            return NextResponse.json({
+                success: false,
+                message: 'Product is not availavle right now'
+            }, { status: 400 })
+        }
+
+        const user = auth.payload
 
         const existingItem = user.cart.find(item => item.productId === productId);
 
@@ -29,7 +52,7 @@ export async function POST(req) {
 
         return NextResponse.json({
             success: true,
-            message: 'Cart updated',
+            message: 'Added to cart',
             cart: user.cart
         }, { status: 200 });
 

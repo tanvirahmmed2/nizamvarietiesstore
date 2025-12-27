@@ -8,6 +8,7 @@ import { PiFinnTheHumanLight } from "react-icons/pi";
 import { FaHistory } from "react-icons/fa";
 import { IoSettingsOutline } from "react-icons/io5";
 import Logout from '../buttons/Logout';
+import { RiGlobalLine } from "react-icons/ri";
 
 const SalesSidebar = () => {
   return (
@@ -19,6 +20,7 @@ const SalesSidebar = () => {
       </div>
 
       <div className='w-auto flex flex-col gap-2'>
+        <Link href={'/'} className='w-auto flex flex-row items-center gap-3 cursor-pointer'><RiGlobalLine/>Website</Link>
         <Link href={'/settings'} className='w-auto flex flex-row items-center gap-3 cursor-pointer'><IoSettingsOutline/>Setting</Link>
         <Link href={'/profile'} className='w-auto flex flex-row items-center gap-3 cursor-pointer'><PiFinnTheHumanLight/> Profile</Link>
         <Logout/>
