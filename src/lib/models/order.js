@@ -4,11 +4,12 @@ const orderSchema = new mongoose.Schema({
     name: {
         type: String,
         trim: true,
-        required: true,
+        default:'guest',
     },
     phone: {
         type: String,
-        required: true,
+        trim:true,
+        default:'+880-1'
     },
 
     items: [
@@ -52,8 +53,8 @@ const orderSchema = new mongoose.Schema({
     },
 
     createdBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'users',
+        type: String,
+        trim:true,
         required: true
     },
     createdAt:{

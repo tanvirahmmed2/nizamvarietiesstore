@@ -3,18 +3,19 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import RemoveFromCart from '../buttons/RemoveFromCart'
 import { useCart } from '../context/CartContext'
+import { toast } from 'react-toastify'
 
 const Orderform = ({ cartItems }) => {
     const { fetchCart } = useCart()
     const [data, setData] = useState({
-        name: '',
-        phone: '',
+        name: 'Guest',
+        phone: '+880-1',
         delivery: 'dinein',
-        table: '',
+        table: 1,
         discount: 0,
         tax: 0,
         totlePrice: 0,
-        payment: ''
+        payment: 'cash'
     })
 
     const [totals, setTotals] = useState({
@@ -49,7 +50,23 @@ const Orderform = ({ cartItems }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log({ ...data, items: cartItems, ...totals })
+        const orderData = {
+        ...data,
+        items: cartItems, 
+        subTotal: totals.subTotal,
+        tax: totals.tax,
+        discount: totals.discount,
+        totalPrice: totals.totlePrice, 
+        paymentMethod: data.payment
+    };
+
+    try {
+        const response = await axios.post('/api/order', orderData, { withCredentials: true });
+        toast.success(response.data.message);
+    } catch (error) {
+        console.log(error)
+        toast.error(error?.response?.data?.message || "Something went wrong");
+    }
     }
 
     return (
@@ -66,7 +83,7 @@ const Orderform = ({ cartItems }) => {
                 </div>
                 <div className='w-full flex flex-row items-center justify-between'>
                     <label htmlFor="phone">Phone</label>
-                    <input type="number" id='phone' name='phone' value={data.phone} onChange={handleChange} min={1} className='px-3 border-2 border-black/10 rounded-lg outline-none' />
+                    <input type="text" id='phone' name='phone' value={data.phone} onChange={handleChange}  className='px-3 border-2 border-black/10 rounded-lg outline-none' />
                 </div>
                 {data.delivery === 'dinein' &&
                     <div className='w-full flex flex-row items-center justify-between'>
@@ -74,6 +91,14 @@ const Orderform = ({ cartItems }) => {
                         <input type="number" id='table' name='table' value={data.table} min={1} onChange={handleChange} className='px-3 border-2 border-black/10 rounded-lg outline-none' />
                     </div>
                 }
+                <div className='w-full flex flex-row items-center justify-between'>
+                    <label htmlFor="payment">Payment</label>
+                    <select name="payment" id="payment" value={data.payment} onChange={handleChange}  className='px-3 border-2 border-black/10 rounded-lg outline-none'>
+                        <option value="cash">cash</option>
+                        <option value="card">Card</option>
+                        <option value="online">Online</option>
+                    </select>
+                </div>
             </div>
 
 
@@ -113,7 +138,7 @@ const Orderform = ({ cartItems }) => {
                 </div>
             </div>
 
-            <button className='bg-black text-white p-1 px-4 rounded-2xl' type='submit'>Place order</button>
+            <button className='bg-black text-white p-1 px-4 rounded-2xl cursor-pointer' type='submit'>Place order</button>
         </form>
     )
 }

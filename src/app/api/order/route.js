@@ -1,4 +1,5 @@
 import ConnectDB from "@/lib/database/mongo";
+import { isLogin } from "@/lib/middleware";
 import Order from "@/lib/models/order";
 import { NextResponse } from "next/server";
 
@@ -36,15 +37,18 @@ export async function POST(req) {
     try {
         await ConnectDB()
 
+        const auth= isLogin()
+        if(!auth.success){
+            return NextResponse.json({success:false, message:'Please login'}, {status:400})
+        }
+        const user= auth.payload
+
         const { name, phone, delivery, items, tabel, subTotal, tax, discount, totalPrice, paymentMethod } = await req.json()
-        if (!delivery || !subTotal || !tax || !discount || !totalPrice || !paymentMethod) {
-            return NextResponse.json({
-                success: false,
-                message: 'Please all information',
-            }, { status: 400 })
+        if (!delivery || !subTotal || !items || items.length === 0) {
+            return NextResponse.json({ success: false, message: 'Missing order details' }, { status: 400 });
         }
 
-        const newOrder = new Order({ name, phone, delivery, items, tabel, subTotal, tax, discount, totalPrice, paymentMethod })
+        const newOrder = new Order({ name, phone, delivery, items, tabel, subTotal, tax, discount, totalPrice, paymentMethod, createdBy:user._id })
 
         await newOrder.save()
 
