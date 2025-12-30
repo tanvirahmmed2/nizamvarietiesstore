@@ -18,3 +18,31 @@ export async function GET() {
     }
 
 }
+
+export async function DELETE(req) {
+    try {
+
+        await ConnectDB()
+
+        const { id } = await req.json()
+        if (!id) {
+            return NextResponse.json({ success: false, message: 'Id not found' }, { status: 400 })
+        }
+        const support = await Support.findById(id)
+        if (!support) {
+            return NextResponse.json({
+                success: false, message: 'Support data not found'
+            }, { status: 400 })
+        }
+
+        await Support.findByIdAndDelete(id)
+
+        return NextResponse.json({
+            success: true, message: 'Successfully deleted support data'
+        }, { status: 200 })
+    } catch (error) {
+        return NextResponse.json({ success: false, message: ' Failed to delete support data', error: error.message }, { status: 500 })
+
+    }
+
+}

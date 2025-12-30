@@ -19,3 +19,31 @@ export async function GET() {
     }
 
 }
+
+export async function DELETE(req) {
+    try {
+
+        await ConnectDB()
+
+        const { id } = await req.json()
+        if (!id) {
+            return NextResponse.json({ success: false, message: 'Id not found' }, { status: 400 })
+        }
+        const reservation = await Reservation.findById(id)
+        if (!reservation) {
+            return NextResponse.json({
+                success: false, message: 'reservation data not found'
+            }, { status: 400 })
+        }
+
+        await Reservation.findByIdAndDelete(id)
+
+        return NextResponse.json({
+            success: true, message: 'Successfully deleted reservation data'
+        }, { status: 200 })
+    } catch (error) {
+        return NextResponse.json({ success: false, message: ' Failed to delete reservation data', error: error.message }, { status: 500 })
+
+    }
+
+}
