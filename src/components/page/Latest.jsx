@@ -15,7 +15,7 @@ const Latest = async () => {
         products && <div className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
           {
             products.map((item) => (
-              <Link href={'/d'} key={item._id}>
+              <Link href={`/menu/${item.slug}`} key={item._id}>
                 <Item item={item} />
               </Link>
             ))

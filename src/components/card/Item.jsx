@@ -1,11 +1,15 @@
+'use client'
 import Image from 'next/image'
 import React from 'react'
+import { motion } from 'framer-motion'
 
 const Item = ({item}) => {
   return (
-    <div>
-      <Image src={item.image} alt={item.title} width={1000} height={1000}/>
-    </div>
+    <motion.div initial={{opacity:0, scale:0.8}} whileInView={{opacity:1, scale:1}} transition={{duration:0.5}} className='w-full flex flex-col items-center justify-center gap-1 bg-white/10 p-1 rounded-lg'>
+      <Image src={item.image} alt={item.title} width={1000} height={1000} className='w-full rounded-lg'/>
+      <h1>{item.title}</h1>
+      <p>{item.price}</p>
+    </motion.div>
   )
 }
 
