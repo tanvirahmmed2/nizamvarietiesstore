@@ -9,7 +9,7 @@ const Latest = async () => {
   if (!data.success) return <p>No data found</p>
   const products = data.payload
   return (
-    <div className='w-full flex flex-col items-center justify-center p-4 gap-4 bg-blue-800 text-white rounded-2xl'>
+    <div className='w-full flex flex-col items-center justify-center p-4 gap-4 bg-blue-50 '>
       <h1 className='text-3xl text-center '>Latest Meals</h1>
       {
         products && <div className='w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>

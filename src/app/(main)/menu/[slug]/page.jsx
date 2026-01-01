@@ -12,18 +12,18 @@ const SingleProduct = async ({ params }) => {
   const product = data.payload
   if (!product) return <p>No data found</p>
   return (
-    <div className='w-full min-h-screen flex flex-col gap-20 items-center justify-center p-4 rounded-2xl'>
-      <div className='w-full md:w-5/6 lg:w-3/4 mx-auto flex flex-col md:flex-row gap-8 bg-white p-4 md:p-6 rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-100'>
+    <div className='w-full min-h-screen flex flex-col gap-20 items-center justify-center  rounded-2xl'>
+      <div className='w-full md:w-5/6 lg:w-3/4 mx-auto flex flex-col md:flex-row gap-8 bg-white m-6 p-4 md:p-6 rounded-2xl shadow-sm border border-slate-100'>
 
         <div className='flex-1 group'>
           <div className='relative aspect-square overflow-hidden rounded-xl bg-slate-50 border border-slate-100'>
             <div className='absolute right-3 top-3 z-10'>
               {product.isAvailable ? (
-                <span className='text-[12px] font-bold uppercase tracking-wider text-white py-1.5 px-3 rounded-full bg-emerald-500 shadow-lg shadow-emerald-200'>
+                <span className='text-[12px] font-bold uppercase tracking-wider text-white py-1.5 px-3 rounded-full bg-emerald-500'>
                   Available
                 </span>
               ) : (
-                <span className='text-[12px] font-bold uppercase tracking-wider text-white py-1.5 px-3 rounded-full bg-rose-500 shadow-lg shadow-rose-200'>
+                <span className='text-[12px] font-bold uppercase tracking-wider text-white py-1.5 px-3 rounded-full bg-rose-500 '>
                   Out of Stock
                 </span>
               )}

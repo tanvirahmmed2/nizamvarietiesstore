@@ -4,6 +4,7 @@ import Image from 'next/image'
 import React from 'react'
 import { toast } from 'react-toastify'
 import { useCart } from '../context/CartContext'
+import Item from '../card/Item'
 
 const SalesAddToCart = ({ product }) => {
 
@@ -21,10 +22,8 @@ const SalesAddToCart = ({ product }) => {
     }
 
     return (
-        <div onClick={addItemToCart} className='w-full cursor-pointer flex flex-col items-center justify-center border border-black/10 shadow-sm rounded-lg overflow-hidden text-center text-sm p-1 gap-1'>
-            <Image src={product.image} alt={product.title} width={400} height={400} className='w-full rounded-lg overflow-hidden' />
-            <h1>{product.title}</h1>
-            <p className='text-base font-semibold'>BDT {product.price}</p>
+        <div onClick={addItemToCart} className='w-full cursor-pointer text-xs'>
+            <Item item={product}/>
         </div>
     )
 }
