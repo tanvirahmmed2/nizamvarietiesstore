@@ -1,6 +1,7 @@
 'use client'
 
 import AddtoCart from "@/components/buttons/AddtoCart"
+import Item from "@/components/card/Item"
 import axios from "axios"
 import Image from "next/image"
 import Link from "next/link"
@@ -62,11 +63,7 @@ const Menu = () => {
             filteredData.map((item) => (
 
               <Link key={item._id} href={`/menu/${item.slug}`} className="w-full bg-white/40 flex flex-col items-center justify-center p-1 border border-black/10 rounded-lg overflow-hidden">
-                <Image src={item.image} alt={item.title} width={1000} height={1000} className="w-full rounded-lg overflow-hidden" />
-                <div className="w-full flex flex-row items-start justify-between gap-2 py-3">
-                  <h1 className="text-xs">{item.title}</h1>
-                  <p className="text-sm flex flex-row items-center gap-2"><span className="text-[8px] italic ">BDT</span> {item.price}</p>
-                </div>
+                <Item item={item}/>
               </Link>
             ))
           ) : (
