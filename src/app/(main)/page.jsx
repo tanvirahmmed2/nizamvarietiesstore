@@ -5,7 +5,7 @@ import React from 'react'
 
 const Main = () => {
   return (
-    <div className='w-full overflow-hidden'>
+    <div className='w-full overflow-hidden min-h-screen flex flex-col items-center justify-center'>
       <Intro/>
       <Latest/>
       <About/>
