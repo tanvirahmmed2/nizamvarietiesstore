@@ -40,7 +40,7 @@ const Support = async () => {
                 </p>
               </div>
 
-              <div className='flex-[2] space-y-2'>
+              <div className='flex-2 space-y-2'>
                 <h3 className='font-semibold text-amber-600 text-sm uppercase tracking-wider'>
                   {info.subject}
                 </h3>
