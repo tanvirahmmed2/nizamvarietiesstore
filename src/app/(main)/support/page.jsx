@@ -36,7 +36,7 @@ const Support = () => {
       <div className='w-full h-full flex flex-col gap-4'>
         <h1 className='text-2xl font-semibold text-center'>Join Us at Our Table</h1>
         <p className='text-wrap w-full text-center'>Whether you are planning a romantic evening, a family celebration, or a private event, we are here to make it unforgettable.</p>
-        <p className=' text-center'>Address: {siteData.address || 'Mymensingh'}</p>
+        <p className=' text-center'>Address: {siteData?.address || 'Mymensingh'}</p>
 
       </div>
       <div className='w-full flex flex-col items-center justify-center gap-4'>
