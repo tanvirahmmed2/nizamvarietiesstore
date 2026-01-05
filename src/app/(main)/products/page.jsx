@@ -62,7 +62,7 @@ const Menu = () => {
   return (
     <div className="w-full p-4 min-h-screen">
       <div className="w-full flex flex-col items-center justify-center gap-4">
-        <div className="w-full flex flex-col sm:flex-row items-start p-2 sm:items-center justify-around shadow">
+        <div className="w-full flex flex-col sm:flex-row items-start gap-4 p-2 sm:items-center justify-around shadow">
           <h1 className="w-full sm:w-auto outline-none text-center">Filter</h1>
           {
             siteData && <select name="category" id="category" onChange={filterChange} value={filterData.category} className="w-full sm:w-auto outline-none px-4 cursor-pointer">

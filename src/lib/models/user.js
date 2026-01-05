@@ -17,13 +17,13 @@ const userSchema = new mongoose.Schema({
         trim: true,
         required: true,
     },
-    phone: {
+    address: {
         type: String,
         trim: true,
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
+    phone: {
+        type: String,
+        trim: true,
     },
     role: {
         type: String,
@@ -47,7 +47,11 @@ const userSchema = new mongoose.Schema({
     isBanned: {
         type: Boolean,
         default: false
-    }
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
 })
 
 const User = mongoose.models.users || mongoose.model('users', userSchema)
