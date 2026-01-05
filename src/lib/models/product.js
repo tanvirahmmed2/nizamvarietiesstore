@@ -17,7 +17,7 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    wholeSale: {
+    wholeSalePrice: {
         type: Number,
         required: true,
         trim: true
@@ -41,10 +41,6 @@ const productSchema = new mongoose.Schema({
         type: String,
         trim: true,
         required: true,
-        enum: {
-            values: ['meals', 'snacks', 'drinks', 'combo', 'salad', 'dessert'],
-            message: '{VALUE} is not supported'
-        }
     },
     stock: {
         type: Boolean,

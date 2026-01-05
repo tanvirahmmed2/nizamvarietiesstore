@@ -2,6 +2,7 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
+import { useCart } from '../context/Context'
 
 
 const categories = [
@@ -39,12 +40,15 @@ const categories = [
 
 
 const AddProduct = () => {
+    const {siteData}= useCart()
     const [formData, setFormData] = useState({
         title: '',
         description: '',
         price: '',
         category: '',
         image: null,
+        wholeSalePrice:'',
+        quantity:''
 
     })
 
@@ -99,14 +103,22 @@ const AddProduct = () => {
                 <label htmlFor="category">Category</label>
                 <select name="category" id="category" required value={formData.category} onChange={handleChange} className='w-full p-1 px-3 outline-none border-2 border-black/10 rounded-lg shadow-sm'>
                     <option value="">--Select--</option>
-                    {categories && categories.map((cat) => (
-                        <option value={cat.value} key={cat.id}>{cat.value}</option>
+                    {siteData && siteData.categories.map((cat) => (
+                        <option value={cat} key={cat._id}>{cat}</option>
                     ))}
                 </select>
             </div>
             <div className='w-full flex flex-col gap-2'>
                 <label htmlFor="price">Price</label>
                 <input type="number" name='price' id='price' min={0} required value={formData.price} onChange={handleChange} className='w-full p-1 px-3 outline-none border-2 border-black/10 rounded-lg shadow-sm' />
+            </div>
+            <div className='w-full flex flex-col gap-2'>
+                <label htmlFor="wholeSalePrice">Whole Sale Price</label>
+                <input type="number" name='wholeSalePrice' id='wholeSalePrice' min={0} required value={formData.wholeSalePrice} onChange={handleChange} className='w-full p-1 px-3 outline-none border-2 border-black/10 rounded-lg shadow-sm' />
+            </div>
+            <div className='w-full flex flex-col gap-2'>
+                <label htmlFor="quantity">Quantity</label>
+                <input type="number" name='quantity' id='quantity' min={0} required value={formData.quantity} onChange={handleChange} className='w-full p-1 px-3 outline-none border-2 border-black/10 rounded-lg shadow-sm' />
             </div>
             <div className='w-full flex flex-col gap-2'>
                 <label htmlFor="image">Image</label>

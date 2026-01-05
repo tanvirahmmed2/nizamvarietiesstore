@@ -46,7 +46,9 @@ export async function POST(req) {
         const imageFile = formData.get('image')
         const category = formData.get('category')
         const price = formData.get('price')
-        if (!title || !description || !category || !price) {
+        const wholeSalePrice = formData.get('price')
+        const quantity = formData.get('price')
+        if (!title || !description || !category || !price || !wholeSalePrice) {
             return NextResponse.json({
                 success: false,
                 message: 'Please fill all information'
@@ -83,7 +85,7 @@ export async function POST(req) {
             stream.end(imageBuffer);
         });
 
-        const newProduct = new Product({ title, slug, description, price, image: cloudImage.secure_url, imageId: cloudImage.public_id, category })
+        const newProduct = new Product({ title, slug, description, price, image: cloudImage.secure_url, imageId: cloudImage.public_id, category, wholeSalePrice, quantity })
 
         await newProduct.save()
         return NextResponse.json({
