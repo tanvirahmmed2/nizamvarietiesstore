@@ -44,15 +44,17 @@ export async function POST(req) {
             }, { status: 400 })
         }
 
-        const {title, bio, tax, tagline, openFrom, openTo, address, socialLink } = await req.json()
-        if (!title|| !bio || !tax || !openFrom || !openTo || !tagline || !address || !socialLink) {
+        const {title, bio, tax, tagline, openFrom, openTo, address, socialLink, hotline, categories } = await req.json()
+        if (!title|| !bio || !tax || !openFrom || !openTo || !tagline || !address || !socialLink || !hotline ) {
             return NextResponse.json({
                 success: false,
                 message: 'Please fill all information'
             }, { status: 400 })
         }
 
-        const newWebsite = new WebSite({ title, bio, tax, tagline, openFrom, openTo, address, socialLink })
+        const cateArry=  categories.split(',').map(category => category.trim()).filter(category => category.length > 0);
+
+        const newWebsite = new WebSite({ title, bio, tax, tagline, openFrom, openTo, address, socialLink, hotline , categories: cateArry})
 
         await newWebsite.save()
         return NextResponse.json({
