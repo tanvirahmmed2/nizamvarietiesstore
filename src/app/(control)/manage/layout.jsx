@@ -4,7 +4,7 @@ import { isManager } from "@/lib/middleware"
 import { redirect } from "next/navigation"
 
 export const metadata={
-  title:'Manage | Restaurant',
+  title:'Manage',
   description:'Management site'
 }
 

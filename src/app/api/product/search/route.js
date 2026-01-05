@@ -22,7 +22,6 @@ export async function GET(req) {
     const products = await Product.find({
       $or: [
         { title: regex },
-        { category: regex },
         { description: regex }
       ]
     }).limit(20);

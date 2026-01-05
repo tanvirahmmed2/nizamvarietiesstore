@@ -4,10 +4,12 @@ import { ContextProvider } from "@/components/context/Context";
 
 
 export const metadata = {
-  title: "Restaurant",
-  description: "Restaurant app",
+  title: {
+    default: "Nizam Store",
+    template: "%s | Nizam Store",
+  },
+  description: "Nizam Store app",
 };
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en">

@@ -7,7 +7,7 @@ import { isSales } from "@/lib/middleware"
 import { redirect } from "next/navigation"
 
 export const metadata = {
-  title: 'Sales | Restaurant',
+  title: 'Sales',
   description: 'Sales site'
 }
 

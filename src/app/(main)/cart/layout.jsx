@@ -2,7 +2,7 @@ import { isLogin } from '@/lib/middleware'
 import { redirect } from 'next/navigation'
 import React from 'react'
 export const metadata={
-    title:'Cart | Restaurant',
+    title:'Cart',
     description:'Cart page'
 }
 

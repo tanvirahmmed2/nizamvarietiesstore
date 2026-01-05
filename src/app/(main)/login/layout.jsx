@@ -2,7 +2,7 @@ import { isLogin } from '@/lib/middleware'
 import { redirect } from 'next/navigation'
 import React from 'react'
 export const metadata={
-    title:'Login | Restaurant',
+    title:'Login',
     description:'Login page'
 }
 
