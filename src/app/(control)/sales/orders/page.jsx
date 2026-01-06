@@ -17,7 +17,7 @@ if (!data.success || data.payload.length === 0) return (
   const orders= data.payload
 
   return (
-    <div className='w-full flex p-4 flex-col items-center justify-center gap-4'>
+    <div className='w-full flex p-4 flex-col items-center gap-4'>
       <h1 className='text-2xl'>Orders</h1>
      {
         orders.map((order)=>(
@@ -25,7 +25,7 @@ if (!data.success || data.payload.length === 0) return (
             <div className='w-full flex flex-row items-center justify-between gap-4'>
               <p className='font-semibold'>Name: {order.name}</p>
               <p>Phone: {order.phone}</p>
-              <p className={`${order.status==='confirmed' && 'bg-amber-400'} ${order.status==='cancelled' && 'bg-red-400'} ${order.status==='delivered' && 'bg-green-400'} text-white px-3 p-1 rounded-lg`}>{order.status}</p>
+              <p className={`${order.status==='confirmed' && 'bg-amber-400'} ${order.status==='cancelled' && 'bg-red-400'} ${order.status==='delivered' && 'bg-green-400'} text-white px-3 p-1 rounded-lg`}>{order.status==='confirmed'?'Pending':`${order.status}`}</p>
             </div>
 
             <div className='w-full flex flex-row items-center justify-between'>
@@ -50,7 +50,7 @@ if (!data.success || data.payload.length === 0) return (
                 <p>Paid by: {order.paymentMethod}</p>
               </div>
             </div>
-            <div className='w-full flex flex-row items-center justify-between gap-2'>
+            <div className='w-full flex flex-row items-center justify-between gap-2 '>
               <PrintOrder order={order}/>
               <DeliverOrder id={order._id}/>
               <CancelOrder id={order._id}/>

@@ -20,7 +20,7 @@ const SingleOrderHistory = async ({ params }) => {
                         </div>
                         <p className='px-3 text-white bg-green-500 rounded-lg'>{order.paymentMethod}</p>
                     </div>
-                    <p>Order id: <strong>{id}</strong></p>
+                    <p>Order id: <strong>#{order.orderId}</strong></p>
                 </div>
                 <div className='w-full flex flex-col items-center justify-center gap-2 border p-4 rounded-lg'>
                     {

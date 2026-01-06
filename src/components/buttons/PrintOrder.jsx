@@ -120,7 +120,7 @@ const PrintOrder = ({ order }) => {
   return (
     <button 
       onClick={printOrder} 
-      className='w-full px-2 rounded-lg hover:bg-black/10 p-2 cursor-pointer flex flex-row items-center justify-center gap-4 transition-colors border border-transparent active:border-black/20'
+     className='w-full px-2 rounded-lg hover:bg-black/10 p-1 cursor-pointer flex flex-row items-center justify-center gap-4'
     >
       <FaPrint className="text-gray-700 hover:text-black" />
       <span className="font-medium">Print Receipt</span>

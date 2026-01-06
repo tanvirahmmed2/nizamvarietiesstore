@@ -1,6 +1,5 @@
 'use client'
 
-import { useCart } from "@/components/context/Context"
 import SalesAddToCart from "@/components/forms/SalesAddToCart"
 import axios from "axios"
 import { useEffect, useState, useMemo } from "react"
@@ -30,13 +29,7 @@ const PosPage = () => {
     fetchData()
   }, [searchTerm])
 
-  const { fetchCart } = useCart()
-
-  useEffect(() => {
-    fetchCart()
-  }, [])
-
-
+ 
 
   return (
     <div className="w-full p-4">
@@ -51,7 +44,7 @@ const PosPage = () => {
           !searchData || searchData.length < 1 ? <p>Please search product</p> : <div className="w-full flex flex-col gap-2 items-center justify-center">
             {
               searchData?.map((item) => (
-                <SalesAddToCart key={item._id} product={item} fetchCart={fetchCart} />
+                <SalesAddToCart key={item._id} product={item}  />
               ))
             }
           </div>

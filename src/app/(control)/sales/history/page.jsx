@@ -13,7 +13,7 @@ const History = async () => {
   )
   const orders = data.payload
   return (
-    <div className='w-full flex p-4 flex-col items-center justify-center gap-4'>
+    <div className='w-full flex p-4 flex-col items-center gap-4'>
       <h1 className='text-2xl'>History</h1>
       <div className='w-full grid grid-cols-3 gap-4'>
         {orders.map((order) => (

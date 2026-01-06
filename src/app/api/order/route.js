@@ -37,28 +37,47 @@ export async function GET() {
 export async function POST(req) {
     try {
         await ConnectDB()
-        const auth=await isLogin()
-        if(!auth.success) {
+        const auth = await isLogin()
+        
+        if (!auth.success) {
             return NextResponse.json({ success: false, message: 'Please Login' }, { status: 400 });
-
         }
 
-        const user= await auth.payload
-
-        const { name, phone, delivery, items, tabel, subTotal, tax, discount, totalPrice, paymentMethod } = await req.json()
-        if (!delivery || !subTotal || !items || items.length === 0) {
-            return NextResponse.json({ success: false, message: 'Missing order details' }, { status: 400 });
+        const user = await auth.payload
+        const { name, phone, delivery, subTotal, tax, discount, totalPrice, paymentMethod,address } = await req.json()
+        
+        if (!delivery || !subTotal || !user.cart || user.cart.length === 0 || !paymentMethod) {
+            return NextResponse.json({ success: false, message: 'Missing order details or empty cart' }, { status: 400 });
         }
 
-        const newOrder = new Order({ name, phone, delivery, items:user.cart, tabel, subTotal, tax, discount, totalPrice, paymentMethod})
+        let orderId = 1000
+        const lastOrder = await Order.findOne().sort({ _id: -1 })
+        
+        if (lastOrder && typeof lastOrder.orderId === 'number') {
+            orderId = lastOrder.orderId + 1
+        }
+
+        const newOrder = new Order({ 
+            name, 
+            phone, 
+            delivery, 
+            items: user.cart,
+            subTotal, 
+            tax, 
+            discount, 
+            totalPrice, 
+            paymentMethod, 
+            orderId ,
+            address
+        })
 
         await newOrder.save()
-
-        await User.findByIdAndUpdate(user._id, { $set: { cart: [] } });
+        await User.findByIdAndUpdate(user._id, { $set: { cart: [] } })
 
         return NextResponse.json({
             success: true,
             message: 'Successfully placed order',
+            orderId
         }, { status: 200 })
 
     } catch (error) {
@@ -67,9 +86,7 @@ export async function POST(req) {
             message: 'Failed to create order',
             error: error.message
         }, { status: 500 })
-
     }
-
 }
 
 export async function DELETE(req) {

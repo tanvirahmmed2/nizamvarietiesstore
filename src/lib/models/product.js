@@ -69,6 +69,10 @@ const productSchema = new mongoose.Schema({
         trim: true,
         default: 0
     },
+    barcode: {
+        type: Number,
+        trim: true,
+    },
     createdAt: {
         type: Date,
         default: Date.now

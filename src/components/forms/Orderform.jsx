@@ -8,14 +8,14 @@ import { toast } from 'react-toastify'
 const Orderform = ({ cartItems }) => {
     const { fetchCart } = useCart()
     const [data, setData] = useState({
-        name: 'Guest',
+        name: 'customer',
         phone: '+880-1',
-        delivery: 'dinein',
-        table: 1,
+        delivery: 'pickup',
+        address: '',
         discount: 0,
         tax: 0,
         totlePrice: 0,
-        payment: 'cash'
+        paymentMethod: 'cash'
     })
 
     const [totals, setTotals] = useState({
@@ -57,7 +57,7 @@ const Orderform = ({ cartItems }) => {
         tax: totals.tax,
         discount: totals.discount,
         totalPrice: totals.totlePrice, 
-        paymentMethod: data.payment
+        paymentMethod: data.paymentMethod
     };
 
     try {
@@ -75,8 +75,8 @@ const Orderform = ({ cartItems }) => {
            
             <div className='w-full flex flex-col items-center justify-center gap-2'>
                 <div className="flex flex-row items-center justify-between w-full">
-                    <p onClick={() => handleMethodChange('dinein')} className={`cursor-pointer px-4 py-1 rounded-full border ${data.delivery === 'dinein' ? 'bg-black text-white' : 'border-gray-300'}`} > Dine In </p>
-                    <p onClick={() => handleMethodChange('takeout')} className={`cursor-pointer px-4 py-1 rounded-full border ${data.delivery === 'takeout' ? 'bg-black text-white' : 'border-gray-300'}`} > Take Out </p>
+                    <p onClick={() => handleMethodChange('pickup')} className={`cursor-pointer px-4 py-1 rounded-full border ${data.delivery === 'pickup' ? 'bg-black text-white' : 'border-gray-300'}`} >Pickup</p>
+                    <p onClick={() => handleMethodChange('homedelivery')} className={`cursor-pointer px-4 py-1 rounded-full border ${data.delivery === 'homedelivery' ? 'bg-black text-white' : 'border-gray-300'}`} >Homde Delivery</p>
                 </div>
                 <div className='w-full flex flex-row items-center justify-between'>
                     <label htmlFor="name">Name</label>
@@ -86,15 +86,15 @@ const Orderform = ({ cartItems }) => {
                     <label htmlFor="phone">Phone</label>
                     <input type="text" id='phone' name='phone' value={data.phone} onChange={handleChange}  className='px-3 border-2 border-black/10 rounded-lg outline-none' />
                 </div>
-                {data.delivery === 'dinein' &&
+                {data.delivery === 'homedelivery' &&
                     <div className='w-full flex flex-row items-center justify-between'>
-                        <label htmlFor="table">Table</label>
-                        <input type="number" id='table' name='table' value={data.table} min={1} onChange={handleChange} className='px-3 border-2 border-black/10 rounded-lg outline-none' />
+                        <label htmlFor="address">Address</label>
+                        <input type="Text" id='address' name='address' value={data.address}  onChange={handleChange} className='px-3 border-2 border-black/10 rounded-lg outline-none' />
                     </div>
                 }
                 <div className='w-full flex flex-row items-center justify-between'>
-                    <label htmlFor="payment">Payment</label>
-                    <select name="payment" id="payment" value={data.payment} onChange={handleChange}  className='px-3 border-2 border-black/10 rounded-lg outline-none'>
+                    <label htmlFor="paymentMethod">Payment Method</label>
+                    <select name="paymentMethod" id="paymentMethod" value={data.paymentMethod} onChange={handleChange}  className='px-3 border-2 border-black/10 rounded-lg outline-none'>
                         <option value="cash">cash</option>
                         <option value="card">Card</option>
                         <option value="online">Online</option>

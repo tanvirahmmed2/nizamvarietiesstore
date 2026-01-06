@@ -4,14 +4,19 @@ const orderSchema = new mongoose.Schema({
     name: {
         type: String,
         trim: true,
-        default:'guest',
+        default: 'customer',
     },
     phone: {
         type: String,
-        trim:true,
-        default:'+880-1'
+        trim: true,
+        default: '+880-1'
     },
-
+    orderId: {
+        type:Number,
+        trim: true,
+        required: true,
+        unique: true
+    },
     items: [
         {
             productId: {
@@ -27,12 +32,8 @@ const orderSchema = new mongoose.Schema({
 
     delivery: {
         type: String,
-        enum: ['dinein', 'takeout'],
+        enum: ['homedelivery', 'pickup'],
         required: true
-    },
-    table: {
-        type: String,
-        trim: true
     },
 
     subTotal: { type: Number, required: true },
@@ -51,7 +52,11 @@ const orderSchema = new mongoose.Schema({
         enum: ['confirmed', 'delivered', 'cancelled'],
         default: 'confirmed'
     },
-    createdAt:{
+    address:{
+        type:String,
+        trim:true
+    },
+    createdAt: {
         type: Date,
         default: Date.now
     }
