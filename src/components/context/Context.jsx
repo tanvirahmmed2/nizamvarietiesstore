@@ -56,6 +56,8 @@ export const ContextProvider = ({ children }) => {
     fetchWebsiteData()
 
   }, [])
+  
+    
 
 
   useEffect(() => { fetchCart() }, [])

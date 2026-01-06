@@ -1,6 +1,7 @@
 import ConnectDB from "@/lib/database/mongo";
 import { isLogin } from "@/lib/middleware";
 import Order from "@/lib/models/order";
+import Product from "@/lib/models/product";
 import User from "@/lib/models/user";
 import { NextResponse } from "next/server";
 
@@ -35,59 +36,86 @@ export async function GET() {
 }
 
 export async function POST(req) {
-    try {
-        await ConnectDB()
-        const auth = await isLogin()
-        
-        if (!auth.success) {
-            return NextResponse.json({ success: false, message: 'Please Login' }, { status: 400 });
-        }
+  try {
+    await ConnectDB()
+    const auth = await isLogin()
 
-        const user = await auth.payload
-        const { name, phone, delivery, subTotal, tax, discount, totalPrice, paymentMethod,address } = await req.json()
-        
-        if (!delivery || !subTotal || !user.cart || user.cart.length === 0 || !paymentMethod) {
-            return NextResponse.json({ success: false, message: 'Missing order details or empty cart' }, { status: 400 });
-        }
-
-        let orderId = 1000
-        const lastOrder = await Order.findOne().sort({ _id: -1 })
-        
-        if (lastOrder && typeof lastOrder.orderId === 'number') {
-            orderId = lastOrder.orderId + 1
-        }
-
-        const newOrder = new Order({ 
-            name, 
-            phone, 
-            delivery, 
-            items: user.cart,
-            subTotal, 
-            tax, 
-            discount, 
-            totalPrice, 
-            paymentMethod, 
-            orderId ,
-            address
-        })
-
-        await newOrder.save()
-        await User.findByIdAndUpdate(user._id, { $set: { cart: [] } })
-
-        return NextResponse.json({
-            success: true,
-            message: 'Successfully placed order',
-            orderId
-        }, { status: 200 })
-
-    } catch (error) {
-        return NextResponse.json({
-            success: false,
-            message: 'Failed to create order',
-            error: error.message
-        }, { status: 500 })
+    if (!auth.success) {
+      return NextResponse.json(
+        { success: false, message: 'Please Login' },
+        { status: 400 }
+      )
     }
+
+    const user = auth.payload
+    const {
+      name,
+      phone,
+      delivery,
+      subTotal,
+      tax,
+      discount,
+      totalPrice,
+      paymentMethod,
+      address
+    } = await req.json()
+
+    if (!delivery || !subTotal || !user.cart || user.cart.length === 0 || !paymentMethod) {
+      return NextResponse.json(
+        { success: false, message: 'Missing order details or empty cart' },
+        { status: 400 }
+      )
+    }
+
+    let orderId = 1000
+    const lastOrder = await Order.findOne().sort({ _id: -1 })
+    if (lastOrder && typeof lastOrder.orderId === 'number') {
+      orderId = lastOrder.orderId + 1
+    }
+
+    // 🔥 CALCULATE TOTAL WHOLESALE PRICE
+    let totalWholeSalePrice = 0
+
+    for (const item of user.cart) {
+      const product = await Product.findById(item.productId).select('wholeSalePrice')
+      if (product) {
+        totalWholeSalePrice += product.wholeSalePrice * item.quantity
+      }
+    }
+
+    const newOrder = new Order({
+      name,
+      phone,
+      delivery,
+      items: user.cart,
+      subTotal,
+      tax,
+      discount,
+      totalPrice,
+      paymentMethod,
+      orderId,
+      address,
+      totalWholeSalePrice
+    })
+
+    await newOrder.save()
+
+    await User.findByIdAndUpdate(user._id, { $set: { cart: [] } })
+
+    return NextResponse.json({
+      success: true,
+      message: 'Successfully placed order',
+    }, { status: 200 })
+
+  } catch (error) {
+    return NextResponse.json({
+      success: false,
+      message: 'Failed to create order',
+      error: error.message
+    }, { status: 500 })
+  }
 }
+
 
 export async function DELETE(req) {
     try {

@@ -9,7 +9,7 @@ export async function POST(req) {
         await ConnectDB()
 
         const { name, email, password, role } = await req.json()
-        if (!name || !email || !password || !role) {
+        if (!name || !email || !password ) {
             return NextResponse.json({
                 success: false,
                 message: 'Please fill all information'

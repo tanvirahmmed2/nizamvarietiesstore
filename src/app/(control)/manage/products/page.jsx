@@ -44,7 +44,7 @@ const Products = () => {
               searchData?.map((product) => (
                 <div key={product._id} className={`w-full flex flex-row px-2 items-center justify-between ${product.isAvailable ? 'bg-transparent' : 'bg-red-100'}`}>
                   <Link className='flex-4' href={`/products/${product?.slug}`}>{product?.title}</Link>
-                  <p className='flex-1'>{product.price}</p>
+                  <p className='flex-1'>৳{product.price}</p>
                   {product.isAvailable ? <p className='flex-1'>{product?.quantity}</p> : <p className='flex-1'>Unavailable</p>}
 
                   <div className=' flex-1 flex flex-row gap-4 items-center justify-center'>

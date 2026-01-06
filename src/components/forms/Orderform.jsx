@@ -14,7 +14,8 @@ const Orderform = ({ cartItems }) => {
         address: '',
         discount: 0,
         tax: 0,
-        totlePrice: 0,
+        totalPrice: 0,
+        totalWholeSalePrice:0,
         paymentMethod: 'cash'
     })
 
@@ -22,21 +23,25 @@ const Orderform = ({ cartItems }) => {
         subTotal: 0,
         discount: 0,
         tax: 0,
-        totlePrice: 0
+        totalPrice: 0,
+        totalWholeSalePrice:0
     })
 
     useEffect(() => {
         let subTotal = 0
+        let totalWholeSalePrice = 0
         for (let i = 0; i < cartItems.length; i++) {
             subTotal += cartItems[i].price
+            totalWholeSalePrice += cartItems[i].wholeSalePrice
         }
         const discountRate = 0 
         const discount = subTotal * discountRate
         const taxRate = 0.02
         const tax = (subTotal - discount) * taxRate
-        const totlePrice = subTotal - discount + tax
+        const totalPrice = subTotal - discount + tax
+        
 
-        setTotals({ subTotal, discount, tax, totlePrice })
+        setTotals({ subTotal, discount, tax, totalPrice, totalWholeSalePrice })
     }, [cartItems])
 
     const handleChange = (e) => {
@@ -56,7 +61,7 @@ const Orderform = ({ cartItems }) => {
         subTotal: totals.subTotal,
         tax: totals.tax,
         discount: totals.discount,
-        totalPrice: totals.totlePrice, 
+        totalPrice: totals.totalPrice, 
         paymentMethod: data.paymentMethod
     };
 
@@ -135,7 +140,7 @@ const Orderform = ({ cartItems }) => {
                 </div>
                 <div className='w-full flex flex-row items-center justify-between'>
                     <p>Total</p>
-                    <p>{totals.totlePrice.toFixed(2)}</p>
+                    <p>{totals.totalPrice.toFixed(2)}</p>
                 </div>
             </div>
 
