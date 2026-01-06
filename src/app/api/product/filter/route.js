@@ -13,7 +13,7 @@ export async function GET(req) {
         if (category) filter.category = category;
         if (availability === "isAvailable") filter.isAvailable = true;
 
-        const products = await Product.find(filter).sort({ _id: -1 });
+        const products = await Product.find(filter).sort({ _id: -1 }).limit(30);;
 
         return NextResponse.json({ success: true,message:'Successfully fetched data', payload: products });
     } catch (error) {
