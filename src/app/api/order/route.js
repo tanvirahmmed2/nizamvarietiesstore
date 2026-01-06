@@ -73,7 +73,6 @@ export async function POST(req) {
       orderId = lastOrder.orderId + 1
     }
 
-    // 🔥 CALCULATE TOTAL WHOLESALE PRICE
     let totalWholeSalePrice = 0
 
     for (const item of user.cart) {

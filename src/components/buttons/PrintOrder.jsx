@@ -44,14 +44,14 @@ const PrintOrder = ({ order }) => {
             <p style="margin:2px 0;">${siteData?.address || 'Sadar, Mymensingh'}</p>
             ${siteData?.phone ? `<p style="margin:2px 0;">Tel: ${siteData.phone}</p>` : ''}
             <div class="divider"></div>
-            <p style="margin:2px 0;">ORDER: #${order._id?.slice(-6).toUpperCase()}</p>
+            <p style="margin:2px 0;">ORDER: #${order.orderId}</p>
             <p style="margin:2px 0;">${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
           </div>
 
           <div style="margin: 10px 0 5px 0;">
             <div>Customer: <span class="bold">${order.name || 'Guest'}</span></div>
             <div>Type: <span class="bold">${order.delivery?.toUpperCase()}</span></div>
-            ${order.delivery === 'dinein' ? `<div>Table: <span class="bold">${order.table}</span></div>` : ''}
+            ${order.delivery}
           </div>
 
           <table>
@@ -99,7 +99,7 @@ const PrintOrder = ({ order }) => {
             <p style="margin:0;">Payment Mode: ${order.paymentMethod?.toUpperCase()}</p>
             <div class="divider" style="border-top-style: dotted;"></div>
             <p>Thank you for dining with us!</p>
-            <p style="font-size: 9px; opacity: 0.8;">Software by YourName</p>
+            <p style="font-size: 9px; opacity: 0.8;">Software by Tanvir Ahmmed</p>
           </div>
         </body>
       </html>
