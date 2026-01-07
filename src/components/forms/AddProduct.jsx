@@ -5,38 +5,6 @@ import { toast } from 'react-toastify'
 import { useCart } from '../context/Context'
 
 
-const categories = [
-    {
-        id: 1,
-        category: 'Meals',
-        value: 'meals'
-    },
-    {
-        id: 2,
-        category: 'Combo',
-        value: 'combo'
-    },
-    {
-        id: 3,
-        category: 'Snacks',
-        value: 'snacks'
-    },
-    {
-        id: 4,
-        category: 'Salad',
-        value: 'salad'
-    },
-    {
-        id: 5,
-        category: 'Drinks',
-        value: 'drinks'
-    },
-    {
-        id: 6,
-        category: 'Dessert',
-        value: 'dessert'
-    }
-]
 
 
 const AddProduct = () => {
