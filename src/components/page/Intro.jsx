@@ -50,7 +50,6 @@ const Intro = () => {
         </h1>
         <p className='text-white/80 text-lg md:text-2xl font-light max-w-2xl mx-auto mb-10 leading-relaxed'>
           Featuring today: <span className="text-red-300 font-medium">{product?.title}</span>.
-          Experience authentic flavors crafted with passion.
         </p>
 
         <div className='flex flex-col sm:flex-row gap-4 justify-center items-center'>
