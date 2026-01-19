@@ -30,11 +30,6 @@ const orderSchema = new mongoose.Schema({
         }
     ],
 
-    delivery: {
-        type: String,
-        enum: ['homedelivery', 'pickup'],
-        required: true
-    },
 
     subTotal: { type: Number, required: true },
     tax: { type: Number, default: 0 },

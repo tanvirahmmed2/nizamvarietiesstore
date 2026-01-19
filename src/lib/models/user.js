@@ -28,11 +28,11 @@ const userSchema = new mongoose.Schema({
     role: {
         type: String,
         trim: true,
-        required: true,
         enum: {
             values: ['user', 'manager', 'sales'],
             message: '{VALUE} is not supporetd'
-        }
+        },
+        default:'user'
     },
     cart: [
         {

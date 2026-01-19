@@ -4,10 +4,11 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 
-const LoginForm = () => {
+const RegisterForm = () => {
     const [formData, setFormData]= useState({
         email:"",
-        password:''
+        password:'',
+        name:'',
     })
     
     const handleChange=(e)=>{
@@ -18,9 +19,9 @@ const LoginForm = () => {
     const loginHandle=async (e) => {
         e.preventDefault()
         try {
-            const response= await axios.post('/api/user/login', formData, {withCredentials:true})
+            const response= await axios.post('/api/user', formData, {withCredentials:true})
             toast.success(response.data.message)
-            window.location.replace('/profile')
+            window.location.replace('/login')
         } catch (error) {
             console.log(error)
             toast.error(error?.response?.data?.message)
@@ -31,6 +32,10 @@ const LoginForm = () => {
   return (
     <form onSubmit={loginHandle} className='flex-1 flex flex-col  gap-4'>
           <div className='w-full flex flex-col'>
+            <label htmlFor="name">Name</label>
+            <input type="text" id='name' name='name' required value={formData.name} onChange={handleChange} className='w-full px-3 p-1 rounded-lg outline-none border border-black/10'/>
+          </div>
+          <div className='w-full flex flex-col'>
             <label htmlFor="email">Email</label>
             <input type="email" id='email' name='email' required value={formData.email} onChange={handleChange} className='w-full px-3 p-1 rounded-lg outline-none border border-black/10'/>
           </div>
@@ -38,10 +43,10 @@ const LoginForm = () => {
             <label htmlFor="password">Password</label>
             <input type="password" id='password' name='password' required value={formData.password} onChange={handleChange} className='w-full px-3 p-1 rounded-lg outline-none border border-black/10'/>
           </div>
-          <Link href={'/register'} className='w-full text-right'>New user?</Link>
+          <Link href={'/login'} className='w-full text-right'>Already user?</Link>
           <button type='submit' className='bg-black/80 hover:bg-black text-white rounded-lg cursor-pointer '>Next</button>
         </form>
   )
 }
 
-export default LoginForm
+export default RegisterForm

@@ -27,10 +27,12 @@ const productSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    unit: {
+    size: {
         type: String,
         trim: true,
         required: true,
+        enum:['NB', 'S', 'M', 'L', 'XL'],
+        default: 'S'
     },
     image: {
         type: String,

@@ -6,6 +6,8 @@ import { useCart } from '../context/Context'
 import { MdOutlineSystemUpdateAlt } from "react-icons/md";
 
 
+const productSize=['NB', 'S', 'M', 'L', 'XL']
+
 
 
 const AddProduct = () => {
@@ -14,7 +16,7 @@ const AddProduct = () => {
         title: '',
         description: '',
         price: '',
-        unit: '',
+        size: '',
         category: '',
         image: null,
         wholeSalePrice: '',
@@ -55,7 +57,7 @@ const AddProduct = () => {
             newData.append('price', formData.price)
             newData.append('category', formData.category)
             newData.append('image', formData.image)
-            newData.append('unit', formData.unit)
+            newData.append('size', formData.size)
             newData.append('wholeSalePrice', formData.wholeSalePrice)
             newData.append('quantity', formData.quantity)
 
@@ -65,7 +67,7 @@ const AddProduct = () => {
                 title: '',
                 description: '',
                 price: '',
-                unit: '',
+                size: '',
                 category: '',
                 image: null,
                 wholeSalePrice: '',
@@ -115,8 +117,16 @@ const AddProduct = () => {
 
 
             <div className='w-full flex flex-col gap-2'>
-                <label htmlFor="unit">Unit</label>
-                <input type="text" name='unit' id='unit' required value={formData.unit} onChange={handleChange} className='w-full p-1 px-3 outline-none border-2 border-black/10 rounded-lg shadow-sm' />
+                <label htmlFor="size">Size</label>
+                <select name='size' id='size' required value={formData.size}  onChange={handleChange} className='w-full p-1 px-3 outline-none border-2 border-black/10 rounded-lg shadow-sm' >
+                        <option value="">Select</option>
+                        {
+                            productSize?.map((s)=>(
+                                <option value={s} key={s}>{s}</option>
+                            ))
+                        }
+                </select>
+               
             </div>
             <div className='w-full flex flex-col gap-2'>
                 <label htmlFor="price">Price</label>
