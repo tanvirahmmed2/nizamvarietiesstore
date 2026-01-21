@@ -1,4 +1,6 @@
 import ManageNavbar from '@/components/bar/ManageNavbar'
+import { isManager } from '@/lib/middleware'
+import { redirect } from 'next/navigation'
 import React from 'react'
 export const metadata={
   title:'Management',
@@ -6,7 +8,11 @@ export const metadata={
 }
 
 
-const ManageLayout = ({children}) => {
+const ManageLayout = async({children}) => {
+  const auth= await isManager()
+  if(!auth.success){
+    return redirect('/login')
+  }
   return (
     <div className='w-full '>
       <ManageNavbar/>
