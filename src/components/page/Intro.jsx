@@ -37,7 +37,7 @@ const Intro = () => {
                 <Image src={`https://images.pexels.com/photos/421879/pexels-photo-421879.jpeg`} className='w-full max-h-100 object-cover' alt='home image' width={1000} height={1000} />
                 <div className="absolute inset-0 sm:gap-4 flex flex-col items-center justify-center text-white bg-black/10 backdrop-blur-xs">
                     <p className='font-semibold font-serif '>Find your best choices</p>
-                    <p className='font-semibold font-serif '>We're always ready to fulfil your dreams</p>
+                    <p className='font-semibold font-serif '>We are always ready to fulfil your dreams</p>
                     <p className='font-semibold font-serif '>Order and get products at the door</p>
                 </div>
             </div>

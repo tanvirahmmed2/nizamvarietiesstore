@@ -1,24 +1,27 @@
-import ManageNavbar from '@/components/bar/ManageNavbar'
-import { isManager } from '@/lib/middleware'
-import { redirect } from 'next/navigation'
-import React from 'react'
+
+import ManageNavbar from "@/components/bar/ManageNavbar"
+import { isManager } from "@/lib/middleware"
+import { redirect } from "next/navigation"
+
 export const metadata={
-  title:'Management',
-  descritpion:'Management Page'
+  title:'Manage',
+  description:'Management site'
 }
 
 
-const ManageLayout = async({children}) => {
+const PosLayout = async({children, }) => {
   const auth= await isManager()
   if(!auth.success){
     return redirect('/login')
   }
   return (
-    <div className='w-full '>
-      <ManageNavbar/>
-      {children}
+    <div className='w-full flex flex-col'>
+        <ManageNavbar/>
+        <div className=" flex flex-row w-full mt-14 justify-between">
+            {children}
+        </div>
     </div>
   )
 }
 
-export default ManageLayout
+export default PosLayout

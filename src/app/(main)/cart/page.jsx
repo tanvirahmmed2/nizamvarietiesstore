@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CategoryPage = () => {
+const Cart = () => {
   return (
     <div>
       
@@ -8,4 +8,4 @@ const CategoryPage = () => {
   )
 }
 
-export default CategoryPage
+export default Cart

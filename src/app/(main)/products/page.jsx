@@ -4,7 +4,7 @@ import Item from "@/components/card/Item"
 import { Context } from "@/components/helper/Context"
 import axios from "axios"
 import Link from "next/link"
-import { useEffect, useState, useMemo, useContext } from "react"
+import { useEffect, useState, useContext } from "react"
 
 
 
