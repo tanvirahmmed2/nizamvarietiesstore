@@ -2,13 +2,13 @@
 import Logout from '@/components/buttons/Logout'
 import { isLogin, isManager } from '@/lib/middleware'
 import Link from 'next/link'
-import { pinkirect } from 'next/navigation'
+import { redirect } from 'next/navigation'
 import React from 'react'
 
 const Profile = async () => {
   const manage = await isManager()
   const auth = await isLogin()
-  if (!auth.success) return pinkirect('/login')
+  if (!auth.success) return redirect('/login')
   const data = auth.payload
 
 

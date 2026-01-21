@@ -48,7 +48,7 @@ const Cart = () => {
   const placeOrder = async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post('/api/order/guestorder', formData, { withCredentials: true })
+      const response = await axios.post('/api/order', formData, { withCredentials: true })
       toast.success(response.data.message)
       clearCart()
     } catch (error) {

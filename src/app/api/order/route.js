@@ -37,30 +37,18 @@ export async function GET() {
 
 export async function POST(req) {
   try {
-    await ConnectDB()
-    const auth = await isLogin()
-
-    if (!auth.success) {
-      return NextResponse.json(
-        { success: false, message: 'Please Login' },
-        { status: 400 }
-      )
-    }
-
-    const user = auth.payload
+    
     const {
       name,
       phone,
-      delivery,
       subTotal,
-      tax,
       discount,
       totalPrice,
       paymentMethod,
-      address
+      items
     } = await req.json()
 
-    if (!delivery || !subTotal || !user.cart || user.cart.length === 0 || !paymentMethod) {
+    if (!name || !phone ||  !subTotal || !items ||items.length === 0 || !paymentMethod) {
       return NextResponse.json(
         { success: false, message: 'Missing order details or empty cart' },
         { status: 400 }
@@ -75,7 +63,7 @@ export async function POST(req) {
 
     let totalWholeSalePrice = 0
 
-    for (const item of user.cart) {
+    for (const item of items) {
       const product = await Product.findById(item.productId).select('wholeSalePrice')
       if (product) {
         totalWholeSalePrice += product.wholeSalePrice * item.quantity
@@ -85,21 +73,17 @@ export async function POST(req) {
     const newOrder = new Order({
       name,
       phone,
-      delivery,
-      items: user.cart,
+      items,
       subTotal,
-      tax,
       discount,
       totalPrice,
       paymentMethod,
       orderId,
-      address,
       totalWholeSalePrice
     })
 
     await newOrder.save()
 
-    await User.findByIdAndUpdate(user._id, { $set: { cart: [] } })
 
     return NextResponse.json({
       success: true,
