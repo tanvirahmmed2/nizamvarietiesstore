@@ -52,6 +52,12 @@ const SingleProduct = async ({ params }) => {
               {product.isAvailable && <p>Stock: {product.quantity}</p>}
 
             </div>
+            <div className='w-full flex flex-row items-center justify-between font-semibold'>
+              <p>Price: {product.price- product.discount}</p>
+              {product.discount>0 && <p>Discount: {product.discount}</p>}
+
+            </div>
+            
 
             <div className="pt-4 border-t border-slate-100">
               <AddtoCart product={product}/>
