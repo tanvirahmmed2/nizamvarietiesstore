@@ -1,5 +1,5 @@
 
-import ManageNavbar from "@/components/bar/ManageNavbar"
+import ManageSidebar from "@/components/bar/ManageSidebar"
 import { isManager } from "@/lib/middleware"
 import { redirect } from "next/navigation"
 
@@ -15,11 +15,9 @@ const PosLayout = async({children, }) => {
     return redirect('/login')
   }
   return (
-    <div className='w-full flex flex-col'>
-        <ManageNavbar/>
-        <div className=" flex flex-row w-full mt-14 justify-between">
-            {children}
-        </div>
+    <div className='w-full flex flex-row items-center justify-between'>
+        <ManageSidebar/>
+        {children}
     </div>
   )
 }

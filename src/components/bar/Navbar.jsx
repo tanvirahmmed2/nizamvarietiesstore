@@ -15,7 +15,7 @@ const Navbar = async () => {
 
   return (
     <div className='w-full relative'>
-      <nav className='fixed px-4 bottom-0 sm:top-0 sm:bottom-auto left-0 right-0 mx-auto w-full max-w-300 bg-pink-400 flex flex-row items-center justify-between text-white h-14 z-50'>
+      <nav className='fixed px-4 bottom-0 sm:top-0 sm:bottom-auto left-0 right-0 mx-auto w-full bg-pink-400 flex flex-row items-center justify-between text-white h-14 z-50'>
         <Link href={'/'} className='text-2xl font-semibold italic hidden sm:block'>BabyMart</Link>
 
         <div className='w-full flex flex-row items-center justify-around text-2xl sm:hidden'>

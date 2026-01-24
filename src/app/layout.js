@@ -14,7 +14,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="w-full max-w-300 mx-auto overflow-x-hidden relative bg-slate-100 p-0.5">
+      <body className="w-full overflow-x-hidden relative bg-slate-100 p-0.5">
        <ContextProvider>
        <ToastProvider>
          <main>{children}</main>
