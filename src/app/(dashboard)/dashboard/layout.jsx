@@ -1,5 +1,5 @@
 
-import ManageSidebar from "@/components/bar/ManageSidebar"
+import DashboardSidebar from "@/components/bar/DashboardSidebar"
 import { isManager } from "@/lib/middleware"
 import { redirect } from "next/navigation"
 
@@ -16,7 +16,7 @@ const PosLayout = async({children, }) => {
   }
   return (
     <div className='w-full flex flex-row items-center justify-between'>
-        <ManageSidebar/>
+        <DashboardSidebar/>
         {children}
     </div>
   )
