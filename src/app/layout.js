@@ -6,10 +6,10 @@ import ToastProvider from "@/components/helper/ToastProvider";
 
 export const metadata = {
   title: {
-    default: "Baby Mart",
-    template: "%s | Baby Mart",
+    default: "Nizam Varieties Store",
+    template: "%s | Nizam Varieties Store",
   },
-  description: "Baby Mart app",
+  description: "Nizam Varieties Store app",
 };
 export default function RootLayout({ children }) {
   return (

@@ -31,7 +31,7 @@ const Support = () => {
 
   return (
     <div className='w-full  p-4 flex flex-col md:flex-row items-center justify-center gap-6'>
-      <div className='w-full h-full flex flex-col gap-4'>
+      <div className='w-full h-full flex flex-col gap-2'>
         <h1 className='text-2xl font-semibold text-center'>Nizam Varieties Store</h1>
         <p className='text-wrap w-full text-center'>Collect you daily essential</p>
       </div>
