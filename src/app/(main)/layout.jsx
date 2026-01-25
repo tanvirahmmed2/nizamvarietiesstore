@@ -1,5 +1,4 @@
 import BottomBar from "@/components/bar/BottomBar"
-import Footer from "@/components/bar/Footer"
 import Navbar from "@/components/bar/Navbar"
 
 
