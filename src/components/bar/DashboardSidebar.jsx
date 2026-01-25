@@ -12,7 +12,7 @@ const MenuItem = ({ href, icon: Icon, label }) => {
   const pathname = usePathname()
   const isActive = pathname === href
   return (
-    <Link href={href} className={`group flex opacity-80 flex-row gap-4 items-center px-2 py-1 transition-all ${isActive ? 'bg-sky-500' : 'hover:bg-sky-500'}`}>
+    <Link href={href} className={`group flex opacity-80 flex-row gap-4 items-center px-2 py-1 transition-all ${isActive ? 'bg-sky-500 text-white' : 'hover:bg-sky-500 hover:text-white'}`}>
       <Icon size={14} />
       <span className="hidden group-hover:inline whitespace-nowrap">{label}</span>
     </Link>
@@ -21,7 +21,7 @@ const MenuItem = ({ href, icon: Icon, label }) => {
 
 const DashboardSidebar = () => {
   return (
-    <aside className="group h-screen w-16 hover:w-60 bg-blue-800 text-white transition-all duration-300 p-2 flex flex-col gap-4 overflow-y-auto py-8">
+    <aside className="group h-screen w-16 hover:w-60 border-r-2  transition-all duration-300 p-2 flex flex-col gap-4 overflow-y-auto py-8">
       <div className="pb-5 text-xl"><MenuItem href="/dashboard" icon={RiHome5Line} label="Management" /></div>
       <div>
         <p className="font-semibold text-gray-400 text-xs hidden group-hover:flex items-center gap-2 mb-2 uppercase"><TbMoneybag/>Purchase & Transaction</p>
