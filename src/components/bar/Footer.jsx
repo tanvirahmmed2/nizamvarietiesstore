@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
+import FooterTagline from './FooterTagline'
 
 const Footer = () => {
   return (
@@ -31,7 +32,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <p className='w-full text-center'><span className='font-semibold'>BabyMart</span> is developed by <Link className='font-semibold' href={'https://tanvirahmmed.vercel.app'}>Tanvir Ahmmed</Link></p>
+    <FooterTagline/>
     </div>
   )
 }
