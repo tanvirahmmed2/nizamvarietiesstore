@@ -45,7 +45,7 @@ const Profile = async () => {
 
           </div>
           {
-            manage.success && <Link href={'/manage'} className='border p-2 rounded-lg'>Manage Your Site</Link>
+            manage.success && <Link href={'/dashboard'} className='border p-2 rounded-lg'>Manage Your Site</Link>
           }
         </div>
       </div>

@@ -8,15 +8,14 @@ export const Context = createContext()
 const ContextProvider = ({ children }) => {
 
 
+  const [userData, setUserData] = useState(null)
 
 
 
   const [cartSalesItems, setCartSalesItems] = useState([])
 
   const [hydrated, setHydrated]= useState(false)
-
   const [cart, setCart] = useState({ items: [] })
-  const [userData, setUserData] = useState(null)
   const [categories, setCategories] = useState([])
 
 
