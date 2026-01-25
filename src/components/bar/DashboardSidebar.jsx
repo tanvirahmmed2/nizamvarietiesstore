@@ -21,7 +21,7 @@ const MenuItem = ({ href, icon: Icon, label }) => {
 
 const DashboardSidebar = () => {
   return (
-    <aside className="group h-screen w-16 hover:w-60 border-r-2  transition-all duration-300 p-2 flex flex-col gap-4 overflow-y-auto py-8">
+    <aside className="group fixed top-0 left-0 z-50 bg-white h-screen w-16 hover:w-60 border-r-2  transition-all duration-300 p-2 flex flex-col gap-4 overflow-y-auto py-8">
       <div className="pb-5 text-xl"><MenuItem href="/dashboard" icon={RiHome5Line} label="Management" /></div>
       <div>
         <p className="font-semibold text-gray-400 text-xs hidden group-hover:flex items-center gap-2 mb-2 uppercase"><TbMoneybag/>Purchase & Transaction</p>
