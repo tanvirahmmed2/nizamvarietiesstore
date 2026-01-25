@@ -9,7 +9,7 @@ const Orderform = ({ cartItems }) => {
     const { fetchCart, decreaseQuantity } = useContext(Context)
     const [data, setData] = useState({
         name: 'customer',
-        phone: '+880-1',
+        phone: '+88',
         delivery: 'pickup',
         address: '',
         discount: 0,
@@ -64,10 +64,7 @@ const Orderform = ({ cartItems }) => {
         <form onSubmit={handleSubmit} className='w-full flex flex-col items-center justify-between gap-6 text-sm'>
 
             <div className='w-full flex flex-col items-center justify-center gap-2'>
-                <div className="flex flex-row items-center justify-between w-full">
-                    <p onClick={() => handleMethodChange('pickup')} className={`cursor-pointer px-4 py-1 rounded-full border ${data.delivery === 'pickup' ? 'bg-pink-400 text-white' : 'border-gray-300'}`} >Pickup</p>
-                    <p onClick={() => handleMethodChange('homedelivery')} className={`cursor-pointer px-4 py-1 rounded-full border ${data.delivery === 'homedelivery' ? 'bg-pink-400 text-white' : 'border-gray-300'}`} >Homde Delivery</p>
-                </div>
+                
                 <div className='w-full flex flex-row items-center justify-between'>
                     <label htmlFor="name">Name</label>
                     <input type="text" id='name' name='name' value={data.name} onChange={handleChange} className='px-3 uppercase border-2 border-black/10 rounded-lg outline-none' />
@@ -126,7 +123,7 @@ const Orderform = ({ cartItems }) => {
                 </div>
             </div>
 
-            <button className='bg-pink-400 text-white p-1 px-4 rounded-2xl cursor-pointer' type='submit'>Place order</button>
+            <button className='w-auto px-8 p-1 rounded-full bg-sky-600 text-white cursor-pointer hover:bg-sky-500 ' type='submit'>Submit</button>
         </form>
     )
 }

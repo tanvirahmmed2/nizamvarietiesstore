@@ -8,58 +8,58 @@ import { useContext, useEffect, useState, } from "react"
 
 
 const ManageHome = () => {
-  const {addToCart, clearCart}= useContext(Context)
+  const { addToCart } = useContext(Context)
 
 
-  const [searchData, setSearchData] = useState([])
-  const [searchTerm, setSearchTerm] = useState('')
-  const [formData, setFormData]= useState({
-    title: '',
-    quantity: 1,
-    price:0,
-    productId:''
-})
 
+
+  const [products, setProducts]= useState([])
+
+  const [filterTerm, setFilterTerm] = useState({
+    barcode: '',
+    name: ''
+  })
+
+  const changeHandler=(e)=>{
+    const {name, value}= e.target
+    setFilterTerm((prev)=>({...prev, [name]:value}))
+  }
 
 
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!searchTerm) {
-        setSearchData([])
-        return
-      }
       try {
-        const response = await axios.get(`/api/product/search?q=${searchTerm}`, { withCredentials: true })
-        setSearchData(response.data.payload)
+        
       } catch (error) {
         console.log(error)
-        setSearchData([])
+        setProducts([])
+        
       }
     }
     fetchData()
-  }, [searchTerm])
+  }, [filterTerm])
 
 
 
   return (
     <div className="w-full p-4 flex flex-col md:flex-row">
-      <div className="flex-3 flex flex-col items-center  gap-4">
-        <button onClick={clearCart} className='font-semibold uppercase cursor-pointer'>Clear Cart</button>
+      <div className="flex-2 flex flex-col items-center  gap-4">
 
         <div className="w-full flex flex-row items-center justify-between gap-4 border-b-2 p-4">
           <p>Find item</p>
-          <input type="text" className="w-auto border px-3 p-1 rounded-lg outline-none" value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value) }} placeholder="search" />
+          <input type="number" className="w-auto border px-3 p-1 rounded-lg outline-none" id="barcode" name="barcode" value={filterTerm.barcode} onChange={changeHandler} placeholder="barcode" />
+          <input type="text" className="w-auto border px-3 p-1 rounded-lg outline-none" id="name" name="name" value={filterTerm.name} onChange={changeHandler} placeholder="product name" />
         </div>
 
         {
-          !searchData || searchData.length < 1 ? <p>Please search product</p> : <div className="w-full flex flex-col gap-2 items-center justify-center">
+          !products || products.length < 1 ? <p>Please search product</p> : <div className="w-full flex flex-col gap-2 items-center justify-center">
             {
-              searchData?.map((item) => (
+              products?.map((item) => (
                 <div key={item._id} className="w-full flex flex-row items-center justify-center p-1">
                   <p className="flex-5">{item.title}</p>
-                  <p className="flex-1"> ৳ {item.price-item.discount}</p>
-                  <button className="flex-1" onClick={()=>addToCart(item)}>Add</button>
+                  <p className="flex-1"> ৳ {item.price - item.discount}</p>
+                  <button className="flex-1" onClick={() => addToCart(item)}>Add</button>
                 </div>
               ))
             }
