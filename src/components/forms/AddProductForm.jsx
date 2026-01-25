@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 
 
-const AddProduct = () => {
+const AddProductForm = () => {
 
     const [formData, setFormData] = useState({
         name: '',
@@ -139,4 +139,4 @@ const AddProduct = () => {
     )
 }
 
-export default AddProduct
+export default AddProductForm
