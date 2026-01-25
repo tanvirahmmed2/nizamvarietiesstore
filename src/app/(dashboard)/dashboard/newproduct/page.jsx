@@ -1,13 +1,11 @@
-import AddProduct from '@/components/forms/AddProduct'
 import React from 'react'
 
-const NewProduct = () => {
+const NewProductPage = () => {
   return (
-    <div className='w-full p-4 flex flex-col items-center gap-6'>
-      <AddProduct />
+    <div>
       
     </div>
   )
 }
 
-export default NewProduct
+export default NewProductPage

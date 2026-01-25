@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ManageUser = () => {
+const BrandPage = () => {
   return (
     <div>
       
@@ -8,4 +8,4 @@ const ManageUser = () => {
   )
 }
 
-export default ManageUser
+export default BrandPage

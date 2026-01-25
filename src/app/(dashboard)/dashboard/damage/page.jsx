@@ -1,6 +1,6 @@
 import React from 'react'
 
-const AnalyticsPage = () => {
+const DamagePage = () => {
   return (
     <div>
       
@@ -8,4 +8,4 @@ const AnalyticsPage = () => {
   )
 }
 
-export default AnalyticsPage
+export default DamagePage
