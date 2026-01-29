@@ -5,7 +5,7 @@ import { LuMapPin } from "react-icons/lu";
 
 const StoreVisit = () => {
   return (
-    <div className='w-full p-4 bg-sky-600 text-white flex flex-col md:flex-row items-center justify-around'>
+    <div className='w-full p-4 bg-linear-to-br from-sky-600 to-blue-800 text-white flex flex-col md:flex-row items-center justify-around'>
       <div className='w-auto flex flex-col md:flex-row items-center justify-center gap-4'>
         <LuMapPin className='text-8xl'/>
         <div className='w-auto flex flex-col gap-1'>
