@@ -10,7 +10,6 @@ const MainPage = () => {
       <Intro />
       <StoreVisit/>
       <Support />
-      <Footer />
     </div>
   )
 }
