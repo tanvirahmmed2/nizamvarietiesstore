@@ -7,51 +7,51 @@ export const Context = createContext()
 
 const ContextProvider = ({ children }) => {
 
+  const [isCategoryBox, setIsCategoryBox] = useState(false)
+  const [isBrandBox, setIsBrandBox] = useState(false)
 
   const [userData, setUserData] = useState(null)
 
-
-
   const [cartSalesItems, setCartSalesItems] = useState([])
 
-  const [hydrated, setHydrated]= useState(false)
+  const [hydrated, setHydrated] = useState(false)
   const [cart, setCart] = useState({ items: [] })
   const [categories, setCategories] = useState([])
 
 
-  
-const fetchCart = () => {
-  if (typeof window === 'undefined') return
 
-  const storedCart = localStorage.getItem('cart')
+  const fetchCart = () => {
+    if (typeof window === 'undefined') return
 
-  if (!storedCart || storedCart === 'undefined') {
-    setCart({ items: [] })
-    setHydrated(true)
-    return
-  }
+    const storedCart = localStorage.getItem('cart')
 
-  try {
-    const parsed = JSON.parse(storedCart)
-    
-    if (
-      typeof parsed === 'object' &&
-      parsed !== null &&
-      Array.isArray(parsed.items)
-    ) {
-      setCart(parsed)
-    } else {
-      throw new Error('Invalid cart shape')
+    if (!storedCart || storedCart === 'undefined') {
+      setCart({ items: [] })
+      setHydrated(true)
+      return
     }
 
-    setHydrated(true)
-  } catch (err) {
-    console.warn('Corrupted cart detected. Resetting cart.', err)
-    localStorage.removeItem('cart')
-    setCart({ items: [] })
-    setHydrated(true) 
+    try {
+      const parsed = JSON.parse(storedCart)
+
+      if (
+        typeof parsed === 'object' &&
+        parsed !== null &&
+        Array.isArray(parsed.items)
+      ) {
+        setCart(parsed)
+      } else {
+        throw new Error('Invalid cart shape')
+      }
+
+      setHydrated(true)
+    } catch (err) {
+      console.warn('Corrupted cart detected. Resetting cart.', err)
+      localStorage.removeItem('cart')
+      setCart({ items: [] })
+      setHydrated(true)
+    }
   }
-}
 
 
   useEffect(() => {
@@ -200,6 +200,7 @@ const fetchCart = () => {
   }, [])
 
   const contextValue = {
+    isBrandBox, setIsBrandBox, isCategoryBox, setIsCategoryBox,
     categories, fetchCategory, cartSalesItems, userData, cart, setCart, fetchCart, addToCart, clearCart, removeFromCart, decreaseQuantity, fetchCart, fetchSalesCart
   }
   return <Context.Provider value={contextValue}>

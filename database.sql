@@ -28,6 +28,14 @@ CREATE TABLE categories (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE brands (
+    brand_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) UNIQUE NOT NULL,
+    description TEXT,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 
 CREATE TABLE products (
     product_id SERIAL PRIMARY KEY,
@@ -37,6 +45,8 @@ CREATE TABLE products (
     name VARCHAR(150) NOT NULL,
     slug VARCHAR(150) UNIQUE,
     description TEXT,
+    barcode VARCHAR(100) UNIQUE;
+    brand_id INT REFERENCES brands(brand_id)
 
     purchase_price NUMERIC(10,2) NOT NULL,
     sale_price NUMERIC(10,2) NOT NULL,

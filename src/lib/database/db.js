@@ -1,4 +1,5 @@
 import { Pool } from "pg";
+import { PG_DATABASE, PG_HOST, PG_PASSWORD, PG_PORT, PG_USER } from "./secret";
 
 
 export const pool= new Pool({

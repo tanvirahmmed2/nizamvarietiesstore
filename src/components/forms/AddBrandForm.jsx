@@ -1,15 +1,19 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+import { ImCancelCircle } from 'react-icons/im'
+import { Context } from '../helper/Context'
 
 const AddBrandForm = () => {
     const [brand, setBrand]= useState('')
+    const {setIsBrandBox}= useContext(Context)
     
     const addNewBrand=async(e)=>{
         e.preventDefault()
     }
   return (
-    <form onSubmit={addNewBrand} className='w-full flex  flex-col items-center justify-center gap-3'>
+    <form onSubmit={addNewBrand} className='w-full flex  flex-col items-center justify-center gap-3 relative'>
         <h1>Add New Brand</h1>
+        <button type='button' onClick={()=>setIsBrandBox(false)} className=' absolute top-2 right-2 text-2xl cursor-pointer'><ImCancelCircle/></button>
         <div className='w-full flex flex-col gap-1'>
             <label htmlFor="brand">Brand</label>
             <input type="text" id='brand' name='brand' required value={brand} onChange={(e)=>setBrand(e.target.value)} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
