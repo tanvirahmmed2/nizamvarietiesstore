@@ -25,9 +25,9 @@ const Intro = () => {
                 <div className='w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 justify-items-center gap-4'>
                     {
                         categories.length > 0 && categories.map((cat)=>(
-                            <motion.div initial={{opacity:0}} whileInView={{opacity:1}} transition={{duration:0.6}} key={cat.title}  className='w-full relative shadow-xs overflow-hidden shadow-pink-400 rounded-lg flex flex-col items-center justify-center'>
-                                <Image src={`${cat?.image}`} width={1000} height={1000} alt='image' className='w-full h-70 object-cover rounded-sm'/>
-                                <Link href={`/products/category/${cat?.title}`} className='w-full'>{cat?.title}</Link>
+                            <motion.div initial={{opacity:0}} whileInView={{opacity:1}} transition={{duration:0.6}} key={cat.name}  className='w-full relative shadow-xs overflow-hidden shadow-pink-400 rounded-lg flex flex-col items-center justify-center'>
+                                
+                                <Link href={`/products/category/${cat?.name}`} className='w-full'>{cat?.name}</Link>
                             </motion.div>
                         ))
                     }

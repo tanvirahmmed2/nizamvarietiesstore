@@ -6,7 +6,7 @@ import { Context } from '../helper/Context'
 
 const AddProductForm = () => {
 
-    const { setIsCategoryBox, setIsBrandBox}= useContext(Context)
+    const { setIsCategoryBox, setIsBrandBox, categories, brands}= useContext(Context)
 
     const [formData, setFormData] = useState({
         name: '',
@@ -69,6 +69,11 @@ const AddProductForm = () => {
                             <label htmlFor="category">Category *</label>
                             <select name='category' id='category' required value={formData.category} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none '>
                                 <option value="">select</option>
+                                {
+                                    categories.length >0 && categories.map((cat)=>(
+                                        <option value={cat.name} key={cat.name}>{cat.name}</option>
+                                    ))
+                                }
                             </select>
 
                         </div>
@@ -79,6 +84,11 @@ const AddProductForm = () => {
                             <label htmlFor="brand">Brand</label>
                             <select name='brand' id='brand' value={formData.brand} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none '>
                                 <option value="">select</option>
+                                {
+                                    brands.length >0 &&brands.map((cat)=>(
+                                        <option value={cat.name} key={cat.name}>{cat.name}</option>
+                                    ))
+                                }
                             </select>
                         </div>
                         <button type='button' className='text-center p-2 bg-sky-600 text-white rounded-full' onClick={()=>setIsBrandBox(true)}>Add</button>

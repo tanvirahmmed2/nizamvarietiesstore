@@ -9,6 +9,8 @@ const ContextProvider = ({ children }) => {
 
   const [isCategoryBox, setIsCategoryBox] = useState(false)
   const [isBrandBox, setIsBrandBox] = useState(false)
+  const [categories, setCategories] = useState([])
+  const [brands, setBrands] = useState([])
 
   const [userData, setUserData] = useState(null)
 
@@ -16,7 +18,6 @@ const ContextProvider = ({ children }) => {
 
   const [hydrated, setHydrated] = useState(false)
   const [cart, setCart] = useState({ items: [] })
-  const [categories, setCategories] = useState([])
 
 
 
@@ -193,14 +194,28 @@ const ContextProvider = ({ children }) => {
   }
 
 
+  const fetchBrand = async () => {
+    try {
+      const response = await axios.get('/api/brand', { withCredentials: true })
+      setBrands(response.data.payload)
+    } catch (error) {
+      console.log(error)
+      setBrands([])
+
+    }
+
+  }
+
+
 
   useEffect(() => {
     fetchCategory()
     fetchCart()
+    fetchBrand()
   }, [])
 
   const contextValue = {
-    isBrandBox, setIsBrandBox, isCategoryBox, setIsCategoryBox,
+    isBrandBox, setIsBrandBox, isCategoryBox, setIsCategoryBox, brands, setBrands,
     categories, fetchCategory, cartSalesItems, userData, cart, setCart, fetchCart, addToCart, clearCart, removeFromCart, decreaseQuantity, fetchCart, fetchSalesCart
   }
   return <Context.Provider value={contextValue}>
