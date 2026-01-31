@@ -1,6 +1,5 @@
 
 import AddtoCart from '@/components/buttons/AddtoCart'
-import SameCategory from '@/components/page/SameCatgory'
 import { BASE_URL } from '@/lib/database/secret'
 import Image from 'next/image'
 import React from 'react'
@@ -10,7 +9,7 @@ const SingleProduct = async ({ params }) => {
 
   const res = await fetch(`${BASE_URL}/api/product/${slug}`, { method: "GET", cache: 'no-store' })
   const data = await res.json()
-  const product = data.payload
+  const product = data.payload?.[0]
   if (!product) return <p>No data found</p>
   return (
     <div className='w-full min-h-screen flex flex-col gap-20 items-center justify-center  rounded-2xl'>
@@ -19,7 +18,7 @@ const SingleProduct = async ({ params }) => {
         <div className='flex-1 group'>
           <div className='relative aspect-square overflow-hidden rounded-xl bg-slate-50 border border-slate-100'>
             <div className='absolute right-3 top-3 z-10'>
-              {product.isAvailable ? (
+              {product.stock>0 ? (
                 <span className='text-[12px] font-bold uppercase tracking-wider text-white py-1.5 px-3 rounded-full bg-emerald-500'>
                   Available
                 </span>
@@ -30,8 +29,8 @@ const SingleProduct = async ({ params }) => {
               )}
             </div>
             <Image
-              src={product.image}
-              alt={product.title}
+              src={product?.image}
+              alt={product?.name}
               width={1000}
               height={1000}
               className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -42,19 +41,19 @@ const SingleProduct = async ({ params }) => {
         <div className='flex-1 flex flex-col justify-center py-2'>
           <div className="space-y-4">
             <h1 className='text-base md:text-xl  font-bold text-slate-900 leading-tight'>
-              {product.title}
+              {product.name}
             </h1>
             <p className='text-slate-600 leading-relaxed'>
               {product.description}
             </p>
             <div className='w-full flex flex-row items-center justify-between font-semibold'>
-              <p>Category: {product.category}</p>
-              {product.isAvailable && <p>Stock: {product.quantity}</p>}
+              <p>Category: {product.category_name}</p>
+              {product.stock >0 && <p>Stock: {product.stock}</p>}
 
             </div>
             <div className='w-full flex flex-row items-center justify-between font-semibold'>
-              <p>Price: {product.price- product.discount}</p>
-              {product.discount>0 && <p>Discount: {product.discount}</p>}
+              <p>Price: {product.sale_price- product.discount_price}</p>
+              {product.discount_price>0 && <p>Discount: {product.discount_price}</p>}
 
             </div>
             
@@ -65,7 +64,6 @@ const SingleProduct = async ({ params }) => {
           </div>
         </div>
       </div>
-      <SameCategory category={product.category}/>
     </div>
   )
 }

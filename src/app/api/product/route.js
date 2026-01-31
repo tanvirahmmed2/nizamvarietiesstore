@@ -92,7 +92,19 @@ export async function POST(req) {
 
 export async function GET() {
     try {
-        
+        const data= await pool.query(`SELECT * FROM products ORDER BY created_at DESC`)
+        const result= data.rows
+        if(!result || result.length===0){
+            return NextResponse.json({
+                success:false, message:'No product found'
+            },{status:400})
+        }
+
+        return NextResponse.json({
+            success: true,
+             message:'Successfully fetched data',
+             payload: result
+        },{status:200})
     } catch (error) {
         return NextResponse.json({
             success:false, message:error.message

@@ -11,19 +11,11 @@ const Item = ({ product }) => {
   const {addToCart}= useContext(Context)
   
   return (
-    <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.6 }} className='w-full bg-white p-1 border border-black/10 flex flex-col items-center justify-between group gap-1'>
-      <Link href={`/products/${product?.slug}`}>
-        <Image src={`${product?.image}`} loading='eager' alt='products image' width={500} height={500} className='w-full h-70 object-cover' />
-      </Link>
-      <h1>{product?.title.slice(0, 30)}</h1>
-      {
-        product?.discount > 0 ? <div className='w-full flex flex-col items-center justify-center gap-1'>
-          <p className=' font-semibold line-through text-pink-400'> ৳ {product?.price}</p>
-          <p className=' font-semibold'> ৳ {product?.price - product?.discount}</p>
-        </div> :
-          <p className=' font-semibold'> ৳ {product?.price}</p>
-      }
-      <button onClick={()=> addToCart(product)} className='w-full p-1 bg-pink-300 flex flex-row items-center justify-center gap-4 text-white cursor-pointer group-hover:bg-pink-400 '>Cart <CiShoppingCart className='text-xl' /></button>
+    <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.6 }} className='w-auto bg-white p-1 border border-black/10 flex flex-col items-center justify-between group gap-1'>
+      <Image src={`${product?.image}`} alt='image' width={1000} height={1000} className='w-50 h-50'/>
+      <Link href={`/products/${product?.slug}`}>{product?.name}</Link>
+      <p>BDT {product?.sale_price-product?.discount_price}</p>
+      <button className='w-full p-1 bg-orange-500 text-white cursor-pointer hover:bg-orange-700'>Add to cart</button>
     </motion.div>
   )
 }
