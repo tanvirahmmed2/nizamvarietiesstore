@@ -11,16 +11,9 @@ import { useEffect, useState, useContext } from "react"
 const Products = () => {
   const { categories } = useContext(Context)
   const [products, setProducts] = useState([])
-  const [filterData, setFilterData] = useState({
-    category: '',
-    availability: ''
-  })
+  const [category, setCategory] = useState('')
 
-  const filterChange = (e) => {
-    const { name, value } = e.target
-    setFilterData(prev => ({ ...prev, [name]: value }))
 
-  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,8 +33,7 @@ const Products = () => {
       try {
         const response = await axios.get('/api/product/filter', {
           params: {
-            category: filterData.category,
-            availability: filterData.availability
+            category: category,
           }
         });
         setProducts(response.data.payload);
@@ -52,7 +44,7 @@ const Products = () => {
     };
 
     fetchProducts();
-  }, [filterData])
+  }, [category])
 
 
 
@@ -62,7 +54,7 @@ const Products = () => {
         <div className="w-full flex flex-col sm:flex-row items-start gap-4 p-2 sm:items-center justify-around shadow">
           <h1 className="w-full sm:w-auto outline-none text-center">Filter</h1>
           {
-            categories && <select name="category" id="category" onChange={filterChange} value={filterData.category} className="w-full sm:w-auto outline-none px-4 cursor-pointer">
+            categories && <select name="category" id="category" onChange={(e)=>setCategory(e.target.value)} value={category} className="w-full sm:w-auto outline-none px-4 cursor-pointer">
               <option value="" className="cursor-pointer ">All Product</option>
               {
                 categories.map(cat => (
@@ -72,18 +64,14 @@ const Products = () => {
 
             </select>
           }
-          <select name="availability" id="availability" onChange={filterChange} value={filterData.availability} className="w-full sm:w-auto outline-none px-4 cursor-pointer">
-            <option value="" className="cursor-pointer ">All</option>
-            <option value="isAvailable" className="cursor-pointer ">Available</option>
-          </select>
 
 
         </div>
         {
-          products.length < 1 ? <p>No product found</p> : <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          products.length < 1 ? <p className="">No product found</p> : <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {
               products.map(product => (
-                <Item product={product} key={product._id} />
+                <Item product={product} key={product.product_id} />
               ))
             }
           </div>

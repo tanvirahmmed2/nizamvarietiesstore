@@ -27,7 +27,7 @@ const CategoryProducts = async ({ params }) => {
   if (products.length < 1) {
     return (
       <div className='w-full flex flex-col items-center justify-center gap-4 py-6'>
-        <p>No product found in {id}</p>
+        <p>No product found</p>
       </div>
     )
   }
