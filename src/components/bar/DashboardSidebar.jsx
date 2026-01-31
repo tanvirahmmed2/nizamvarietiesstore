@@ -70,7 +70,6 @@ const DashboardSidebar = () => {
       <div>
         <p className="font-semibold text-gray-400 text-xs hidden group-hover:flex items-center gap-2 mb-2 uppercase"><BsFillHouseGearFill /> Settings</p>
         <MenuItem href="/profile" icon={RiUser3Line} label="Account" />
-        <MenuItem href="/dashboard/usermanagement" icon={RiUserCommunityLine} label="User Management" />
         <MenuItem href="/dashboard/rolemanagement" icon={RiUserAddLine} label="Role Management" />
         <MenuItem href="/dashboard/settings" icon={RiSettings3Line} label="Setting" />
         <MenuItem href="/dashboard/help" icon={TbReport} label="Help" />

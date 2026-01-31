@@ -9,7 +9,7 @@ CREATE TABLE customers (
 );
 
 
-CREATE TABLE staff_users (
+CREATE TABLE staffs (
     staff_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
