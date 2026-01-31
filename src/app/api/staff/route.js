@@ -74,7 +74,22 @@ export async function GET() {
 
 export async function DELETE(req) {
     try {
-        
+        const {id}= await req.json()
+        if(!id){
+            return NextResponse.json({
+                success:false, message:'ID not recieved'
+            },{status:400})
+        }
+
+        const result = await pool.query(`DELETE FROM staffs WHERE staff_id=$1  RETURNING *`,[id])
+        if(result.rowCount===0){
+            return NextResponse.json({
+                success:false, message:'Failed to delete staff'
+            })
+        }
+        return NextResponse.json({
+            success:true, message:'Successfully deleted staff'
+        },{status:200})
     } catch (error) {
         return NextResponse.json({
             success:false, message:error.message

@@ -1,9 +1,23 @@
 'use client'
 import AddCategoryForm from '@/components/forms/AddCategoryForm'
-import React, { useState } from 'react'
+import { Context } from '@/components/helper/Context'
+import axios from 'axios'
+import React, { useContext } from 'react'
 
 const CategoryPage = () => {
-  const [categories, setCategories] = useState([])
+  const {categories, fetchCategory}= useContext(Context)
+
+  const removeCategory=async(id)=>{
+    try {
+      const response= await axios.delete('/api/category', {data:{id},withCredentials:true})
+      alert(response.data.message)
+      fetchCategory()
+
+    } catch (error) {
+      alert(error?.response?.data?.message || 'Failed to remove category')
+      
+    }
+  }
 
 
   return (
@@ -11,10 +25,14 @@ const CategoryPage = () => {
       {
         categories.length === 0 ? <div className='w-full min-h-30 flex items-center justify-center text-center'>
           <p className='text-red-500'>Category data not Found !</p>
-        </div> : <div>
+        </div> :<div className='w-full flex flex-col items-center justify-center gap-4'>
+          <h1 className='text-center text-2xl font-semibold'>Category</h1>
           {
             categories.map((cat) => (
-              <p key={cat}>{cat}</p>
+              <div key={cat.category_id} className='w-full grid grid-cols-2 p-2 border'>
+                <p>{cat.name}</p>
+                <button className='cursor-pointer' onClick={()=> removeCategory(cat.category_id)}>Delete</button>
+              </div>
             ))
           }
         </div>

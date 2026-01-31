@@ -19,6 +19,17 @@ const RolemanagementPage = () => {
     }
     fetchStaff()
   }, [])
+
+
+  const removeStaff=async(id)=>{
+    try {
+      const response= await axios.delete('/api/staff', {data:{id}, withCredentials:true})
+      alert(response.data.message)
+    } catch (error) {
+      alert(error?.response?.data?.message || 'Failed to remove staff')
+      
+    }
+  }
   return (
     <div className='w-full flex flex-col items-center gap-6 p-4'>
 
@@ -33,7 +44,7 @@ const RolemanagementPage = () => {
                 <p >{staff.name}</p>
                 <p>{staff.email}</p>
                 <p>{staff.role}</p>
-                <button >Remove</button>
+                <button  className='cursor-pointer' onClick={()=>removeStaff(staff.staff_id)}>Remove</button>
               </div>
             ))
           }
