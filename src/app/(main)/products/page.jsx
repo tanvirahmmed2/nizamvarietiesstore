@@ -66,7 +66,7 @@ const Products = () => {
               <option value="" className="cursor-pointer ">All Product</option>
               {
                 categories.map(cat => (
-                  <option value={cat.title} key={cat._id} className="cursor-pointer ">{cat.title}</option>
+                  <option value={cat.category_id} key={cat.category_id} className="cursor-pointer ">{cat.name}</option>
                 ))
               }
 

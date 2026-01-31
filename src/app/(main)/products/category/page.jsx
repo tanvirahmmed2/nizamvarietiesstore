@@ -12,7 +12,7 @@ const CategoryPage = () => {
             <div className='w-full max-w-2xl flex flex-wrap items-center justify-center gap-4'>
                 {
                     categories.length > 0 && categories.map((cat) => (
-                        <Link href={`/products/category/${cat?.name}`} className='w-auto px-4 p-1 border rounded-full shadow' key={cat.category_id}>{cat?.name}</Link>
+                        <Link href={`/products/category/${cat?.category_id}`} className='w-auto px-4 p-1 border rounded-full shadow' key={cat.category_id}>{cat?.name}</Link>
 
                     ))
                 }
