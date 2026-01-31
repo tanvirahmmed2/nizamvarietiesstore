@@ -1,13 +1,11 @@
-import { isLogin, isManager } from '@/lib/middleware';
+
 import Link from 'next/link'
 import React from 'react'
 
 import { CiShoppingCart } from "react-icons/ci";
 
 const Navbar = async () => {
-  const auth = await isLogin()
-  const manage= await isManager()
-
+ 
   return (
     <div className='w-full relative'>
       <nav className='w-full flex flex-row items-center justify-between fixed top-0 right-0 h-14 px-4 bg-linear-to-br from-sky-600 to-blue-800 text-white z-50'>
