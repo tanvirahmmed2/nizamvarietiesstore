@@ -71,7 +71,7 @@ const AddProductForm = () => {
                                 <option value="">select</option>
                                 {
                                     categories.length >0 && categories.map((cat)=>(
-                                        <option value={cat.name} key={cat.name}>{cat.name}</option>
+                                        <option value={cat.category_id} key={cat.name}>{cat.name}</option>
                                     ))
                                 }
                             </select>
@@ -85,8 +85,8 @@ const AddProductForm = () => {
                             <select name='brand' id='brand' value={formData.brand} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none '>
                                 <option value="">select</option>
                                 {
-                                    brands.length >0 &&brands.map((cat)=>(
-                                        <option value={cat.name} key={cat.name}>{cat.name}</option>
+                                    brands.length >0 &&brands.map((brand)=>(
+                                        <option value={brand.brand_id} key={brand.name}>{brand.name}</option>
                                     ))
                                 }
                             </select>
