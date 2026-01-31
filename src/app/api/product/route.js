@@ -113,3 +113,59 @@ export async function GET() {
     }
     
 }
+
+
+export async function DELETE(req) {
+    try {
+        const { id } = await req.json();
+
+        if (!id) {
+            return NextResponse.json(
+                { success: false, message: "ID not received" },
+                { status: 400 }
+            );
+        }
+
+        const { rows } = await pool.query(`SELECT * FROM products WHERE product_id = $1`, [id]);
+        if (rows.length === 0) {
+            return NextResponse.json(
+                { success: false, message: "No product found with this ID" },
+                { status: 404 }
+            );
+        }
+
+        const product = rows[0];
+
+        const deleteImage = await cloudinary.uploader.destroy(product.image_id);
+        if (deleteImage.result !== "ok" && deleteImage.result !== "not found") {
+            return NextResponse.json(
+                { success: false, message: "Could not delete image from Cloudinary" },
+                { status: 500 }
+            );
+        }
+
+        const deleteProduct = await pool.query(
+            `DELETE FROM products WHERE product_id = $1 RETURNING *`,
+            [id]
+        );
+
+        if (deleteProduct.rowCount === 0) {
+            return NextResponse.json(
+                { success: false, message: "Failed to delete product" },
+                { status: 500 }
+            );
+        }
+
+        return NextResponse.json(
+            { success: true, message: "Successfully deleted product" },
+            { status: 200 }
+        );
+
+    } catch (error) {
+        console.error(error);
+        return NextResponse.json(
+            { success: false, message: "Internal server error" },
+            { status: 500 }
+        );
+    }
+}
