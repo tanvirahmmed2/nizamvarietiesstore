@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import React from 'react'
-import { RiHome5Line, RiProductHuntLine, RiShoppingCart2Line, RiRefund2Line, RiAlertLine, RiUser3Line, RiTruckLine, RiSettings3Line, RiFileChartLine, RiArchiveLine, RiPriceTag3Line, RiShoppingBag3Line, RiUserAddLine, RiUserCommunityLine } from "react-icons/ri"
+import { RiHome5Line, RiProductHuntLine, RiShoppingCart2Line, RiRefund2Line, RiAlertLine, RiUser3Line, RiTruckLine, RiSettings3Line, RiFileChartLine, RiArchiveLine, RiPriceTag3Line, RiShoppingBag3Line, RiUserAddLine, RiUserCommunityLine, RiSuperscript } from "react-icons/ri"
 import { TbReport, TbMoneybag, TbReportMoney, TbReportAnalytics, TbReportSearch } from "react-icons/tb"
 import { usePathname } from 'next/navigation'
 import { BiPurchaseTagAlt } from "react-icons/bi"
@@ -72,6 +72,7 @@ const DashboardSidebar = () => {
         <MenuItem href="/profile" icon={RiUser3Line} label="Account" />
         <MenuItem href="/dashboard/rolemanagement" icon={RiUserAddLine} label="Role Management" />
         <MenuItem href="/dashboard/settings" icon={RiSettings3Line} label="Setting" />
+        <MenuItem href="/dashboard/support" icon={RiSuperscript} label="Support" />
         <MenuItem href="/dashboard/help" icon={TbReport} label="Help" />
       </div>
     </aside>
