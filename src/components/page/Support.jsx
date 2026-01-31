@@ -31,9 +31,9 @@ const Support = () => {
 
   return (
     <div className='w-full  p-4 flex flex-col md:flex-row items-center justify-center gap-6'>
-      <div className='w-full h-full flex flex-col gap-2'>
+      <div className='w-full h-full flex flex-col'>
         <h1 className='text-2xl font-semibold text-center'>Nizam Varieties Store</h1>
-        <p className='text-wrap w-full text-center'>Collect you daily essential</p>
+        <p className='text-wrap w-full text-center'>Everything you need, right where you are</p>
       </div>
       <div className='w-full flex flex-col items-center justify-center gap-4'>
         <h1 className='text-2xl font-semibold border-b-2 px-5 text-center'>Get In Touch</h1>

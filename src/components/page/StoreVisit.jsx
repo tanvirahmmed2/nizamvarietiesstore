@@ -13,7 +13,7 @@ const StoreVisit = () => {
             <p>Visit Our Store & Get Your Desired  Product!</p>
         </div>
       </div>
-      <Link href={'/'} className='bg-orange-400 p-2 px-6 rounded-full cursor-pointer hover:bg-orange-500'>Find on map</Link>
+      <Link href={'https://maps.app.goo.gl/aw6YJSn6bPPJzwx49'} className='bg-orange-400 p-2 px-6 rounded-full cursor-pointer hover:bg-orange-500'>Find on map</Link>
     </div>
   )
 }
