@@ -13,32 +13,24 @@ const ManageHome = () => {
 
 
 
-  const [products, setProducts]= useState([])
+  const [products, setProducts] = useState([])
 
-  const [filterTerm, setFilterTerm] = useState({
-    barcode: '',
-    name: ''
-  })
-
-  const changeHandler=(e)=>{
-    const {name, value}= e.target
-    setFilterTerm((prev)=>({...prev, [name]:value}))
-  }
-
+  const [searchTerm, setSearchTerm] = useState('')
 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        
+        const respoonse = await axios.get(`/api/product/search?q=${searchTerm}`,{withCredentials:true})
+        setProducts(respoonse.data.payload)
       } catch (error) {
         console.log(error)
         setProducts([])
-        
+
       }
     }
     fetchData()
-  }, [filterTerm])
+  }, [searchTerm])
 
 
 
@@ -48,18 +40,24 @@ const ManageHome = () => {
 
         <div className="w-full flex flex-row items-center justify-between gap-4 border-b-2 p-4">
           <p>Find item</p>
-          <input type="number" className="w-auto border px-3 p-1 rounded-lg outline-none" id="barcode" name="barcode" value={filterTerm.barcode} onChange={changeHandler} placeholder="barcode" />
-          <input type="text" className="w-auto border px-3 p-1 rounded-lg outline-none" id="name" name="name" value={filterTerm.name} onChange={changeHandler} placeholder="product name" />
+          <input
+            type="text"
+            name='searchTerm'
+            id='searchTerm'
+            onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchTerm}
+            className='w-auto border border-sky-400 px-4 p-1 rounded-sm outline-none '
+          />
         </div>
 
         {
           !products || products.length < 1 ? <p>Please search product</p> : <div className="w-full flex flex-col gap-2 items-center justify-center">
             {
-              products?.map((item) => (
-                <div key={item._id} className="w-full flex flex-row items-center justify-center p-1">
-                  <p className="flex-5">{item.title}</p>
-                  <p className="flex-1"> ৳ {item.price - item.discount}</p>
-                  <button className="flex-1" onClick={() => addToCart(item)}>Add</button>
+              products?.map((product) => (
+                <div key={product.product_id} className="w-full flex flex-row items-center justify-center p-1">
+                  <p className="flex-5">{product.name}</p>
+                  <p className="flex-1"> ৳ {product.sale_price - product.discount_price}</p>
+                  <button className="flex-1" onClick={() => addToCart(product)}>Add</button>
                 </div>
               ))
             }
