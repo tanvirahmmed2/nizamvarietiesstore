@@ -45,6 +45,7 @@ const DashboardSidebar = () => {
           <p className="hidden group-hover:flex items-center gap-4 px-2 cursor-pointer"><RiProductHuntLine />Products <MdChevronRight /></p>
           <div className="hidden group-hover/products:block px-3">
             <MenuItem href="/dashboard/newproduct" icon={RiPriceTag3Line} label="New Product" />
+            <MenuItem href="/dashboard/updateproduct" icon={RiPriceTag3Line} label="Update Product" />
             <MenuItem href="/dashboard/productlist" icon={RiShoppingBag3Line} label="Product List" />
           </div>
         </div>
