@@ -14,9 +14,9 @@ export async function GET(req) {
 
         if (q) {
             query += `
-        WHERE (COALESCE(name, '') ILIKE $1 
-        OR COALESCE(barcode, '') ILIKE $1)
-    `;
+              WHERE (COALESCE(name, '') ILIKE $1 
+                 OR COALESCE(barcode, '') ILIKE $1)
+         `;
             values.push(`%${q}%`);
         }
 
@@ -24,7 +24,7 @@ export async function GET(req) {
 
         const data = await pool.query(query, values);
         const result = data.rows
-        if (result.length === 0) {
+        if (q.length<1 || result.length === 0) {
             return NextResponse.json({
                 success: false, message: 'No product found'
             }, { status: 400 })

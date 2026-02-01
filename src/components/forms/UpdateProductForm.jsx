@@ -12,7 +12,7 @@ const UpdateProductForm = ({ product }) => {
         name: product?.name || '',
         category_id: product?.category_id || '',
         brand_id: product?.brand_id || '',
-        barcode: product?.barcode || '', // Added barcode as it's required by your backend
+        barcode: product?.barcode || '',
         unit: product?.unit || '',
         stock: product?.stock || '',
         purchase_price: product?.purchase_price || '',
