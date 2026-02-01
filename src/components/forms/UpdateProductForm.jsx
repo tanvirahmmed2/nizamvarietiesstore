@@ -2,26 +2,26 @@
 import React, { useContext, useState } from 'react'
 import { toast } from 'react-toastify'
 import { Context } from '../helper/Context'
+import axios from 'axios'
 
-
-const UpdateProductForm = ({product}) => {
-
-    const {categories, brands}= useContext(Context)
+const UpdateProductForm = ({ product }) => {
+    const { categories, brands } = useContext(Context)
 
     const [formData, setFormData] = useState({
-        productId:product?.product_id,
+        productId: product?.product_id,
         name: product?.name || '',
-        categoryId:product?.category_id || '',
-        brandId:product?.brand_id || '',
-        unit: product?.unit ||'',
+        category_id: product?.category_id || '',
+        brand_id: product?.brand_id || '',
+        barcode: product?.barcode || '', // Added barcode as it's required by your backend
+        unit: product?.unit || '',
         stock: product?.stock || '',
-        purchasePrice:product?.purchase_price ||  '',
-        salePrice: product?.sale_price || '',
-        discountPrice: product?.discount_price || '',
-        wholeSalePrice: product?.wholesale_price || '',
-        retailPrice:product?.retail_price||  '',
-        dealerPrice:product?.dealer_price ||  '',
-        description: product?. description || '',
+        purchase_price: product?.purchase_price || '',
+        sale_price: product?.sale_price || '',
+        discount_price: product?.discount_price || '',
+        wholesale_price: product?.wholesale_price || '',
+        retail_price: product?.retail_price || '',
+        dealer_price: product?.dealer_price || '',
+        description: product?.description || '',
     })
 
     const handleChange = (e) => {
@@ -32,14 +32,36 @@ const UpdateProductForm = ({product}) => {
     const SubmitNewProduct = async (e) => {
         e.preventDefault()
         try {
+            const data = new FormData()
+            data.append("id", formData.productId)
+            data.append("name", formData.name)
+            data.append("category_id", formData.category_id)
+            data.append("brand_id", formData.brand_id)
+            data.append("barcode", formData.barcode)
+            data.append("unit", formData.unit)
+            data.append("stock", formData.stock)
+            data.append("purchase_price", formData.purchase_price)
+            data.append("sale_price", formData.sale_price)
+            data.append("discount_price", formData.discount_price)
+            data.append("wholesale_price", formData.wholesale_price)
+            data.append("retail_price", formData.retail_price)
+            data.append("dealer_price", formData.dealer_price)
+            data.append("description", formData.description)
 
+            const response = await axios.put('/api/product', data, {
+                withCredentials: true,
+                headers: { "Content-Type": "multipart/form-data" }
+            })
+
+            if (response.data.success) {
+                toast.success(response.data.message)
+                
+            }
         } catch (error) {
-            console.log(error)
-            toast.error(error?.response?.data?.message || "Failed to add product")
-
+            console.error(error)
+            toast.error(error?.response?.data?.message || "Failed to update product")
         }
     }
-
 
     return (
         <div className='w-full flex flex-col items-center gap-6'>
@@ -51,77 +73,72 @@ const UpdateProductForm = ({product}) => {
                     <input type="text" name='name' id='name' required value={formData.name} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
                 </div>
 
-
-
                 <div className='w-full flex flex-col md:flex-row items-center justify-center gap-2'>
                     <div className='w-full flex flex-col gap-1'>
-                        <label htmlFor="categoryId">Category *</label>
-                        <select name='categoryId' id='categoryId' required value={formData.categoryId} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none '>
+                        <label htmlFor="category_id">Category *</label>
+                        <select name='category_id' id='category_id' required value={formData.category_id} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none '>
                             <option value="">select</option>
-                            {
-                                categories.length>0 && categories.map((category)=>(
-                                    <option value={category.category_id} key={category.category_id}>{category.name}</option>
-                                ))
-                            }
+                            {categories.length > 0 && categories.map((category) => (
+                                <option value={category.category_id} key={category.category_id}>{category.name}</option>
+                            ))}
                         </select>
                     </div>
                     <div className='w-full flex flex-col gap-1'>
-                        <label htmlFor="brandId">Brand</label>
-                        <select name='brandId' id='brandId' value={formData.brandId} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none '>
+                        <label htmlFor="brand_id">Brand</label>
+                        <select name='brand_id' id='brand_id' value={formData.brand_id} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none '>
                             <option value="">select</option>
-                            {
-                                brands.length>0 && brands.map((brand)=>(
-                                    <option value={brand.brand_id} key={brand.brand_id}>{brand.name}</option>
-                                ))
-                            }
+                            {brands.length > 0 && brands.map((brand) => (
+                                <option value={brand.brand_id} key={brand.brand_id}>{brand.name}</option>
+                            ))}
                         </select>
                     </div>
                 </div>
 
                 <div className='w-full flex flex-col md:flex-row items-center justify-center gap-2'>
+                    <div className='w-full flex flex-col gap-1'>
+                        <label htmlFor="barcode">Barcode *</label>
+                        <input type="text" name='barcode' id='barcode' required value={formData.barcode} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
+                    </div>
                     <div className='w-full flex flex-col gap-1'>
                         <label htmlFor="unit">Unit *</label>
                         <input type="text" name='unit' id='unit' required value={formData.unit} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
                     </div>
+                </div>
+
+                <div className='w-full flex flex-col md:flex-row items-center justify-center gap-2'>
                     <div className='w-full flex flex-col gap-1'>
                         <label htmlFor="stock">Stock *</label>
                         <input type="number" name='stock' id='stock' required value={formData.stock} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
                     </div>
-                </div>
-
-
-                <div className='w-full flex flex-col md:flex-row items-center justify-center gap-2'>
                     <div className='w-full flex flex-col gap-1'>
-                        <label htmlFor="purchasePrice">Purchase Price *</label>
-                        <input type="number" name='purchasePrice' id='purchasePrice' required value={formData.purchasePrice} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
-                    </div>
-
-                    <div className='w-full flex flex-col gap-1'>
-                        <label htmlFor="salePrice">Sale Price *</label>
-                        <input type="number" name='salePrice' id='salePrice' required value={formData.salePrice} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
-                    </div>
-
-                    <div className='w-full flex flex-col gap-1'>
-                        <label htmlFor="discount">Discount</label>
-                        <input type="number" name='discount' id='discount' value={formData.discount} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
+                        <label htmlFor="purchase_price">Purchase Price *</label>
+                        <input type="number" name='purchase_price' id='purchase_price' required value={formData.purchase_price} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
                     </div>
                 </div>
 
+                <div className='w-full flex flex-col md:flex-row items-center justify-center gap-2'>
+                    <div className='w-full flex flex-col gap-1'>
+                        <label htmlFor="sale_price">Sale Price *</label>
+                        <input type="number" name='sale_price' id='sale_price' required value={formData.sale_price} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
+                    </div>
+                    <div className='w-full flex flex-col gap-1'>
+                        <label htmlFor="discount_price">Discount Price</label>
+                        <input type="number" name='discount_price' id='discount_price' value={formData.discount_price} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
+                    </div>
+                    <div className='w-full flex flex-col gap-1'>
+                        <label htmlFor="wholesale_price">Whole Sale Price *</label>
+                        <input type="number" name='wholesale_price' id='wholesale_price' required value={formData.wholesale_price} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
+                    </div>
+                </div>
 
                 <div className='w-full flex flex-col md:flex-row items-center justify-center gap-2'>
                     <div className='w-full flex flex-col gap-1'>
-                        <label htmlFor="retailPrice">Retail Price</label>
-                        <input type="number" name='retailPrice' id='retailPrice' value={formData.retailPrice} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
+                        <label htmlFor="retail_price">Retail Price</label>
+                        <input type="number" name='retail_price' id='retail_price' value={formData.retail_price} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
                     </div>
-
                     <div className='w-full flex flex-col gap-1'>
-                        <label htmlFor="wholeSalePrice">Whole Sale Price *</label>
-                        <input type="number" name='wholeSalePrice' id='wholeSalePrice' required value={formData.wholeSalePrice} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
-                    </div>
-
-                    <div className='w-full flex flex-col gap-1'>
-                        <label htmlFor="dealerPrice">Dealer Price</label>
-                        <input type="number" name='dealerPrice' id='dealerPrice' value={formData.dealerPrice} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
+                        <label htmlFor="dealer_price">Dealer Price</label>
+                        <input type="number" name='dealer_price' id='dealer_price' value={formData.dealer_price} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
                     </div>
                 </div>
 
@@ -130,9 +147,8 @@ const UpdateProductForm = ({product}) => {
                     <textarea name="description" id="description" required value={formData.description} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none '></textarea>
                 </div>
 
-                <button className='w-auto px-8 p-1 rounded-full bg-sky-600 text-white cursor-pointer hover:bg-sky-500 ' type='submit'>Submit</button>
+                <button className='w-auto px-8 p-1 rounded-full bg-sky-600 text-white cursor-pointer hover:bg-sky-500 ' type='submit'>Update Product</button>
             </form>
-
         </div>
     )
 }

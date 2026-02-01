@@ -14,18 +14,24 @@ export async function GET(req) {
 
         if (q) {
             query += `
-                WHERE name ILIKE $1
-                OR barcode ILIKE $1
-            `;
+        WHERE (COALESCE(name, '') ILIKE $1 
+        OR COALESCE(barcode, '') ILIKE $1)
+    `;
             values.push(`%${q}%`);
         }
 
-        query += ` ORDER BY created_at DESC`;
+        query += ` ORDER BY created_at DESC LIMIT 5`;
 
-        const { rows } = await pool.query(query, values);
+        const data = await pool.query(query, values);
+        const result = data.rows
+        if (result.length === 0) {
+            return NextResponse.json({
+                success: false, message: 'No product found'
+            }, { status: 400 })
+        }
 
         return NextResponse.json(
-            { success: true, payload: rows },
+            { success: true, message: 'Successfully fetched data', payload: result },
             { status: 200 }
         );
 

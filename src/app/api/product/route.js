@@ -169,3 +169,74 @@ export async function DELETE(req) {
         );
     }
 }
+
+export async function PUT(req) {
+    try {
+        const formData = await req.formData();
+        const id = formData.get("id");
+
+        if (!id) {
+            return NextResponse.json({ success: false, message: 'Product ID is required' }, { status: 400 });
+        }
+
+        const name = formData.get("name");
+        const description = formData.get('description');
+        const category_id = parseInt(formData.get('category_id'));
+        const brand_id = formData.get('brand_id') ? parseInt(formData.get('brand_id')) : null;
+        const barcode = formData.get('barcode');
+        const unit = formData.get('unit');
+        const stock = parseInt(formData.get('stock')) || 0;
+        
+        const purchase_price = parseFloat(formData.get('purchase_price'));
+        const sale_price = parseFloat(formData.get('sale_price'));
+        const discount_price = parseFloat(formData.get('discount_price')) || 0;
+        const wholesale_price = parseFloat(formData.get('wholesale_price'));
+        const retail_price = parseFloat(formData.get('retail_price')) || 0;
+        const dealer_price = parseFloat(formData.get('dealer_price')) || 0;
+
+        const slug = slugify(name.trim(), { lower: true, strict: true });
+
+        const query = `
+            UPDATE products 
+            SET 
+                name = $1, 
+                description = $2, 
+                category_id = $3, 
+                brand_id = $4, 
+                slug = $5, 
+                barcode = $6, 
+                unit = $7, 
+                stock = $8, 
+                purchase_price = $9, 
+                sale_price = $10, 
+                discount_price = $11, 
+                wholesale_price = $12, 
+                retail_price = $13, 
+                dealer_price = $14
+            WHERE product_id = $15 
+            RETURNING *`;
+
+        const values = [
+            name, description, category_id, brand_id, slug, barcode, unit,
+            stock, purchase_price, sale_price, discount_price,
+            wholesale_price, retail_price, dealer_price, id
+        ];
+
+        const updatedProduct = await pool.query(query, values);
+
+        if (updatedProduct.rowCount === 0) {
+            return NextResponse.json({
+                success: false, message: 'Product not found or update failed'
+            }, { status: 404 });
+        }
+
+        return NextResponse.json({
+            success: true, message: 'Successfully updated product'
+        }, { status: 200 });
+
+    } catch (error) {
+        return NextResponse.json({
+            success: false, message: error.message 
+        }, { status: 500 });
+    }
+}
