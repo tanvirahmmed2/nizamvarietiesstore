@@ -1,29 +1,21 @@
 'use client'
 import axios from 'axios'
 import React, { createContext, useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 
 export const Context = createContext()
 
-
 const ContextProvider = ({ children }) => {
-
   const [isCategoryBox, setIsCategoryBox] = useState(false)
   const [isBrandBox, setIsBrandBox] = useState(false)
   const [categories, setCategories] = useState([])
   const [brands, setBrands] = useState([])
-
   const [userData, setUserData] = useState(null)
-
-  const [cartSalesItems, setCartSalesItems] = useState([])
-
   const [hydrated, setHydrated] = useState(false)
   const [cart, setCart] = useState({ items: [] })
 
-
-
   const fetchCart = () => {
     if (typeof window === 'undefined') return
-
     const storedCart = localStorage.getItem('cart')
 
     if (!storedCart || storedCart === 'undefined') {
@@ -34,17 +26,11 @@ const ContextProvider = ({ children }) => {
 
     try {
       const parsed = JSON.parse(storedCart)
-
-      if (
-        typeof parsed === 'object' &&
-        parsed !== null &&
-        Array.isArray(parsed.items)
-      ) {
+      if (typeof parsed === 'object' && parsed !== null && Array.isArray(parsed.items)) {
         setCart(parsed)
       } else {
         throw new Error('Invalid cart shape')
       }
-
       setHydrated(true)
     } catch (err) {
       console.warn('Corrupted cart detected. Resetting cart.', err)
@@ -54,114 +40,90 @@ const ContextProvider = ({ children }) => {
     }
   }
 
-
   useEffect(() => {
     if (typeof window !== 'undefined' && hydrated) {
       localStorage.setItem('cart', JSON.stringify(cart))
     }
   }, [cart, hydrated])
 
-
-
   const addToCart = (product) => {
+    const exists = cart.items.find(item => item.product_id === product?.product_id);
+
     setCart((prev) => {
       const existing = prev.items.find(
-        item => item.productId === product?._id
+        item => item.product_id === product?.product_id
       )
 
       if (existing) {
         return {
           ...prev,
           items: prev.items.map(item =>
-            item.productId === product?._id
+            item.product_id === product?.product_id
               ? { ...item, quantity: item.quantity + 1 }
               : item
           )
         }
       }
 
+      const salePrice = parseFloat(product?.sale_price) || 0;
+      const discountAmount = parseFloat(product?.discount_price) || 0;
+
       return {
         ...prev,
         items: [
           ...prev.items,
           {
-            productId: product?._id,
-            title: product?.title,
+            product_id: product?.product_id,
+            name: product?.name,
             quantity: 1,
-            price: product?.price - product?.discount
+            base_price: salePrice,
+            discount_per_item: discountAmount,
+            price: salePrice - discountAmount
           }
         ]
       }
     })
+
+    if (exists) {
+      toast.info("Quantity increased")
+    } else {
+      toast.success("Added to cart")
+    }
   }
 
   const removeFromCart = (id) => {
     setCart(prev => ({
       ...prev,
-      items: prev.items.filter(item => item.productId !== id)
+      items: prev.items.filter(item => item.product_id !== id)
     }))
   }
-
 
   const decreaseQuantity = (id) => {
     setCart((prev) => {
       const existing = prev.items.find(
-        item => item.productId === id
+        item => item.product_id === id
       )
-
       if (!existing) return prev
-
       if (existing.quantity > 1) {
         return {
           ...prev,
           items: prev.items.map(item =>
-            item.productId === id
+            item.product_id === id
               ? { ...item, quantity: item.quantity - 1 }
               : item
           )
         }
       }
-
-
       return {
         ...prev,
-        items: prev.items.filter(item => item.productId !== id)
+        items: prev.items.filter(item => item.product_id !== id)
       }
     })
   }
 
-
-
   const clearCart = () => {
     setCart({ items: [] })
     localStorage.removeItem('cart')
-  }
-
-
-
-
-
-
-
-
-
-
-
-  const fetchSalesCart = async () => {
-    try {
-      const res = await axios.get('/api/user/cart', { withCredentials: true })
-      const plainCart = res.data.payload.map(item => ({
-        _id: item._id.toString(),
-        productId: item.productId.toString(),
-        title: item.title,
-        quantity: item.quantity,
-        price: item.price
-      }))
-      setCartSalesItems(plainCart)
-    } catch (err) {
-      console.log(err)
-      setCartSalesItems([])
-    }
   }
 
   useEffect(() => {
@@ -171,42 +133,28 @@ const ContextProvider = ({ children }) => {
         setUserData(response.data.payload)
       } catch (error) {
         setUserData(null)
-
       }
-
     }
     fetchUserData()
-
   }, [])
-
-
 
   const fetchCategory = async () => {
     try {
       const response = await axios.get('/api/category', { withCredentials: true })
       setCategories(response.data.payload)
     } catch (error) {
-      console.log(error)
       setCategories([])
-
     }
-
   }
-
 
   const fetchBrand = async () => {
     try {
       const response = await axios.get('/api/brand', { withCredentials: true })
       setBrands(response.data.payload)
     } catch (error) {
-      console.log(error)
       setBrands([])
-
     }
-
   }
-
-
 
   useEffect(() => {
     fetchCategory()
@@ -216,16 +164,12 @@ const ContextProvider = ({ children }) => {
 
   const contextValue = {
     isBrandBox, setIsBrandBox, isCategoryBox, setIsCategoryBox, brands, setBrands,
-    categories, fetchCategory, cartSalesItems, userData, cart, setCart, fetchCart, addToCart, clearCart, removeFromCart, decreaseQuantity, fetchCart, fetchSalesCart
+    categories, fetchCategory, userData, cart, setCart, fetchCart, addToCart, clearCart, removeFromCart, decreaseQuantity
   }
+
   return <Context.Provider value={contextValue}>
     {children}
   </Context.Provider>
 }
 
-
 export default ContextProvider
-
-
-
-
