@@ -11,7 +11,6 @@ const Footer = () => {
           <div className='flex flex-col text-sm w-auto'>
             <Link href={'/offers'}>Offers</Link>
             <Link href={'/products'}>Products</Link>
-            <Link href={'/register'}>Register</Link>
             <Link href={'/products/category'}>Categories</Link>
           </div>
         </div>
