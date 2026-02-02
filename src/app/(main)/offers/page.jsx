@@ -17,7 +17,7 @@ const Offers = async () => {
       {
         products.length === 0 ? <p>No product found</p> : <div className='w-full flex flex-col items-center justify-center gap-4'>
           <h1 className='font-semibold text-center text-2xl'>Offer available on specific items</h1>
-          <div className='w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4'>
+          <div className='w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4'>
             {
               products && products.map(product => (
                 <Item product={product} key={product.product_id} />

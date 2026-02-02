@@ -68,7 +68,7 @@ const Products = () => {
 
         </div>
         {
-          products.length < 1 ? <p className="">No product found</p> : <div className='w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4'>
+          products.length < 1 ? <p className="">No product found</p> : <div className='w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4'>
             {
               products.map(product => (
                 <Item product={product} key={product.product_id} />

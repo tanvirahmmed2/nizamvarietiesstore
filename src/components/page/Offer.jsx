@@ -14,7 +14,7 @@ const Offer = async () => {
       <h1 className='text-3xl text-center '>Offer Products</h1>
       <Image src={'/offerbg.jpg'} alt='offer image' width={1000} height={1000} className='w-full  blur-[5px] absolute -z-10 scale-105' />
       {
-        products && <div className='w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4'>
+        products && <div className='w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4'>
           {
             products.map((item) => (
 
