@@ -45,7 +45,7 @@ const ReturnPage = () => {
         <div className='max-w-6xl mx-auto w-full p-10 bg-white min-h-screen'>
             {/* Header Area */}
             <div className='flex flex-col gap-1 mb-12 border-l-4 border-emerald-500 pl-6'>
-                <h1 className='text-3xl font-black text-gray-900 tracking-tight uppercase'>
+                <h1 className='text-3xl  text-gray-900 tracking-tight uppercase'>
                     Inventory Restitution
                 </h1>
                 <p className='text-gray-400 text-xs font-bold tracking-[0.2em] uppercase'>
@@ -55,10 +55,9 @@ const ReturnPage = () => {
 
             <div className='grid grid-cols-1 lg:grid-cols-12 gap-12'>
                 
-                {/* Search Panel (5 cols) */}
                 <div className='lg:col-span-5 flex flex-col gap-6'>
                     <div className='flex flex-col gap-2'>
-                        <label className='text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1'>
+                        <label className='text-[10px]  text-gray-400 uppercase tracking-widest ml-1'>
                             Find Product
                         </label>
                         <input 
@@ -82,7 +81,7 @@ const ReturnPage = () => {
                                     <p className='text-xs text-gray-400 font-mono'>REF: {p.product_id}</p>
                                 </div>
                                 <div className='text-right'>
-                                    <p className='text-sm font-black text-gray-900'>৳{p.sale_price}</p>
+                                    <p className='text-sm  text-gray-900'>৳{p.sale_price}</p>
                                     <p className='text-[10px] text-gray-400 uppercase'>Per Unit</p>
                                 </div>
                             </button>
@@ -92,18 +91,17 @@ const ReturnPage = () => {
                     </div>
                 </div>
 
-                {/* Processing Panel (7 cols) */}
                 <div className='lg:col-span-7'>
                     {selectedProduct ? (
                         <div className='bg-gray-50/50 p-10 rounded border border-gray-100 flex flex-col gap-8 sticky top-10'>
                             <div className='flex justify-between items-start border-b border-gray-200 pb-6'>
                                 <div>
-                                    <span className='text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em]'>Adjustment Target</span>
-                                    <h2 className='text-2xl font-black text-gray-900 mt-1'>{selectedProduct.name}</h2>
+                                    <span className='text-[10px]  text-emerald-600 uppercase tracking-[0.2em]'>Adjustment Target</span>
+                                    <h2 className='text-2xl  text-gray-900 mt-1'>{selectedProduct.name}</h2>
                                 </div>
                                 <div className='bg-white px-4 py-2 rounded-lg border border-gray-200 text-center'>
                                     <span className='block text-[10px] text-gray-400 font-bold uppercase'>In Stock</span>
-                                    <span className='text-sm font-black text-gray-800'>{selectedProduct.stock}</span>
+                                    <span className='text-sm  text-gray-800'>{selectedProduct.stock}</span>
                                 </div>
                             </div>
 
@@ -115,7 +113,7 @@ const ReturnPage = () => {
                                         value={quantity}
                                         min="1"
                                         onChange={(e) => setQuantity(e.target.value)}
-                                        className='w-full px-5 py-4 rounded-xl border-2 border-gray-100 outline-none focus:border-emerald-500 bg-white text-xl font-black text-gray-900 transition-all'
+                                        className='w-full px-5 py-4 rounded-xl border-2 border-gray-100 outline-none focus:border-emerald-500 bg-white text-xl  text-gray-900 transition-all'
                                     />
                                 </div>
                                 <div className='flex flex-col gap-2'>
@@ -130,12 +128,12 @@ const ReturnPage = () => {
                             <div className='mt-4 p-6 bg-white rounded-2xl border border-gray-100 flex items-center justify-between'>
                                 <div>
                                     <p className='text-xs font-bold text-gray-400 uppercase'>Revenue Deduction</p>
-                                    <p className='text-2xl font-black text-red-600'>- ৳{(selectedProduct.sale_price * quantity).toLocaleString()}</p>
+                                    <p className='text-2xl  text-red-600'>- ৳{(selectedProduct.sale_price * quantity).toLocaleString()}</p>
                                 </div>
                                 <div className='h-10 w-px bg-gray-100'></div>
                                 <div className='text-right'>
                                     <p className='text-xs font-bold text-gray-400 uppercase'>Inventory Gain</p>
-                                    <p className='text-2xl font-black text-emerald-600'>+ {quantity}</p>
+                                    <p className='text-2xl  text-emerald-600'>+ {quantity}</p>
                                 </div>
                             </div>
 

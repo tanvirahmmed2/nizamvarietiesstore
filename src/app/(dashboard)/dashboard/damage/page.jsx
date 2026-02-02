@@ -48,7 +48,7 @@ const DamagePage = () => {
         <div className='max-w-6xl mx-auto w-full p-10 bg-white min-h-screen'>
             {/* Header Area */}
             <div className='flex flex-col gap-1 mb-12 border-l-4 border-red-500 pl-6'>
-                <h1 className='text-3xl font-black text-gray-900 tracking-tight uppercase'>
+                <h1 className='text-3xl  text-gray-900 tracking-tight uppercase'>
                     Damage & Loss Entry
                 </h1>
                 <p className='text-gray-400 text-xs font-bold tracking-[0.2em] uppercase'>
@@ -61,7 +61,7 @@ const DamagePage = () => {
                 {/* Search Panel */}
                 <div className='lg:col-span-5 flex flex-col gap-6'>
                     <div className='flex flex-col gap-2'>
-                        <label className='text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1'>
+                        <label className='text-[10px]  text-gray-400 uppercase tracking-widest ml-1'>
                             Find Damaged Item
                         </label>
                         <input 
@@ -84,7 +84,7 @@ const DamagePage = () => {
                                     <p className='font-bold text-gray-800'>{p.name}</p>
                                     <p className='text-[10px] text-gray-400 font-mono uppercase'>Stock: {p.stock} Units</p>
                                 </div>
-                                <span className='text-[10px] font-black text-gray-300'>#{p.product_id}</span>
+                                <span className='text-[10px]  text-gray-300'>#{p.product_id}</span>
                             </button>
                         ))}
                     </div>
@@ -95,8 +95,8 @@ const DamagePage = () => {
                     {selectedProduct ? (
                         <div className='bg-gray-50/50 p-10 rounded border border-gray-100 flex flex-col gap-6 sticky top-10'>
                             <div>
-                                <span className='text-[10px] font-black text-red-600 uppercase tracking-[0.2em]'>Withdrawal Item</span>
-                                <h2 className='text-2xl font-black text-gray-900 mt-1'>{selectedProduct.name}</h2>
+                                <span className='text-[10px]  text-red-600 uppercase tracking-[0.2em]'>Withdrawal Item</span>
+                                <h2 className='text-2xl  text-gray-900 mt-1'>{selectedProduct.name}</h2>
                             </div>
 
                             <div className='grid grid-cols-2 gap-6'>
@@ -106,13 +106,13 @@ const DamagePage = () => {
                                         type="number"
                                         value={quantity}
                                         onChange={(e) => setQuantity(e.target.value)}
-                                        className='w-full px-5 py-4 rounded-xl border-2 border-gray-100 outline-none focus:border-red-500 bg-white text-xl font-black'
+                                        className='w-full px-5 py-4 rounded-xl border-2 border-gray-100 outline-none focus:border-red-500 bg-white text-xl '
                                     />
                                 </div>
                                 <div className='flex flex-col gap-2'>
                                     <label className='text-[10px] font-bold text-gray-400 uppercase tracking-widest'>Financial Impact</label>
                                     <div className='px-5 py-4 rounded-xl bg-white border-2 border-gray-100'>
-                                        <p className='text-xl font-black text-gray-400 italic'>৳{(selectedProduct.purchase_price * quantity).toLocaleString()}</p>
+                                        <p className='text-xl  text-gray-400 italic'>৳{(selectedProduct.purchase_price * quantity).toLocaleString()}</p>
                                     </div>
                                 </div>
                             </div>

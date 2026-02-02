@@ -15,10 +15,9 @@ export async function POST(req) {
             VALUES ($1, $2, 'completed', CURRENT_TIMESTAMP)
             RETURNING order_id;
         `;
-        // We save total_amount as a negative value
+        
         await client.query(negOrderQuery, [customer_id || null, -total_deduction]);
 
-        // 2. Restore the Product Stock
         const restoreStockQuery = `
             UPDATE products 
             SET stock = stock + $1 

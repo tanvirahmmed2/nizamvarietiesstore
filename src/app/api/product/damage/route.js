@@ -12,8 +12,6 @@ export async function POST(req) {
 
         await client.query('BEGIN');
 
-        // Reduce the stock. 
-        // We use a CHECK to ensure stock doesn't go below zero if your DB allows it.
         const damageQuery = `
             UPDATE products 
             SET stock = stock - $1 
@@ -27,9 +25,7 @@ export async function POST(req) {
             throw new Error("Product not found or insufficient stock to damage");
         }
 
-        // Optional: Log to an adjustments table if you have one
-        // await client.query(`INSERT INTO inventory_logs...`);
-
+       
         await client.query('COMMIT');
 
         return NextResponse.json({ 
