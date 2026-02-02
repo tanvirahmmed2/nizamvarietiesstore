@@ -5,9 +5,7 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const searchTerm = searchParams.get('q'); 
 
-    if (!searchTerm) {
-        return NextResponse.json({ success: false, message: "Search term required" }, { status: 400 });
-    }
+    
 
     try {
         const query = `
@@ -26,16 +24,23 @@ export async function GET(req) {
             JOIN payments p ON o.order_id = p.order_id
             JOIN order_items oi ON o.order_id = oi.order_id
             JOIN products pr ON oi.product_id = pr.product_id
-            WHERE c.phone ILIKE $1 OR CAST(o.order_id AS TEXT) = $2
+            WHERE o.status = 'completed' 
+            AND (c.phone ILIKE $1 OR CAST(o.order_id AS TEXT) = $2)
             GROUP BY o.order_id, c.name, c.phone, p.payment_status, o.created_at
             ORDER BY o.created_at DESC
         `;
 
         const data = await pool.query(query, [`%${searchTerm}%`, searchTerm]);
-
+        const result= data.rows
+        if(result.length<=0){
+            return NextResponse.json({
+                success:false, message:'No order found'
+            },{status:400})
+        }
         return NextResponse.json({ 
             success: true, 
-            payload: data.rows 
+            message:'Successfully fetched data',
+            payload: result
         }, { status: 200 });
 
     } catch (error) {

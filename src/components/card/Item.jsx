@@ -19,7 +19,7 @@ const Item = ({ product }) => {
           <p>BDT {product?.sale_price - product?.discount_price}</p>
         </div> : <p>BDT {product.sale_price}</p>
       }
-      <button className='w-full p-1 bg-orange-500 text-white cursor-pointer hover:bg-orange-700'>Add to cart</button>
+      <button onClick={()=> addToCart(product)} className='w-full p-1 bg-orange-500 text-white cursor-pointer hover:bg-orange-700'>Add to cart</button>
     </motion.div>
   )
 }

@@ -1,25 +1,33 @@
-import { BASE_URL } from '@/lib/database/secret'
-import React from 'react'
+'use client'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 
-const SalesListPage = async () => {
-  const res = await fetch(`${BASE_URL}/api/order`, {
-    method: 'GET',
-    cache: 'no-store'
-  })
+const SalesListPage = () => {
+  const [orders, setOrders] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
 
-  const data = await res.json()
-  if (!data.success) return <p className='text-center text-gray-500 mt-10'>No history found</p>
-  const orders = data.payload
+  useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        const response = await axios.get(`/api/order/search?q=${searchTerm}`, { withCredentials: true })
+        setOrders(response.data.payload)
+      } catch (error) {
+        console.log(error?.response?.data?.message)
+        setOrders([])
+      }
+    }
+    fetchOrder()
+  }, [searchTerm])
 
 
   return (
     <div className='w-full min-h-screen flex flex-col items-center p-6 gap-6 '>
       <h1 className='text-center text-3xl font-bold text-gray-800 mb-4'>Sales History</h1>
-
+      <input type="text" value={searchTerm} onChange={(e)=>setSearchTerm(e.target.value)} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none '/>
       <div className='w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
         {orders.length > 0 && orders.map((order, idx) => (
-          <div 
-            key={idx} 
+          <div
+            key={idx}
             className='w-full flex flex-col p-4 rounded-xl border border-gray-200 shadow-md bg-white hover:shadow-lg transition-shadow duration-200'
           >
             <div className='flex flex-row w-full  justify-between'>

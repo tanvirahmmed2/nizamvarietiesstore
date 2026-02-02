@@ -5,9 +5,6 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const searchTerm = searchParams.get('q');
 
-    if (!searchTerm) {
-        return NextResponse.json({ success: false, message: "Search term required" }, { status: 400 });
-    }
 
     try {
         const query = `

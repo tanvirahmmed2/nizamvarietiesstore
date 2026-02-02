@@ -16,6 +16,7 @@ export async function GET() {
             FROM payments p
             JOIN orders o ON p.order_id = o.order_id
             JOIN customers c ON o.customer_id = c.customer_id
+            WHERE o.status='completed'
             ORDER BY p.paid_at DESC
         `;
 

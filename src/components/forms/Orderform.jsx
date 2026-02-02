@@ -6,7 +6,7 @@ import { Context } from '../helper/Context'
 import { MdOutlineDeleteOutline } from 'react-icons/md'
 
 const Orderform = ({ cartItems }) => {
-    const { fetchCart, decreaseQuantity } = useContext(Context)
+    const { fetchCart, decreaseQuantity, clearCart } = useContext(Context)
     const [data, setData] = useState({
         name: 'Walk-in Customer',
         phone: '+88',
@@ -24,12 +24,10 @@ const Orderform = ({ cartItems }) => {
             (sum, item) => sum + (parseFloat(item.base_price) * item.quantity),
             0
         )
-
         const productDiscount = cartItems.reduce(
             (sum, item) => sum + (parseFloat(item.discount_per_item) * item.quantity),
             0
         )
-
         const manualDiscount = parseFloat(data.manualDiscount) || 0
         const tax = parseFloat(data.tax) || 0
 
@@ -64,6 +62,7 @@ const Orderform = ({ cartItems }) => {
             total: data.totalPrice,
             paymentMethod: data.paymentMethod,
             transactionId: data.transactionId,
+            status: 'completed', // Direct sales from POS are confirmed immediately
             items: cartItems.map(item => ({
                 product_id: item.product_id,
                 quantity: item.quantity,
@@ -73,7 +72,7 @@ const Orderform = ({ cartItems }) => {
 
         try {
             const response = await axios.post('/api/order', payload, { withCredentials: true });
-            toast.success(response.data.message);
+            toast.success("Order Processed Successfully!");
             if (fetchCart) fetchCart();
 
             setData({
@@ -87,77 +86,68 @@ const Orderform = ({ cartItems }) => {
                 transactionId: '',
                 paymentMethod: 'cash'
             })
+            clearCart()
         } catch (error) {
-            console.error(error)
-            toast.error(error?.response?.data?.message || "Something went wrong");
+            toast.error(error?.response?.data?.message || "Checkout failed");
         }
     }
 
     return (
-        <form onSubmit={handleSubmit} className='w-full flex flex-col items-center justify-between gap-6 text-sm'>
-            <div className='w-full flex flex-col items-center justify-center gap-2'>
+        <form onSubmit={handleSubmit} className='w-full flex flex-col items-center justify-between gap-6 text-sm bg-white p-4 rounded-xl shadow-sm border border-black/5'>
+            <div className='w-full flex flex-col gap-3'>
                 <div className='w-full flex flex-row items-center justify-between'>
-                    <label htmlFor="name">Name</label>
-                    <input type="text" id='name' name='name' value={data.name} onChange={handleChange} className='px-3 uppercase border-2 border-black/10 rounded-lg outline-none' />
+                    <label className='font-semibold'>Name</label>
+                    <input type="text" name='name' value={data.name} onChange={handleChange} className='px-3 py-1 border border-black/10 rounded-lg outline-none w-2/3' />
                 </div>
                 <div className='w-full flex flex-row items-center justify-between'>
-                    <label htmlFor="phone">Phone</label>
-                    <input type="text" id='phone' name='phone' value={data.phone} onChange={handleChange} className='px-3 border-2 border-black/10 rounded-lg outline-none' />
+                    <label className='font-semibold'>Phone</label>
+                    <input type="text" name='phone' value={data.phone} onChange={handleChange} className='px-3 py-1 border border-black/10 rounded-lg outline-none w-2/3' />
                 </div>
-
                 <div className='w-full flex flex-row items-center justify-between'>
-                    <label htmlFor="paymentMethod">Payment Method</label>
-                    <select name="paymentMethod" id="paymentMethod" value={data.paymentMethod} onChange={handleChange} className='px-3 border-2 border-black/10 rounded-lg outline-none'>
-                        <option value="cash">cash</option>
+                    <label className='font-semibold'>Payment</label>
+                    <select name="paymentMethod" value={data.paymentMethod} onChange={handleChange} className='px-3 py-1 border border-black/10 rounded-lg outline-none w-2/3'>
+                        <option value="cash">Cash</option>
                         <option value="card">Card</option>
                         <option value="online">Online</option>
                     </select>
                 </div>
-
                 {data.paymentMethod !== 'cash' && (
                     <div className='w-full flex flex-row items-center justify-between'>
-                        <label htmlFor="transactionId">Transaction ID</label>
-                        <input type="text" id='transactionId' name='transactionId' value={data.transactionId} onChange={handleChange} className='px-3 border-2 border-black/10 rounded-lg outline-none' />
+                        <label className='font-semibold text-sky-600'>Trx ID</label>
+                        <input type="text" name='transactionId' value={data.transactionId} onChange={handleChange} className='px-3 py-1 border border-sky-200 rounded-lg outline-none w-2/3' />
                     </div>
                 )}
             </div>
 
-            <div className='w-full max-h-40 overflow-y-auto'>
-                {cartItems.length > 0 && cartItems.map(item => (
-                    <div key={item.product_id} className='w-full grid-cols-2 grid border border-black/10 p-1 mb-1 rounded-lg gap-2'>
-                        <p className='text-xs'>{item.name}</p>
-                        <div className='w-full flex flex-row items-center justify-between px-2'>
-                            <p>{item.quantity} x {item.price}</p>
-                            <p className='cursor-pointer text-red-500' onClick={() => decreaseQuantity(item.product_id)}><MdOutlineDeleteOutline /></p>
+            <div className='w-full max-h-48 overflow-y-auto border-y border-black/5 py-2'>
+                {cartItems.map(item => (
+                    <div key={item.product_id} className='w-full flex justify-between items-center p-2 mb-1 bg-gray-50 rounded-lg'>
+                        <p className='text-xs font-medium truncate w-1/2'>{item.name}</p>
+                        <div className='flex items-center gap-3'>
+                            <p className='text-xs'>{item.quantity} x {item.price}</p>
+                            <MdOutlineDeleteOutline className='cursor-pointer text-red-500 text-lg' onClick={() => decreaseQuantity(item.product_id)} />
                         </div>
                     </div>
                 ))}
             </div>
 
-            <div className='w-full flex flex-col gap-4 items-center justify-center border-t border-black/10 pt-4'>
-                <div className='w-full flex flex-row items-center justify-between'>
-                    <p>Sub Total</p>
-                    <p>{data.subTotal.toFixed(2)}</p>
-                </div>
-                <div className='w-full flex flex-row items-center justify-between text-red-500'>
-                    <p>Product Discount</p>
-                    <p>-{(data.totalDiscount - (parseFloat(data.manualDiscount) || 0)).toFixed(2)}</p>
-                </div>
-                <div className='w-full flex flex-row items-center justify-between'>
-                    <label>Extra Discount</label>
-                    <input type="number" name="manualDiscount" value={data.manualDiscount} onChange={handleChange} className='w-20 border-b-2 border-black/10 outline-none text-right' />
-                </div>
-                <div className='w-full flex flex-row items-center justify-between'>
+            <div className='w-full flex flex-col gap-2 pt-2'>
+                <div className='flex justify-between'><span>Sub Total</span><span>{data.subTotal.toFixed(2)}</span></div>
+                <div className='flex justify-between text-red-500'><span>Discount</span><span>-{data.totalDiscount.toFixed(2)}</span></div>
+                <div className='flex justify-between'>
                     <label>Tax</label>
-                    <input type="number" name="tax" value={data.tax} onChange={handleChange} className='w-20 border-b-2 border-black/10 outline-none text-right' />
+                    <input type="number" name="tax" value={data.tax} onChange={handleChange} className='w-20 border-b border-black/10 outline-none text-right' />
                 </div>
-                <div className='w-full flex flex-row items-center justify-between font-bold text-lg border-t border-black/10 pt-2'>
-                    <p>Total Bill</p>
-                    <p>{data.totalPrice.toFixed(2)}</p>
+                <div className='flex justify-between'>
+                    <label>Manual Disc.</label>
+                    <input type="number" name="manualDiscount" value={data.manualDiscount} onChange={handleChange} className='w-20 border-b border-black/10 outline-none text-right' />
+                </div>
+                <div className='flex justify-between font-bold text-lg border-t pt-2 mt-2 text-sky-700'>
+                    <span>Total Bill</span><span>৳{data.totalPrice.toFixed(2)}</span>
                 </div>
             </div>
 
-            <button className='w-full py-2 rounded-full bg-sky-600 text-white cursor-pointer hover:bg-sky-500 font-semibold' type='submit'>Place Order</button>
+            <button className='w-full py-3 rounded-xl bg-sky-600 text-white hover:bg-sky-500 font-bold shadow-md transition-all uppercase' type='submit'>Complete Sale</button>
         </form>
     )
 }

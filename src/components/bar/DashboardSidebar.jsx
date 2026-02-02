@@ -28,6 +28,7 @@ const DashboardSidebar = () => {
       <div>
         <p className="font-semibold text-gray-400 text-xs hidden group-hover:flex items-center gap-2 mb-2 uppercase"><TbMoneybag />Purchase & Transaction</p>
         <MenuItem href="/dashboard" icon={RiShoppingCart2Line} label="POS" />
+        <MenuItem href="/dashboard/pendingorders" icon={RiShoppingCart2Line} label="Pending Orders" />
         <div className="group/purchase flex flex-col gap-1">
           <p className="hidden group-hover:flex items-center gap-4 px-2 cursor-pointer"><BiPurchaseTagAlt />Purchase <MdChevronRight /></p>
           <div className="hidden group-hover/purchase:block px-3">
@@ -62,9 +63,9 @@ const DashboardSidebar = () => {
         <div className="group/reports flex flex-col gap-1">
           <p className="hidden group-hover:flex items-center gap-4 px-2 cursor-pointer"><TbReportSearch />Report<MdChevronRight /></p>
           <div className="hidden group-hover/reports:block px-3">
-            <MenuItem href="/dashboard/report/sales" icon={TbReport} label="Sales" />
-            <MenuItem href="/dashboard/report/stock" icon={RiFileChartLine} label="Stock" />
-            <MenuItem href="/dashboard/report/analytics" icon={TbReportAnalytics} label="Analytics" />
+            <MenuItem href="/dashboard/sales" icon={TbReport} label="Sales" />
+            <MenuItem href="/dashboard/stock" icon={RiFileChartLine} label="Stock" />
+            <MenuItem href="/dashboard/analytics" icon={TbReportAnalytics} label="Analytics" />
           </div>
         </div>
       </div>
