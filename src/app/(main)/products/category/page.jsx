@@ -7,7 +7,7 @@ import React, { useContext } from 'react'
 const CategoryPage = () => {
     const { categories } = useContext(Context)
     return (
-        <div className='w-full text-center flex flex-col items-center justify-center gap-6 py-8 px-4'>
+        <div className='w-full text-center flex flex-col items-center gap-6 py-8 px-4'>
             <h1 className='text-xl  text-center'>Find best product for your daily life among these categories</h1>
             <div className='w-full max-w-2xl flex flex-wrap items-center justify-center gap-4'>
                 {

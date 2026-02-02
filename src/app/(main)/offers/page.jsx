@@ -11,13 +11,13 @@ const Offers = async () => {
   if (!data.success) return <p>No product found</p>
   const products = data.payload
   return (
-    <div className='w-full flex flex-col items-center min-h-screen py-6 gap-4'>
+    <div className='w-full flex flex-col items-center min-h-screen py-6 p-4 gap-4'>
 
 
       {
         products.length === 0 ? <p>No product found</p> : <div className='w-full flex flex-col items-center justify-center gap-4'>
-          <h1 className='font-semibold text-center'>Offer available on specific items</h1>
-          <div>
+          <h1 className='font-semibold text-center text-2xl'>Offer available on specific items</h1>
+          <div className='w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4'>
             {
               products && products.map(product => (
                 <Item product={product} key={product.product_id} />
