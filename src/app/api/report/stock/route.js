@@ -18,7 +18,7 @@ export async function GET() {
 
         const highStockQuery = `
             SELECT name, stock, sale_price FROM products
-            ORDER BY stock DESC LIMIT 30;
+            ORDER BY stock DESC LIMIT 50;
         `;
 
         const [statsRes, lowRes, highRes] = await Promise.all([

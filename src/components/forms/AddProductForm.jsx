@@ -7,7 +7,7 @@ import axios from 'axios'
 
 const AddProductForm = () => {
 
-    const { setIsCategoryBox, setIsBrandBox, categories, brands}= useContext(Context)
+    const { setIsCategoryBox, setIsBrandBox, categories, brands } = useContext(Context)
 
     const [formData, setFormData] = useState({
         name: '',
@@ -38,7 +38,7 @@ const AddProductForm = () => {
     const SubmitNewProduct = async (e) => {
         e.preventDefault()
         try {
-            const newData= new FormData()
+            const newData = new FormData()
             newData.append('name', formData.name)
             newData.append('categoryId', formData.categoryId)
             newData.append('barcode', formData.barcode)
@@ -54,8 +54,24 @@ const AddProductForm = () => {
             newData.append('description', formData.description)
             newData.append('image', formData.image)
 
-            const response= await axios.post('/api/product', newData, {withCredentials:true})
+            const response = await axios.post('/api/product', newData, { withCredentials: true })
             toast.success(response.data.message)
+            setFormData({
+                name: '',
+                barcode: '',
+                categoryId: '',
+                brandId: '',
+                unit: '',
+                stock: '',
+                purchasePrice: '',
+                salePrice: '',
+                discountPrice: '',
+                wholeSalePrice: '',
+                retailPrice: '',
+                dealerPrice: '',
+                description: '',
+                image: null,
+            })
         } catch (error) {
             console.log(error)
             toast.error(error?.response?.data?.message || "Failed to add product")
@@ -88,14 +104,14 @@ const AddProductForm = () => {
                             <select name='categoryId' id='categoryId' required value={formData.categoryId} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none '>
                                 <option value="">select</option>
                                 {
-                                    categories.length >0 && categories.map((cat)=>(
+                                    categories.length > 0 && categories.map((cat) => (
                                         <option value={cat.category_id} key={cat.name}>{cat.name}</option>
                                     ))
                                 }
                             </select>
 
                         </div>
-                        <button type='button'  className='text-center p-2 bg-sky-600 text-white rounded-full' onClick={()=>setIsCategoryBox(true)}>Add</button>
+                        <button type='button' className='text-center p-2 bg-sky-600 text-white rounded-full' onClick={() => setIsCategoryBox(true)}>Add</button>
                     </div>
                     <div className='w-full flex flex-row items-center justify-between gap-2'>
                         <div className='w-full flex flex-col gap-1'>
@@ -103,13 +119,13 @@ const AddProductForm = () => {
                             <select name='brandId' id='brandId' value={formData.brandId} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none '>
                                 <option value="">select</option>
                                 {
-                                    brands.length >0 &&brands.map((brand)=>(
+                                    brands.length > 0 && brands.map((brand) => (
                                         <option value={brand.brand_id} key={brand.name}>{brand.name}</option>
                                     ))
                                 }
                             </select>
                         </div>
-                        <button type='button' className='text-center p-2 bg-sky-600 text-white rounded-full' onClick={()=>setIsBrandBox(true)}>Add</button>
+                        <button type='button' className='text-center p-2 bg-sky-600 text-white rounded-full' onClick={() => setIsBrandBox(true)}>Add</button>
                     </div>
 
                 </div>

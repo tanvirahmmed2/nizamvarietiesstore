@@ -88,7 +88,6 @@ const DashboardSidebar = () => {
         <p className="font-semibold text-gray-400 text-xs hidden group-hover:flex items-center gap-2 mb-2 uppercase"><BsFillHouseGearFill /> Settings</p>
         <MenuItem href="/dashboard/account" icon={RiUser3Line} label="Account" />
         <MenuItem href="/dashboard/rolemanagement" icon={RiUserAddLine} label="Role Management" />
-        <MenuItem href="/dashboard/settings" icon={RiSettings3Line} label="Setting" />
         <MenuItem href="/dashboard/support" icon={RiSuperscript} label="Support" />
         <MenuItem href="/dashboard/help" icon={TbReport} label="Help" />
         <button onClick={handleLogout} className="hidden group-hover:inline whitespace-nowrap w-full bg-orange-500 text-white py-5 mt-5 cursor-pointer">Logout</button>

@@ -23,7 +23,7 @@ const SingleProduct = async ({ params }) => {
                   Available
                 </span>
               ) : (
-                <span className='text-[12px] font-bold uppercase tracking-wider text-white py-1.5 px-3 rounded-full bg-rose-500 '>
+                <span className='text-[12px] font-bold uppercase tracking-wider text-white py-1.5 px-3 rounded-full bg-orange-500 '>
                   Out of Stock
                 </span>
               )}
