@@ -15,7 +15,6 @@ const BottomBar = () => {
           <Link href={'/'}><IoHomeOutline /></Link>
           <Link href={'/offers'}><BiSolidOffer /></Link>
           <Link href={'/products'}><AiOutlineProduct /></Link>
-          <Link href={'/login'}><IoLogInSharp /></Link>
           <Link href={'/cart'}><CiShoppingCart /></Link>
     </div>
   )
