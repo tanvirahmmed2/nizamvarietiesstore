@@ -73,7 +73,7 @@ const DamagePage = () => {
                         />
                     </div>
                     
-                    <div className='flex flex-col gap-3 mt-4 max-h-[400px] overflow-y-auto custom-scrollbar'>
+                    <div className='flex flex-col gap-3 mt-4 max-h-100 overflow-y-auto custom-scrollbar'>
                         {products.map(p => (
                             <button 
                                 key={p.product_id}
@@ -93,7 +93,7 @@ const DamagePage = () => {
                 {/* Damage Processing Panel */}
                 <div className='lg:col-span-7'>
                     {selectedProduct ? (
-                        <div className='bg-gray-50/50 p-10 rounded-[2rem] border border-gray-100 flex flex-col gap-6 sticky top-10'>
+                        <div className='bg-gray-50/50 p-10 rounded border border-gray-100 flex flex-col gap-6 sticky top-10'>
                             <div>
                                 <span className='text-[10px] font-black text-red-600 uppercase tracking-[0.2em]'>Withdrawal Item</span>
                                 <h2 className='text-2xl font-black text-gray-900 mt-1'>{selectedProduct.name}</h2>
@@ -123,7 +123,7 @@ const DamagePage = () => {
                                     value={reason}
                                     onChange={(e) => setReason(e.target.value)}
                                     placeholder="Expired, Physical Damage, Lost..."
-                                    className='w-full px-5 py-4 rounded-xl border-2 border-gray-100 outline-none focus:border-red-500 bg-white min-h-[100px] resize-none'
+                                    className='w-full px-5 py-4 rounded-xl border-2 border-gray-100 outline-none focus:border-red-500 bg-white min-h-25 resize-none'
                                 />
                             </div>
 
@@ -136,8 +136,8 @@ const DamagePage = () => {
                             </button>
                         </div>
                     ) : (
-                        <div className='h-full min-h-[400px] border-2 border-dashed border-gray-100 rounded-[2rem] flex flex-col items-center justify-center text-center p-10'>
-                            <p className='text-gray-400 font-medium max-w-[220px]'>
+                        <div className='h-full min-h-100 border-2 border-dashed border-gray-100 rounded flex flex-col items-center justify-center text-center p-10'>
+                            <p className='text-gray-400 font-medium max-w-105'>
                                 Search and select an item to record stock damage or loss.
                             </p>
                         </div>

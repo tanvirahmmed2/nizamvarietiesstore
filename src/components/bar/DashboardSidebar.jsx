@@ -7,8 +7,11 @@ import { usePathname } from 'next/navigation'
 import { BiPurchaseTagAlt } from "react-icons/bi"
 import { BsFillHouseGearFill } from "react-icons/bs"
 import { MdChevronRight } from "react-icons/md";
+import { toast } from 'react-toastify'
+import axios from 'axios'
 
 const MenuItem = ({ href, icon: Icon, label }) => {
+  
   const pathname = usePathname()
   const isActive = pathname === href
   return (
@@ -17,6 +20,18 @@ const MenuItem = ({ href, icon: Icon, label }) => {
       <span className="hidden group-hover:inline whitespace-nowrap">{label}</span>
     </Link>
   )
+}
+
+const handleLogout=async()=>{
+  try {
+    const response= await axios.get('/api/staff/login', {withCredentials:true})
+    toast.success(response.data.message)
+    window.location.replace('/login')
+  } catch (error) {
+    console.log(error)
+    toast.error(error?.response?.data?.message || 'Failed to logout')
+    
+  }
 }
 
 const DashboardSidebar = () => {
@@ -71,11 +86,12 @@ const DashboardSidebar = () => {
       </div>
       <div>
         <p className="font-semibold text-gray-400 text-xs hidden group-hover:flex items-center gap-2 mb-2 uppercase"><BsFillHouseGearFill /> Settings</p>
-        <MenuItem href="/profile" icon={RiUser3Line} label="Account" />
+        <MenuItem href="/dashboard/account" icon={RiUser3Line} label="Account" />
         <MenuItem href="/dashboard/rolemanagement" icon={RiUserAddLine} label="Role Management" />
         <MenuItem href="/dashboard/settings" icon={RiSettings3Line} label="Setting" />
         <MenuItem href="/dashboard/support" icon={RiSuperscript} label="Support" />
         <MenuItem href="/dashboard/help" icon={TbReport} label="Help" />
+        <button onClick={handleLogout} className="hidden group-hover:inline whitespace-nowrap w-full bg-orange-500 text-white py-5 mt-5 cursor-pointer">Logout</button>
       </div>
     </aside>
   )

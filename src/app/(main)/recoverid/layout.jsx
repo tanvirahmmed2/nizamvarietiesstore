@@ -3,11 +3,11 @@ import { isLogin } from '@/lib/middleware'
 import { redirect } from 'next/navigation'
 import React from 'react'
 export const metadata={
-    title:'Login',
-    description:'Login page'
+    title:'Recover',
+    description:'Recover page'
 }
 
-const LoginLayout = async({children}) => {
+const RecoverLayout = async({children}) => {
     const auth= await isLogin()
     if(auth.success) return redirect('/dashboard')
   return (
@@ -17,4 +17,4 @@ const LoginLayout = async({children}) => {
   )
 }
 
-export default LoginLayout
+export default RecoverLayout

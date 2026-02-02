@@ -70,7 +70,7 @@ const ReturnPage = () => {
                         />
                     </div>
                     
-                    <div className='flex flex-col gap-3 mt-4 max-h-[400px] overflow-y-auto custom-scrollbar'>
+                    <div className='flex flex-col gap-3 mt-4 max-h-100 overflow-y-auto custom-scrollbar'>
                         {products.length > 0 ? products.map(p => (
                             <button 
                                 key={p.product_id}
@@ -95,7 +95,7 @@ const ReturnPage = () => {
                 {/* Processing Panel (7 cols) */}
                 <div className='lg:col-span-7'>
                     {selectedProduct ? (
-                        <div className='bg-gray-50/50 p-10 rounded-[2rem] border border-gray-100 flex flex-col gap-8 sticky top-10'>
+                        <div className='bg-gray-50/50 p-10 rounded border border-gray-100 flex flex-col gap-8 sticky top-10'>
                             <div className='flex justify-between items-start border-b border-gray-200 pb-6'>
                                 <div>
                                     <span className='text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em]'>Adjustment Target</span>
@@ -132,7 +132,7 @@ const ReturnPage = () => {
                                     <p className='text-xs font-bold text-gray-400 uppercase'>Revenue Deduction</p>
                                     <p className='text-2xl font-black text-red-600'>- ৳{(selectedProduct.sale_price * quantity).toLocaleString()}</p>
                                 </div>
-                                <div className='h-10 w-[1px] bg-gray-100'></div>
+                                <div className='h-10 w-px bg-gray-100'></div>
                                 <div className='text-right'>
                                     <p className='text-xs font-bold text-gray-400 uppercase'>Inventory Gain</p>
                                     <p className='text-2xl font-black text-emerald-600'>+ {quantity}</p>
@@ -148,11 +148,11 @@ const ReturnPage = () => {
                             </button>
                         </div>
                     ) : (
-                        <div className='h-full min-h-[400px] border-2 border-dashed border-gray-100 rounded-[2rem] flex flex-col items-center justify-center text-center p-10'>
+                        <div className='h-full min-h-100 border-2 border-dashed border-gray-100 rounded flex flex-col items-center justify-center text-center p-10'>
                             <div className='w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4'>
                                 <svg className='w-8 h-8 text-gray-200' fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                             </div>
-                            <p className='text-gray-400 font-medium max-w-[200px] leading-relaxed'>
+                            <p className='text-gray-400 font-medium max-w-50 leading-relaxed'>
                                 Select a product from the registry to begin return process.
                             </p>
                         </div>

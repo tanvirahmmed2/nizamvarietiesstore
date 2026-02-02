@@ -1,6 +1,7 @@
 'use client'
 import axios from 'axios'
 import React, { useState } from 'react'
+import { toast } from 'react-toastify'
 
 const NewStaffForm = () => {
     const [formData, setFormData] = useState({
@@ -19,9 +20,9 @@ const NewStaffForm = () => {
         e.preventDefault()
         try {
             const response= await axios.post('/api/staff', formData, {withCredentials:true})
-            alert(response.data.message)
+            toast.success(response.data.message)
         } catch (error) {
-            alert(error?.response?.data?.message || "Failed to add new staff")
+            toast.error(error?.response?.data?.message || "Failed to add new staff")
             
         }
 
