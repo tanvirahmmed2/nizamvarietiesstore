@@ -20,7 +20,7 @@ export async function GET(req) {
             values.push(`%${q}%`);
         }
 
-        query += ` ORDER BY created_at DESC LIMIT 5`;
+        query += ` ORDER BY created_at DESC LIMIT 10`;
 
         const data = await pool.query(query, values);
         const result = data.rows
