@@ -32,7 +32,7 @@ const Navbar = () => {
     <div className='w-full relative'>
       <nav className='w-full flex flex-row items-center justify-between fixed top-0 right-0 h-14 px-4 bg-linear-to-br from-sky-600 to-blue-800 text-white z-50'>
         <Link href={'/'} className='text-lg sm:text-2xl font-semibold  '>Nizam Varieties Store</Link>
-        <input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className='px-2 p-1 outline-none bg-white text-black' placeholder='search' />
+        <input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className='px-2 w-40  md:w-100 p-1 outline-none bg-white text-black' placeholder='search' />
         <div className='w-auto hidden sm:flex flex-row items-center justify-center'>
           <Link className='px-2 h-14 w-auto flex items-center justify-center hover:bg-white/20' href={'/offers'}>Offers</Link>
           <Link className='px-2 h-14 w-auto flex items-center justify-center hover:bg-white/20' href={'/products'}>Products</Link>

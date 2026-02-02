@@ -16,19 +16,6 @@ const Products = () => {
 
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('/api/product', { withCredentials: true })
-        setProducts(response.data.payload)
-      } catch (error) {
-        console.error("Fetch error:", error)
-        setProducts([])
-      }
-    }
-    fetchData()
-  }, [])
-
-  useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get('/api/product/filter', {

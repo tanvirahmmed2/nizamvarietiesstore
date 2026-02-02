@@ -92,7 +92,7 @@ export async function POST(req) {
 
 export async function GET() {
     try {
-        const data= await pool.query(`SELECT * FROM products ORDER BY created_at DESC`)
+        const data= await pool.query(`SELECT * FROM products ORDER BY created_at DESC LIMIT 30`)
         const result= data.rows
         if(!result || result.length===0){
             return NextResponse.json({

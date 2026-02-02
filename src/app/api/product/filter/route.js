@@ -10,7 +10,7 @@ export async function GET(req) {
         let values = [];
 
         if (category_id && category_id !== '') {
-            query += ` WHERE category_id = $1`;
+            query += ` WHERE category_id = $1 LIMIT 30`;
             values.push(category_id);
         }
 

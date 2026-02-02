@@ -10,7 +10,6 @@ const ContextProvider = ({ children }) => {
   const [isBrandBox, setIsBrandBox] = useState(false)
   const [categories, setCategories] = useState([])
   const [brands, setBrands] = useState([])
-  const [userData, setUserData] = useState(null)
   const [hydrated, setHydrated] = useState(false)
   const [cart, setCart] = useState({ items: [] })
 
@@ -126,17 +125,7 @@ const ContextProvider = ({ children }) => {
     localStorage.removeItem('cart')
   }
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get('/api/user/islogin', { withCredentials: true })
-        setUserData(response.data.payload)
-      } catch (error) {
-        setUserData(null)
-      }
-    }
-    fetchUserData()
-  }, [])
+
 
   const fetchCategory = async () => {
     try {
@@ -164,7 +153,7 @@ const ContextProvider = ({ children }) => {
 
   const contextValue = {
     isBrandBox, setIsBrandBox, isCategoryBox, setIsCategoryBox, brands, setBrands,
-    categories, fetchCategory, userData, cart, setCart, fetchCart, addToCart, clearCart, removeFromCart, decreaseQuantity
+    categories, fetchCategory,  cart, setCart, fetchCart, addToCart, clearCart, removeFromCart, decreaseQuantity
   }
 
   return <Context.Provider value={contextValue}>
