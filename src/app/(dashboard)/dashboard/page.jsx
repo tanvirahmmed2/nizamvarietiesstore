@@ -1,5 +1,6 @@
 'use client'
 
+import BarScanner from "@/components/helper/BarcodeScanner"
 import { Context } from "@/components/helper/Context"
 import SalesCart from "@/components/page/SalesCart"
 import axios from "axios"
@@ -21,7 +22,7 @@ const ManageHome = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const respoonse = await axios.get(`/api/product/search?q=${searchTerm}`,{withCredentials:true})
+        const respoonse = await axios.get(`/api/product/search?q=${searchTerm}`, { withCredentials: true })
         setProducts(respoonse.data.payload)
       } catch (error) {
         console.log(error)
@@ -32,12 +33,27 @@ const ManageHome = () => {
     fetchData()
   }, [searchTerm])
 
+  const handleBarcodeScan = async (code) => {
+    try {
+      setSearchTerm(code)
+
+      const response = await axios.get(`/api/product/search?q=${code}`, { withCredentials: true })
+      const foundItems = response.data.payload
+
+      if (foundItems && foundItems.length === 1) {
+        addToCart(foundItems[0])
+        setSearchTerm('') 
+      }
+    } catch (error) {
+      console.error("Scanner lookup error:", error)
+    }
+  }
 
 
   return (
     <div className="w-full p-4 flex flex-col md:flex-row">
       <div className="flex-2 flex flex-col items-center  gap-4">
-
+        <BarScanner onScan={handleBarcodeScan} />
         <div className="w-full flex flex-row items-center justify-between gap-4 border-b-2 p-4">
           <p>Find item</p>
           <input
