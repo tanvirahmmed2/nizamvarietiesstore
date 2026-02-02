@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
+import { generateReceipt } from '@/lib/database/print'
 
 const PendingOrdersPage = () => {
   const [orders, setOrders] = useState([])
@@ -37,6 +38,7 @@ const PendingOrdersPage = () => {
       if (res.data.success) {
         toast.success("Order Confirmed & Stock Updated")
         fetchOrders() 
+        generateReceipt(res.data.payload)
       }
     } catch (error) {
       toast.error(error?.response?.data?.message || "Confirmation failed")

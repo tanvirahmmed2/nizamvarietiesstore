@@ -4,6 +4,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { Context } from '../helper/Context'
 import { MdOutlineDeleteOutline } from 'react-icons/md'
+import { generateReceipt } from '@/lib/database/print'
 
 const Orderform = ({ cartItems }) => {
     const { fetchCart, decreaseQuantity, clearCart } = useContext(Context)
@@ -62,7 +63,7 @@ const Orderform = ({ cartItems }) => {
             total: data.totalPrice,
             paymentMethod: data.paymentMethod,
             transactionId: data.transactionId,
-            status: 'completed', // Direct sales from POS are confirmed immediately
+            status: 'completed',
             items: cartItems.map(item => ({
                 product_id: item.product_id,
                 quantity: item.quantity,
@@ -72,9 +73,8 @@ const Orderform = ({ cartItems }) => {
 
         try {
             const response = await axios.post('/api/order', payload, { withCredentials: true });
-            toast.success("Order Processed Successfully!");
-            if (fetchCart) fetchCart();
-
+            toast.success(response.data.message);
+            generateReceipt(response.data.payload)
             setData({
                 name: 'Walk-in Customer',
                 phone: '+88',
