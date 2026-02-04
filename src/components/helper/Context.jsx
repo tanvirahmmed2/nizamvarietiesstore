@@ -25,18 +25,16 @@ const ContextProvider = ({ children }) => {
 
     try {
       const parsed = JSON.parse(storedCart)
-      if (typeof parsed === 'object' && parsed !== null && Array.isArray(parsed.items)) {
+      if (parsed && Array.isArray(parsed.items)) {
         setCart(parsed)
       } else {
-        throw new Error('Invalid cart shape')
+        setCart({ items: [] })
       }
-      setHydrated(true)
     } catch (err) {
-      console.warn('Corrupted cart detected. Resetting cart.', err)
       localStorage.removeItem('cart')
       setCart({ items: [] })
-      setHydrated(true)
     }
+    setHydrated(true)
   }
 
   useEffect(() => {
@@ -46,18 +44,20 @@ const ContextProvider = ({ children }) => {
   }, [cart, hydrated])
 
   const addToCart = (product) => {
-    const exists = cart.items.find(item => item.product_id === product?.product_id);
+    if (!product?.product_id) return;
 
+    // 1. Check if it exists first for the toast logic
+    const exists = cart.items.find(item => item.product_id === product.product_id);
+
+    // 2. Perform the state update (Keep this pure!)
     setCart((prev) => {
-      const existing = prev.items.find(
-        item => item.product_id === product?.product_id
-      )
+      const existing = prev.items.find(item => item.product_id === product.product_id)
 
       if (existing) {
         return {
           ...prev,
           items: prev.items.map(item =>
-            item.product_id === product?.product_id
+            item.product_id === product.product_id
               ? { ...item, quantity: item.quantity + 1 }
               : item
           )
@@ -65,6 +65,7 @@ const ContextProvider = ({ children }) => {
       }
 
       const salePrice = parseFloat(product?.sale_price) || 0;
+      const wholeSalePrice = parseFloat(product?.wholesale_price) || 0;
       const discountAmount = parseFloat(product?.discount_price) || 0;
 
       return {
@@ -72,93 +73,79 @@ const ContextProvider = ({ children }) => {
         items: [
           ...prev.items,
           {
-            product_id: product?.product_id,
-            name: product?.name,
+            product_id: product.product_id,
+            name: product.name,
             quantity: 1,
-            base_price: salePrice,
-            discount_per_item: discountAmount,
+            sale_price: salePrice,
+            wholesale_price: wholeSalePrice,
+            discount_price: discountAmount,
             price: salePrice - discountAmount
           }
         ]
       }
-    })
+    });
 
+    // 3. Show the toast AFTER the setCart call (Outside the updater)
     if (exists) {
-      toast.info("Quantity increased")
+      toast.info("Quantity increased");
     } else {
-      toast.success("Added to cart")
+      toast.success("Added to cart");
     }
-  }
-
+  };
   const removeFromCart = (id) => {
-    setCart(prev => ({
-      ...prev,
-      items: prev.items.filter(item => item.product_id !== id)
-    }))
+    setCart(prev => ({ ...prev, items: prev.items.filter(item => item.product_id !== id) }))
   }
 
   const decreaseQuantity = (id) => {
     setCart((prev) => {
-      const existing = prev.items.find(
-        item => item.product_id === id
-      )
+      const existing = prev.items.find(item => item.product_id === id)
       if (!existing) return prev
       if (existing.quantity > 1) {
         return {
           ...prev,
           items: prev.items.map(item =>
-            item.product_id === id
-              ? { ...item, quantity: item.quantity - 1 }
-              : item
+            item.product_id === id ? { ...item, quantity: item.quantity - 1 } : item
           )
         }
       }
-      return {
-        ...prev,
-        items: prev.items.filter(item => item.product_id !== id)
-      }
+      return { ...prev, items: prev.items.filter(item => item.product_id !== id) }
     })
   }
 
   const clearCart = () => {
     setCart({ items: [] })
-    localStorage.removeItem('cart')
+    if (typeof window !== 'undefined') localStorage.removeItem('cart')
   }
-
-
 
   const fetchCategory = async () => {
     try {
       const response = await axios.get('/api/category', { withCredentials: true })
-      setCategories(response.data.payload)
-    } catch (error) {
-      setCategories([])
-    }
+      setCategories(response.data.payload || [])
+    } catch (error) { setCategories([]) }
   }
 
   const fetchBrand = async () => {
     try {
       const response = await axios.get('/api/brand', { withCredentials: true })
-      setBrands(response.data.payload)
-    } catch (error) {
-      setBrands([])
-    }
+      setBrands(response.data.payload || [])
+    } catch (error) { setBrands([]) }
   }
 
   useEffect(() => {
     fetchCategory()
     fetchCart()
     fetchBrand()
+
   }, [])
 
-  const contextValue = {
-    isBrandBox, setIsBrandBox, isCategoryBox, setIsCategoryBox, brands, setBrands,
-    categories, fetchCategory,  cart, setCart, fetchCart, addToCart, clearCart, removeFromCart, decreaseQuantity
-  }
-
-  return <Context.Provider value={contextValue}>
-    {children}
-  </Context.Provider>
+  return (
+    <Context.Provider value={{
+      isBrandBox, setIsBrandBox, isCategoryBox, setIsCategoryBox, brands, setBrands,
+      categories, fetchCategory, cart, setCart, fetchCart, addToCart, clearCart, removeFromCart, decreaseQuantity
+    }}>
+      {children}
+    </Context.Provider>
+  )
 }
 
 export default ContextProvider

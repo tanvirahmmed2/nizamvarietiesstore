@@ -6,12 +6,13 @@ import { Context } from '../helper/Context'
 import { MdOutlineDeleteOutline } from 'react-icons/md'
 import { generateReceipt } from '@/lib/database/print'
 
-const Orderform = ({ cartItems }) => {
-    const { fetchCart, decreaseQuantity, clearCart } = useContext(Context)
+const Orderform = ({ cartItems = [] }) => {
+    const { decreaseQuantity, clearCart, setCart } = useContext(Context)
+    const [saleType, setSaleType] = useState('retail') // retail or wholesale
+
     const [data, setData] = useState({
         name: 'Walk-in Customer',
         phone: '+88',
-        manualDiscount: 0,
         tax: 0,
         subTotal: 0,
         totalDiscount: 0,
@@ -20,28 +21,44 @@ const Orderform = ({ cartItems }) => {
         paymentMethod: 'cash'
     })
 
-    useEffect(() => {
-        const subTotal = cartItems.reduce(
-            (sum, item) => sum + (parseFloat(item.base_price) * item.quantity),
-            0
-        )
-        const productDiscount = cartItems.reduce(
-            (sum, item) => sum + (parseFloat(item.discount_per_item) * item.quantity),
-            0
-        )
-        const manualDiscount = parseFloat(data.manualDiscount) || 0
-        const tax = parseFloat(data.tax) || 0
+    // Update item prices in the cart when switching sale type
+    const handleSaleTypeChange = (type) => {
+        setSaleType(type)
+        setCart(prev => ({
+            ...prev,
+            items: prev.items.map(item => ({
+                ...item,
+                price: type === 'wholesale'
+                    ? (parseFloat(item.wholesale_price) || 0) - (parseFloat(item.discount_price) || 0)
+                    : (parseFloat(item.sale_price) || 0) - (parseFloat(item.discount_price) || 0)
+            }))
+        }))
+    }
 
-        const totalDiscount = productDiscount + manualDiscount
-        const totalPrice = subTotal - totalDiscount + tax
+    useEffect(() => {
+        // Calculate Subtotal based on the selected mode's BASE price
+        const subTotal = cartItems.reduce((sum, item) => {
+            const base = saleType === 'retail'
+                ? (parseFloat(item.sale_price) || 0)
+                : (parseFloat(item.wholesale_price) || 0);
+            return sum + (base * (item.quantity || 0));
+        }, 0)
+
+        // Calculate Automatic Discount (applied in both modes as requested)
+        const productDiscount = cartItems.reduce((sum, item) => {
+            return sum + (parseFloat(item.discount_price || 0) * (item.quantity || 0));
+        }, 0)
+
+        const tax = parseFloat(data.tax) || 0
+        const totalPrice = subTotal - productDiscount + tax
 
         setData(prev => ({
             ...prev,
             subTotal,
-            totalDiscount,
+            totalDiscount: productDiscount,
             totalPrice
         }))
-    }, [cartItems, data.manualDiscount, data.tax])
+    }, [cartItems, data.tax, saleType])
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -50,10 +67,7 @@ const Orderform = ({ cartItems }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-
-        if (cartItems.length === 0) {
-            return toast.error("Please add items to cart first");
-        }
+        if (cartItems.length === 0) return toast.error("Cart is empty")
 
         const payload = {
             customerName: data.name,
@@ -63,40 +77,44 @@ const Orderform = ({ cartItems }) => {
             total: data.totalPrice,
             paymentMethod: data.paymentMethod,
             transactionId: data.transactionId,
+            saleType: saleType,
             status: 'completed',
             items: cartItems.map(item => ({
                 product_id: item.product_id,
                 quantity: item.quantity,
-                price: item.price
+                price: item.price // This is the net price (Base - Discount)
             }))
         }
 
         try {
-            const response = await axios.post('/api/order', payload, { withCredentials: true });
-            toast.success(response.data.message);
-            generateReceipt(response.data.payload)
-            setData({
-                name: 'Walk-in Customer',
-                phone: '+88',
-                manualDiscount: 0,
-                tax: 0,
-                subTotal: 0,
-                totalDiscount: 0,
-                totalPrice: 0,
-                transactionId: '',
-                paymentMethod: 'cash'
-            })
+            const response = await axios.post('/api/order', payload, { withCredentials: true })
+            toast.success(response.data.message)
+            if (generateReceipt) generateReceipt(response.data.payload)
             clearCart()
+            setData(prev => ({
+                ...prev,
+                name: 'Walk-in Customer', phone: '+88', tax: 0, transactionId: ''
+            }))
+            setSaleType('retail')
         } catch (error) {
-            toast.error(error?.response?.data?.message || "Checkout failed");
+            toast.error(error?.response?.data?.message || "Checkout failed")
         }
     }
 
     return (
-        <form onSubmit={handleSubmit} className='w-full flex flex-col items-center justify-between gap-6 text-sm bg-white p-4 rounded-xl shadow-sm border border-black/5'>
+        <form onSubmit={handleSubmit} className='w-full flex flex-col items-center justify-between gap-4 text-sm bg-white p-4 rounded-xl shadow-md border border-gray-100'>
+
+
+            <div className='grid grid-cols-2 gap-2 bg-gray-100 p-1 rounded-lg w-full'>
+                <button type="button" onClick={() => handleSaleTypeChange('retail')}
+                    className={`py-2 rounded-md font-bold transition-all ${saleType === 'retail' ? 'bg-white text-sky-600 shadow-sm' : 'text-gray-500'}`}>Retail</button>
+                <button type="button" onClick={() => handleSaleTypeChange('wholesale')}
+                    className={`py-2 rounded-md font-bold transition-all ${saleType === 'wholesale' ? 'bg-sky-600 text-white shadow-sm' : 'text-gray-500'}`}>Wholesale</button>
+            </div>
+
             <div className='w-full flex flex-col gap-3'>
                 <div className='w-full flex flex-row items-center justify-between'>
-                    <label className='font-semibold'>Name</label>
+                    <label className='font-semibold'>Customer</label>
                     <input type="text" name='name' value={data.name} onChange={handleChange} className='px-3 py-1 border border-black/10 rounded-lg outline-none w-2/3' />
                 </div>
                 <div className='w-full flex flex-row items-center justify-between'>
@@ -105,7 +123,7 @@ const Orderform = ({ cartItems }) => {
                 </div>
                 <div className='w-full flex flex-row items-center justify-between'>
                     <label className='font-semibold'>Payment</label>
-                    <select name="paymentMethod" value={data.paymentMethod} onChange={handleChange} className='px-3 py-1 border border-black/10 rounded-lg outline-none w-2/3'>
+                    <select name="paymentMethod" value={data.paymentMethod} onChange={handleChange} className='px-3 py-1 border border-black/10 rounded-lg outline-none w-2/3 bg-white'>
                         <option value="cash">Cash</option>
                         <option value="card">Card</option>
                         <option value="online">Online</option>
@@ -119,35 +137,40 @@ const Orderform = ({ cartItems }) => {
                 )}
             </div>
 
+
             <div className='w-full max-h-48 overflow-y-auto border-y border-black/5 py-2'>
                 {cartItems.map(item => (
                     <div key={item.product_id} className='w-full flex justify-between items-center p-2 mb-1 bg-gray-50 rounded-lg'>
-                        <p className='text-xs font-medium truncate w-1/2'>{item.name}</p>
+                        <div className='w-1/2'>
+                            <p className='text-xs font-bold truncate'>{item.name}</p>
+                            <p className='text-[10px] text-sky-600 font-bold uppercase'>{saleType} Mode</p>
+                        </div>
                         <div className='flex items-center gap-3'>
-                            <p className='text-xs'>{item.quantity} x {item.price}</p>
-                            <MdOutlineDeleteOutline className='cursor-pointer text-red-500 text-lg' onClick={() => decreaseQuantity(item.product_id)} />
+                            <p className='text-xs'>{item.quantity} x {parseFloat(item.price).toFixed(2)}</p>
+                            <MdOutlineDeleteOutline className='cursor-pointer text-red-500 text-lg hover:scale-110' onClick={() => decreaseQuantity(item.product_id)} />
                         </div>
                     </div>
                 ))}
             </div>
 
+
             <div className='w-full flex flex-col gap-2 pt-2'>
-                <div className='flex justify-between'><span>Sub Total</span><span>{data.subTotal.toFixed(2)}</span></div>
-                <div className='flex justify-between text-red-500'><span>Discount</span><span>-{data.totalDiscount.toFixed(2)}</span></div>
-                <div className='flex justify-between'>
-                    <label>Tax</label>
+                <div className='flex justify-between'><span>Sub Total ({saleType})</span><span>{data.subTotal.toFixed(2)}</span></div>
+                <div className='flex justify-between text-red-500 font-medium'>
+                    <span>Auto Discount</span><span>-{data.totalDiscount.toFixed(2)}</span>
+                </div>
+                <div className='flex justify-between items-center'>
+                    <label>Tax (+)</label>
                     <input type="number" name="tax" value={data.tax} onChange={handleChange} className='w-20 border-b border-black/10 outline-none text-right' />
                 </div>
-                <div className='flex justify-between'>
-                    <label>Manual Disc.</label>
-                    <input type="number" name="manualDiscount" value={data.manualDiscount} onChange={handleChange} className='w-20 border-b border-black/10 outline-none text-right' />
-                </div>
-                <div className='flex justify-between font-bold text-lg border-t pt-2 mt-2 text-sky-700'>
-                    <span>Total Bill</span><span>৳{data.totalPrice.toFixed(2)}</span>
+                <div className='flex justify-between font-extrabold text-xl border-t border-dashed pt-2 mt-2 text-sky-700'>
+                    <span>TOTAL</span><span>৳{data.totalPrice.toFixed(2)}</span>
                 </div>
             </div>
 
-            <button className='w-full py-3 rounded-xl bg-sky-600 text-white hover:bg-sky-500 font-bold shadow-md transition-all uppercase' type='submit'>Complete Sale</button>
+            <button className='w-full py-3 rounded-xl bg-sky-600 text-white hover:bg-sky-700 font-bold shadow-lg transition-all active:scale-95 uppercase' type='submit'>
+                Complete {saleType} Sale
+            </button>
         </form>
     )
 }
