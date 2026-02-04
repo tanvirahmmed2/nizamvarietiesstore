@@ -76,7 +76,7 @@ const Cart = () => {
 
   if (!cart || cart?.items.length < 1) return (
     <div className='w-full p-20 text-center flex flex-col items-center gap-4'>
-      <p className='text-2xl text-gray-400 font-medium'>Your cart is empty</p>
+      <p className='text-2xl text-gray-400 '>Your cart is empty</p>
       <Link href="/products" className='bg-sky-500 hover:bg-sky-600 text-white px-8 py-3 rounded-full transition-all'>
         Continue Shopping
       </Link>
@@ -87,12 +87,12 @@ const Cart = () => {
     <div className='w-full max-w-6xl mx-auto p-4 flex flex-col lg:flex-row gap-8 mt-10'>
       
       <div className='flex-1'>
-        <h1 className='text-3xl font-extrabold mb-8 text-gray-800'>Shopping Cart</h1>
+        <h1 className='text-3xl font-semibold mb-8 text-gray-800'>Shopping Cart</h1>
         <div className='flex flex-col gap-6'>
           {cart.items.map((item) => (
             <div key={item?.product_id} className='flex items-center justify-between border-b border-gray-100 pb-6'>
               <div className='flex-1'>
-                <p className='font-bold text-lg text-gray-800'>{item?.name}</p>
+                <p className=' text-lg text-gray-800'>{item?.name}</p>
                 <p className='text-sm text-gray-500'>৳{parseFloat(item?.price).toFixed(2)} per unit</p>
               </div>
               <div className='flex items-center gap-6'>
@@ -101,9 +101,9 @@ const Cart = () => {
                     className='cursor-pointer text-gray-600 hover:text-black transition-colors' 
                     onClick={() => decreaseQuantity(item?.product_id)} 
                   />
-                  <span className='font-bold text-gray-800'>{item?.quantity}</span>
+                  <span className=' text-gray-800'>{item?.quantity}</span>
                 </div>
-                <p className='font-bold w-24 text-right text-gray-800'>
+                <p className=' w-24 text-right text-gray-800'>
                    ৳{(parseFloat(item.price) * item.quantity).toFixed(2)}
                 </p>
                 <MdDeleteOutline 
@@ -123,7 +123,7 @@ const Cart = () => {
       </div>
 
       <div className='w-full lg:w-100 bg-white p-8 rounded-3xl shadow-xl shadow-black/5 border border-gray-100 h-fit sticky top-10'>
-        <h2 className='text-2xl font-bold mb-6 text-gray-800'>Order Summary</h2>
+        <h2 className='text-2xl  mb-6 text-gray-800'>Order Summary</h2>
         <form onSubmit={placeOrder} className='flex flex-col gap-5'>
           <div className='space-y-4'>
             <input 
@@ -137,7 +137,7 @@ const Cart = () => {
               className='w-full p-4 border border-gray-200 rounded-2xl outline-none focus:border-sky-500 transition-all' 
             />
             
-            <label className='text-xs font-bold text-gray-400 uppercase ml-2'>Payment Method</label>
+            <label className='text-xs  text-gray-400 uppercase ml-2'>Payment Method</label>
             <select 
               name="paymentMethod" onChange={handleChange} value={formData.paymentMethod} 
               className='w-full p-4 border border-gray-200 rounded-2xl outline-none bg-white focus:border-sky-500 appearance-none'
@@ -172,7 +172,7 @@ const Cart = () => {
           </div>
 
           <button 
-            className='w-full bg-sky-600 text-white py-5 rounded-2xl font-extrabold hover:bg-sky-700 active:scale-95 shadow-lg shadow-sky-200 transition-all mt-6 uppercase tracking-wider' 
+            className='w-full bg-sky-600 text-white py-5 rounded-2xl  hover:bg-sky-700 active:scale-95   transition-all mt-6 uppercase tracking-wider' 
             type='submit'
           >
             Confirm Order
