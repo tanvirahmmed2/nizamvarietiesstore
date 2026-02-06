@@ -31,7 +31,9 @@ export async function GET(req) {
                     JSON_BUILD_OBJECT(
                         'name', pr.name, 
                         'quantity', oi.quantity,
-                        'price', oi.price
+                        'price', oi.price,
+                        'sale_price', pr.sale_price,
+                        'discount_price', pr.discount_price
                     )
                 ) AS product_list
             FROM orders o

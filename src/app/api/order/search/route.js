@@ -18,7 +18,7 @@ export async function GET(req) {
                 o.subtotal_amount AS subtotal,
                 p.payment_status,
                 o.created_at AS date,
-                JSON_AGG(JSON_BUILD_OBJECT('name', pr.name, 'quantity', oi.quantity)) AS product_list
+                JSON_AGG(JSON_BUILD_OBJECT('name', pr.name, 'quantity', oi.quantity,'sale_price', pr.sale_price, 'discount_price', pr.discount_price)) AS product_list
             FROM orders o
             JOIN customers c ON o.customer_id = c.customer_id
             JOIN payments p ON o.order_id = p.order_id

@@ -48,7 +48,7 @@ const DashboardSidebar = () => {
           <p className="hidden group-hover:flex items-center gap-4 px-2 cursor-pointer"><BiPurchaseTagAlt />Sale <FaChevronDown /></p>
           <div className="hidden group-hover/purchase:block px-3">
             <MenuItem href="/dashboard/sales-list" icon={RiShoppingBag3Line} label="Sales List" />
-            <MenuItem href="/dashboard/sale-transactions" icon={TbReport} label="Transaction" />
+            <MenuItem href="/dashboard/sales-transactions" icon={TbReport} label="Transaction" />
           </div>
         </div>
         <MenuItem href="/dashboard/purchase" icon={RiShoppingCart2Line} label="Purchase" />

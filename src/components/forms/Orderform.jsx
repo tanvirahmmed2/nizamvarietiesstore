@@ -3,7 +3,7 @@ import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { Context } from '../helper/Context'
-import { MdDeleteOutline, MdOutlineDeleteOutline } from 'react-icons/md'
+import { MdDeleteOutline } from 'react-icons/md'
 import { generateReceipt } from '@/lib/database/print'
 import { FaMinus, FaPlus } from 'react-icons/fa6'
 
@@ -14,7 +14,7 @@ const Orderform = ({ cartItems = [] }) => {
     const [data, setData] = useState({
         name: 'Walk-in Customer',
         phone: '+88',
-        tax: 0,
+        extradiscount: 0,
         subTotal: 0,
         totalDiscount: 0,
         totalPrice: 0,
@@ -29,7 +29,7 @@ const Orderform = ({ cartItems = [] }) => {
             items: prev.items.map(item => ({
                 ...item,
                 price: type === 'wholesale'
-                    ? (parseFloat(item.wholesale_price) || 0) - (parseFloat(item.discount_price) || 0)
+                    ? (parseFloat(item.wholesale_price) || 0)
                     : (parseFloat(item.sale_price) || 0) - (parseFloat(item.discount_price) || 0)
             }))
         }))
@@ -43,20 +43,21 @@ const Orderform = ({ cartItems = [] }) => {
             return sum + (base * (item.quantity || 0));
         }, 0)
 
-        const productDiscount = cartItems.reduce((sum, item) => {
-            return sum + (parseFloat(item.discount_price || 0) * (item.quantity || 0));
+        const productDiscountTotal = cartItems.reduce((sum, item) => {
+            const discountPerUnit = saleType === 'wholesale' ? 0 : (parseFloat(item.discount_price) || 0);
+            return sum + (discountPerUnit * (item.quantity || 0));
         }, 0)
 
-        const tax = parseFloat(data.tax) || 0
-        const totalPrice = subTotal - productDiscount + tax
+        const manualDiscount = parseFloat(data.extradiscount) || 0
+        const totalPrice = subTotal - productDiscountTotal - manualDiscount
 
         setData(prev => ({
             ...prev,
             subTotal,
-            totalDiscount: productDiscount,
-            totalPrice
+            totalDiscount: productDiscountTotal,
+            totalPrice: Math.max(0, totalPrice)
         }))
-    }, [cartItems, data.tax, saleType])
+    }, [cartItems, data.extradiscount, saleType])
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -71,7 +72,7 @@ const Orderform = ({ cartItems = [] }) => {
             customerName: data.name,
             phone: data.phone,
             subtotal: data.subTotal,
-            discount: data.totalDiscount,
+            discount: data.totalDiscount + (parseFloat(data.extradiscount) || 0),
             total: data.totalPrice,
             paymentMethod: data.paymentMethod,
             transactionId: data.transactionId,
@@ -88,11 +89,18 @@ const Orderform = ({ cartItems = [] }) => {
             const response = await axios.post('/api/order', payload, { withCredentials: true })
             toast.success(response.data.message)
             if (generateReceipt) generateReceipt(response.data.payload)
+            
             clearCart()
-            setData(prev => ({
-                ...prev,
-                name: 'Walk-in Customer', phone: '+88', tax: 0, transactionId: ''
-            }))
+            setData({
+                name: 'Walk-in Customer', 
+                phone: '+88', 
+                extradiscount: 0, 
+                transactionId: '',
+                paymentMethod: 'cash',
+                subTotal: 0,
+                totalDiscount: 0,
+                totalPrice: 0
+            })
             setSaleType('retail')
         } catch (error) {
             toast.error(error?.response?.data?.message || "Checkout failed")
@@ -101,7 +109,6 @@ const Orderform = ({ cartItems = [] }) => {
 
     return (
         <form onSubmit={handleSubmit} className='w-full flex flex-col items-center justify-between gap-4 text-sm bg-white p-4 rounded-xl shadow-md border border-gray-100'>
-
 
             <div className='grid grid-cols-2 gap-2 bg-gray-100 p-1 rounded-lg w-full'>
                 <button type="button" onClick={() => handleSaleTypeChange('retail')}
@@ -135,7 +142,6 @@ const Orderform = ({ cartItems = [] }) => {
                 )}
             </div>
 
-
             <div className='w-full max-h-48 overflow-y-auto border-y border-black/5 py-2'>
                 {cartItems.map(item => (
                     <div key={item.product_id} className='w-full flex justify-between items-center p-2 mb-1 bg-gray-50 rounded-lg'>
@@ -155,8 +161,8 @@ const Orderform = ({ cartItems = [] }) => {
                                     onClick={() => addToCart(item)}
                                 />
                             </div>
-                            <p className=' w-24 text-right text-gray-800'>
-                                ৳{(parseFloat(item.price) * item.quantity).toFixed(2)}
+                            <p className=' w-24 text-right text-gray-800 font-medium'>
+                                ৳{((parseFloat(item.price) || 0) * item.quantity).toFixed(2)}
                             </p>
                             <MdDeleteOutline
                                 className='text-2xl text-red-400 cursor-pointer hover:text-red-600 transition-colors'
@@ -167,18 +173,32 @@ const Orderform = ({ cartItems = [] }) => {
                 ))}
             </div>
 
-
             <div className='w-full flex flex-col gap-2 pt-2'>
-                <div className='flex justify-between'><span>Sub Total ({saleType})</span><span>{data.subTotal.toFixed(2)}</span></div>
-                <div className='flex justify-between text-red-500 font-medium'>
-                    <span>Auto Discount</span><span>-{data.totalDiscount.toFixed(2)}</span>
+                <div className='flex justify-between'>
+                    <span>Sub Total ({saleType})</span>
+                    <span>{data.subTotal.toFixed(2)}</span>
                 </div>
+                {data.totalDiscount > 0 && (
+                    <div className='flex justify-between text-red-500 font-medium'>
+                        <span>Auto Discount</span>
+                        <span>-{data.totalDiscount.toFixed(2)}</span>
+                    </div>
+                )}
                 <div className='flex justify-between items-center'>
-                    <label>Tax (+)</label>
-                    <input type="number" name="tax" value={data.tax} onChange={handleChange} className='w-20 border-b border-black/10 outline-none text-right' />
+                    <label>Manual Discount</label>
+                    <input 
+                        type="number" 
+                        name="extradiscount" 
+                        min={0}
+                        step="0.01" 
+                        value={data.extradiscount} 
+                        onChange={handleChange} 
+                        className='w-20 border-b border-black/10 outline-none text-right focus:border-sky-600 transition-colors' 
+                    />
                 </div>
                 <div className='flex justify-between font-extrabold text-xl border-t border-dashed pt-2 mt-2 text-sky-700'>
-                    <span>TOTAL</span><span>৳{data.totalPrice.toFixed(2)}</span>
+                    <span>TOTAL</span>
+                    <span>৳{data.totalPrice.toFixed(2)}</span>
                 </div>
             </div>
 

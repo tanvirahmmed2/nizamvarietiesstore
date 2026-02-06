@@ -65,11 +65,11 @@ const PendingOrdersPage = () => {
     <div className='w-full min-h-screen flex flex-col items-center p-6 gap-6 '>
       <h1 className='text-center text-3xl font-bold text-gray-800 mb-4'>Pending Orders</h1>
 
-      <div className='w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
+      <div className='w-full flex flex-col gap-2 items-center justify-center'>
         {orders.map((order, idx) => (
           <div 
             key={order.order_id || idx} 
-            className='w-full flex flex-col p-4 rounded-xl border border-gray-200 shadow-md bg-white hover:shadow-lg transition-shadow duration-200'
+            className='w-full flex flex-col items-center justify-center gap-2 p-2 border rounded-xl even:bg-gray-200'
           >
             <div className='flex flex-row w-full justify-between'>
               <div className='flex flex-col gap-1 mb-2'>
@@ -85,12 +85,19 @@ const PendingOrdersPage = () => {
               </div>
             </div>
 
-            <div className='mt-2'>
+            <div className='w-full'>
               <p className='font-medium text-gray-700 mb-1'>Products ({order.total_items_count || order.product_list?.length} items):</p>
-              <ul className='list-disc list-inside text-gray-800'>
+              <ul className='w-full list-disc list-inside text-gray-800'>
                 {order.product_list.map((product, pIdx) => (
-                  <li key={pIdx}>
-                    {product.name} - Qty: {product.quantity}
+                  <li key={pIdx} className='w-full grid grid-cols-6'>
+                    <p className='col-span-4'>{product.name}</p>
+                    <p className='col-span-1'>Quantity: {product.quantity}</p>
+                    <div className='col-span-1 flex flex-col'>
+                      <p >Price:৳{product.sale_price *product.quantity }</p>
+                      {
+                        product.discount_price > 0 && <p className='text-xs'> (- {product.discount_price *product.quantity})</p>
+                      }
+                      </div>
                   </li>
                 ))}
               </ul>

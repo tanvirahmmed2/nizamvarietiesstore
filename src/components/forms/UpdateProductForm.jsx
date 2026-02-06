@@ -55,7 +55,7 @@ const UpdateProductForm = ({ product }) => {
 
             if (response.data.success) {
                 toast.success(response.data.message)
-                
+
             }
         } catch (error) {
             console.error(error)
@@ -108,37 +108,44 @@ const UpdateProductForm = ({ product }) => {
                 <div className='w-full flex flex-col md:flex-row items-center justify-center gap-2'>
                     <div className='w-full flex flex-col gap-1'>
                         <label htmlFor="stock">Stock *</label>
-                        <input type="number" min={0} name='stock' id='stock' required value={formData.stock} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
+                        <input type="number" min={0}
+                            step="0.01" name='stock' id='stock' required value={formData.stock} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
                     </div>
                     <div className='w-full flex flex-col gap-1'>
                         <label htmlFor="purchase_price">Purchase Price *</label>
-                        <input type="number" min={0} name='purchase_price' id='purchase_price' required value={formData.purchase_price} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
+                        <input type="number" min={0}
+                            step="0.01" name='purchase_price' id='purchase_price' required value={formData.purchase_price} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
                     </div>
                 </div>
 
                 <div className='w-full flex flex-col md:flex-row items-center justify-center gap-2'>
                     <div className='w-full flex flex-col gap-1'>
                         <label htmlFor="sale_price">Sale Price *</label>
-                        <input type="number" min={0} name='sale_price' id='sale_price' required value={formData.sale_price} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
+                        <input type="number" min={0}
+                            step="0.01" name='sale_price' id='sale_price' required value={formData.sale_price} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
                     </div>
                     <div className='w-full flex flex-col gap-1'>
                         <label htmlFor="discount_price">Discount Price</label>
-                        <input type="number" min={0} name='discount_price' id='discount_price' value={formData.discount_price} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
+                        <input type="number" min={0}
+                            step="0.01" name='discount_price' id='discount_price' value={formData.discount_price} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
                     </div>
                     <div className='w-full flex flex-col gap-1'>
                         <label htmlFor="wholesale_price">Whole Sale Price *</label>
-                        <input type="number" min={0} name='wholesale_price' id='wholesale_price' required value={formData.wholesale_price} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
+                        <input type="number" min={0}
+                            step="0.01" name='wholesale_price' id='wholesale_price' required value={formData.wholesale_price} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
                     </div>
                 </div>
 
                 <div className='w-full flex flex-col md:flex-row items-center justify-center gap-2'>
                     <div className='w-full flex flex-col gap-1'>
                         <label htmlFor="retail_price">Retail Price</label>
-                        <input type="number" min={0} name='retail_price' id='retail_price' value={formData.retail_price} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
+                        <input type="number" min={0}
+                            step="0.01" name='retail_price' id='retail_price' value={formData.retail_price} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
                     </div>
                     <div className='w-full flex flex-col gap-1'>
                         <label htmlFor="dealer_price">Dealer Price</label>
-                        <input type="number" min={0} name='dealer_price' id='dealer_price' value={formData.dealer_price} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
+                        <input type="number" min={0}
+                            step="0.01" name='dealer_price' id='dealer_price' value={formData.dealer_price} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
                     </div>
                 </div>
 

@@ -18,11 +18,11 @@ const TransactionsPage = async () => {
     <div className='w-full min-h-screen flex flex-col items-center p-6 gap-6 '>
       <h1 className='text-center text-3xl font-bold text-gray-800 mb-4'>Transaction History</h1>
       
-      <div className='w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
+      <div className='w-full flex flex-col gap-1'>
         {transactions.length > 0 && transactions.map((t, idx) => (
           <div 
             key={idx} 
-            className='w-full flex flex-col sm:flex-row justify-between p-4 rounded-xl border border-gray-200 shadow-md bg-white hover:shadow-lg transition-shadow duration-200'
+            className='w-full flex flex-col sm:flex-row justify-between p-4 rounded-xl border border-gray-200 shadow-md bg-white even:bg-gray-200 hover:shadow-lg transition-shadow duration-200'
           >
             <div className='flex flex-col gap-1'>
               <p className='font-medium text-gray-700'>Name: <span className='font-semibold text-gray-900'>{t.name}</span></p>
