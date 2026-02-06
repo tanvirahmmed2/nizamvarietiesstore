@@ -15,7 +15,7 @@ const MenuItem = ({ href, icon: Icon, label }) => {
   const pathname = usePathname()
   const isActive = pathname === href
   return (
-    <Link href={href} className={`group font-serif flex flex-row gap-4 items-center px-2 py-1 transition-all ${isActive ? 'bg-sky-500 text-white' : 'hover:bg-sky-500 hover:text-white'}`}>
+    <Link href={href} className={`group font-serif flex flex-row gap-4  opacity-80 items-center px-2 py-1 transition-all ${isActive ? 'bg-sky-500 text-white' : 'hover:bg-sky-500 hover:text-white'}`}>
       <Icon size={14} />
       <span className="hidden group-hover:inline whitespace-nowrap">{label}</span>
     </Link>
@@ -45,10 +45,18 @@ const DashboardSidebar = () => {
         <MenuItem href="/dashboard/pos" icon={RiShoppingCart2Line} label="POS" />
         <MenuItem href="/dashboard/pendingorders" icon={RiShoppingCart2Line} label="Pending Orders" />
         <div className="group/purchase flex flex-col gap-1">
+          <p className="hidden group-hover:flex items-center gap-4 px-2 cursor-pointer"><BiPurchaseTagAlt />Sale <MdChevronRight /></p>
+          <div className="hidden group-hover/purchase:block px-3">
+            <MenuItem href="/dashboard/sales-list" icon={RiShoppingBag3Line} label="Sales List" />
+            <MenuItem href="/dashboard/sale-transactions" icon={TbReport} label="Transaction" />
+          </div>
+        </div>
+        <MenuItem href="/dashboard/purchase" icon={RiShoppingCart2Line} label="Purchase" />
+        <div className="group/purchase flex flex-col gap-1">
           <p className="hidden group-hover:flex items-center gap-4 px-2 cursor-pointer"><BiPurchaseTagAlt />Purchase <MdChevronRight /></p>
           <div className="hidden group-hover/purchase:block px-3">
-            <MenuItem href="/dashboard/saleslist" icon={RiShoppingBag3Line} label="Sales List" />
-            <MenuItem href="/dashboard/transactions" icon={TbReport} label="Transaction" />
+            <MenuItem href="/dashboard/purchase-list" icon={RiShoppingBag3Line} label="Purchase List" />
+            <MenuItem href="/dashboard/purchase-transactions" icon={TbReport} label="Transaction" />
           </div>
         </div>
         <MenuItem href="/dashboard/return" icon={RiRefund2Line} label="Return" />
