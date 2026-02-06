@@ -6,9 +6,9 @@ import { TbReport, TbMoneybag, TbReportMoney, TbReportAnalytics, TbReportSearch 
 import { usePathname } from 'next/navigation'
 import { BiPurchaseTagAlt } from "react-icons/bi"
 import { BsFillHouseGearFill } from "react-icons/bs"
-import { MdChevronRight } from "react-icons/md";
 import { toast } from 'react-toastify'
 import axios from 'axios'
+import { FaChevronDown } from 'react-icons/fa6'
 
 const MenuItem = ({ href, icon: Icon, label }) => {
   
@@ -45,7 +45,7 @@ const DashboardSidebar = () => {
         <MenuItem href="/dashboard/pos" icon={RiShoppingCart2Line} label="POS" />
         <MenuItem href="/dashboard/pendingorders" icon={RiShoppingCart2Line} label="Pending Orders" />
         <div className="group/purchase flex flex-col gap-1">
-          <p className="hidden group-hover:flex items-center gap-4 px-2 cursor-pointer"><BiPurchaseTagAlt />Sale <MdChevronRight /></p>
+          <p className="hidden group-hover:flex items-center gap-4 px-2 cursor-pointer"><BiPurchaseTagAlt />Sale <FaChevronDown /></p>
           <div className="hidden group-hover/purchase:block px-3">
             <MenuItem href="/dashboard/sales-list" icon={RiShoppingBag3Line} label="Sales List" />
             <MenuItem href="/dashboard/sale-transactions" icon={TbReport} label="Transaction" />
@@ -53,7 +53,7 @@ const DashboardSidebar = () => {
         </div>
         <MenuItem href="/dashboard/purchase" icon={RiShoppingCart2Line} label="Purchase" />
         <div className="group/purchase flex flex-col gap-1">
-          <p className="hidden group-hover:flex items-center gap-4 px-2 cursor-pointer"><BiPurchaseTagAlt />Purchase <MdChevronRight /></p>
+          <p className="hidden group-hover:flex items-center gap-4 px-2 cursor-pointer"><BiPurchaseTagAlt />Purchase <FaChevronDown /></p>
           <div className="hidden group-hover/purchase:block px-3">
             <MenuItem href="/dashboard/purchase-list" icon={RiShoppingBag3Line} label="Purchase List" />
             <MenuItem href="/dashboard/purchase-transactions" icon={TbReport} label="Transaction" />
@@ -66,7 +66,7 @@ const DashboardSidebar = () => {
         <p className="font-semibold  text-xs hidden group-hover:block mb-2 uppercase">Product Information</p>
         <MenuItem href="/dashboard/category" icon={RiArchiveLine} label="Category" />
         <div className="group/products flex flex-col gap-1">
-          <p className="hidden group-hover:flex items-center gap-4 px-2 cursor-pointer"><RiProductHuntLine />Products <MdChevronRight /></p>
+          <p className="hidden group-hover:flex items-center gap-4 px-2 cursor-pointer"><RiProductHuntLine />Products <FaChevronDown /></p>
           <div className="hidden group-hover/products:block px-3">
             <MenuItem href="/dashboard/newproduct" icon={RiPriceTag3Line} label="New Product" />
             <MenuItem href="/dashboard/products" icon={RiShoppingBag3Line} label="Product List" />
@@ -83,7 +83,7 @@ const DashboardSidebar = () => {
         <p className="font-semibold  text-xs hidden group-hover:flex items-center gap-2 mb-2 uppercase"><TbReportMoney />Report & Ledger</p>
         <MenuItem href="/dashboard/ledger" icon={RiFileChartLine} label="Ledger" />
         <div className="group/reports flex flex-col gap-1">
-          <p className="hidden group-hover:flex items-center gap-4 px-2 cursor-pointer"><TbReportSearch />Report<MdChevronRight /></p>
+          <p className="hidden group-hover:flex items-center gap-4 px-2 cursor-pointer"><TbReportSearch />Report<FaChevronDown /></p>
           <div className="hidden group-hover/reports:block px-3">
             <MenuItem href="/dashboard/sales" icon={TbReport} label="Sales" />
             <MenuItem href="/dashboard/stock" icon={RiFileChartLine} label="Stock" />
