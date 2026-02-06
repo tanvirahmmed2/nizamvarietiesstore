@@ -15,7 +15,7 @@ const MenuItem = ({ href, icon: Icon, label }) => {
   const pathname = usePathname()
   const isActive = pathname === href
   return (
-    <Link href={href} className={`group font-serif flex opacity-80 flex-row gap-4 items-center px-2 py-1 transition-all ${isActive ? 'bg-sky-500 text-white' : 'hover:bg-sky-600 hover:text-white'}`}>
+    <Link href={href} className={`group font-serif flex flex-row gap-4 items-center px-2 py-1 transition-all ${isActive ? 'bg-sky-500 text-white' : 'hover:bg-sky-500 hover:text-white'}`}>
       <Icon size={14} />
       <span className="hidden group-hover:inline whitespace-nowrap">{label}</span>
     </Link>
@@ -36,12 +36,12 @@ const handleLogout=async()=>{
 
 const DashboardSidebar = () => {
   return (
-    <aside className="group select-none fixed top-0 left-0 z-50 bg-white h-screen w-16 hover:w-60 border-r-2  transition-all duration-300 p-2 flex flex-col gap-4 overflow-y-auto py-8">
+    <aside className="group select-none fixed top-0  left-0 z-50 text-white bg-sky-600 h-screen w-16 hover:w-60 border-r-2  transition-all duration-300 p-2 flex flex-col gap-4 overflow-y-auto py-8">
       <div className="pb-5 text-xl">
         <MenuItem href="/dashboard" icon={RiHome5Line} label="Management" />
       </div>
       <div>
-        <p className="font-semibold text-gray-400 text-xs hidden group-hover:flex items-center gap-2 mb-2 uppercase"><TbMoneybag />Purchase & Transaction</p>
+        <p className="font-semibold  text-xs hidden group-hover:flex items-center gap-2 mb-2 uppercase"><TbMoneybag />Purchase & Transaction</p>
         <MenuItem href="/dashboard/pos" icon={RiShoppingCart2Line} label="POS" />
         <MenuItem href="/dashboard/pendingorders" icon={RiShoppingCart2Line} label="Pending Orders" />
         <div className="group/purchase flex flex-col gap-1">
@@ -55,7 +55,7 @@ const DashboardSidebar = () => {
         <MenuItem href="/dashboard/damage" icon={RiAlertLine} label="Damage" />
       </div>
       <div>
-        <p className="font-semibold text-gray-400 text-xs hidden group-hover:block mb-2 uppercase">Product Information</p>
+        <p className="font-semibold  text-xs hidden group-hover:block mb-2 uppercase">Product Information</p>
         <MenuItem href="/dashboard/category" icon={RiArchiveLine} label="Category" />
         <div className="group/products flex flex-col gap-1">
           <p className="hidden group-hover:flex items-center gap-4 px-2 cursor-pointer"><RiProductHuntLine />Products <MdChevronRight /></p>
@@ -67,12 +67,12 @@ const DashboardSidebar = () => {
         <MenuItem href="/dashboard/brand" icon={RiPriceTag3Line} label="Brand" />
       </div>
       <div>
-        <p className="font-semibold text-gray-400 text-xs hidden group-hover:block mb-2 uppercase">Customer & Supplier</p>
+        <p className="font-semibold  text-xs hidden group-hover:block mb-2 uppercase">Customer & Supplier</p>
         <MenuItem href="/dashboard/customer" icon={RiUser3Line} label="Customer" />
         <MenuItem href="/dashboard/supplier" icon={RiTruckLine} label="Supplier" />
       </div>
       <div>
-        <p className="font-semibold text-gray-400 text-xs hidden group-hover:flex items-center gap-2 mb-2 uppercase"><TbReportMoney />Report & Ledger</p>
+        <p className="font-semibold  text-xs hidden group-hover:flex items-center gap-2 mb-2 uppercase"><TbReportMoney />Report & Ledger</p>
         <MenuItem href="/dashboard/ledger" icon={RiFileChartLine} label="Ledger" />
         <div className="group/reports flex flex-col gap-1">
           <p className="hidden group-hover:flex items-center gap-4 px-2 cursor-pointer"><TbReportSearch />Report<MdChevronRight /></p>
@@ -84,7 +84,7 @@ const DashboardSidebar = () => {
         </div>
       </div>
       <div>
-        <p className="font-semibold text-gray-400 text-xs hidden group-hover:flex items-center gap-2 mb-2 uppercase"><BsFillHouseGearFill /> Settings</p>
+        <p className="font-semibold  text-xs hidden group-hover:flex items-center gap-2 mb-2 uppercase"><BsFillHouseGearFill /> Settings</p>
         <MenuItem href="/dashboard/account" icon={RiUser3Line} label="Account" />
         <MenuItem href="/dashboard/rolemanagement" icon={RiUserAddLine} label="Role Management" />
         <MenuItem href="/dashboard/support" icon={RiSuperscript} label="Support" />
