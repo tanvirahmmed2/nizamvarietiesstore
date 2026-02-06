@@ -42,7 +42,7 @@ const DashboardSidebar = () => {
       </div>
       <div>
         <p className="font-semibold text-gray-400 text-xs hidden group-hover:flex items-center gap-2 mb-2 uppercase"><TbMoneybag />Purchase & Transaction</p>
-        <MenuItem href="/dashboard" icon={RiShoppingCart2Line} label="POS" />
+        <MenuItem href="/dashboard/pos" icon={RiShoppingCart2Line} label="POS" />
         <MenuItem href="/dashboard/pendingorders" icon={RiShoppingCart2Line} label="Pending Orders" />
         <div className="group/purchase flex flex-col gap-1">
           <p className="hidden group-hover:flex items-center gap-4 px-2 cursor-pointer"><BiPurchaseTagAlt />Purchase <MdChevronRight /></p>
@@ -61,8 +61,7 @@ const DashboardSidebar = () => {
           <p className="hidden group-hover:flex items-center gap-4 px-2 cursor-pointer"><RiProductHuntLine />Products <MdChevronRight /></p>
           <div className="hidden group-hover/products:block px-3">
             <MenuItem href="/dashboard/newproduct" icon={RiPriceTag3Line} label="New Product" />
-            <MenuItem href="/dashboard/updateproduct" icon={RiPriceTag3Line} label="Update Product" />
-            <MenuItem href="/dashboard/productlist" icon={RiShoppingBag3Line} label="Product List" />
+            <MenuItem href="/dashboard/products" icon={RiShoppingBag3Line} label="Product List" />
           </div>
         </div>
         <MenuItem href="/dashboard/brand" icon={RiPriceTag3Line} label="Brand" />

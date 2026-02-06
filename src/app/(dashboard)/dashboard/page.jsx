@@ -1,88 +1,96 @@
 'use client'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import { Line } from 'react-chartjs-2'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+} from 'chart.js'
 
-import BarScanner from "@/components/helper/BarcodeScanner"
-import { Context } from "@/components/helper/Context"
-import SalesCart from "@/components/page/SalesCart"
-import axios from "axios"
-import { useContext, useEffect, useState, } from "react"
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler)
 
+const AnalyticsPage = () => {
+    const [data, setData] = useState(null)
+    const [loading, setLoading] = useState(true)
 
-
-const ManageHome = () => {
-  const { addToCart } = useContext(Context)
-
-
-
-
-  const [products, setProducts] = useState([])
-
-  const [searchTerm, setSearchTerm] = useState('')
-
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const respoonse = await axios.get(`/api/product/search?q=${searchTerm}`, { withCredentials: true })
-        setProducts(respoonse.data.payload)
-      } catch (error) {
-        console.log(error)
-        setProducts([])
-
-      }
-    }
-    fetchData()
-  }, [searchTerm])
-
-  const handleBarcodeScan = async (code) => {
-    try {
-      setSearchTerm(code)
-
-      const response = await axios.get(`/api/product/search?q=${code}`, { withCredentials: true })
-      const foundItems = response.data.payload
-
-      if (foundItems && foundItems.length === 1) {
-        addToCart(foundItems[0])
-        setSearchTerm('') 
-      }
-    } catch (error) {
-      console.error("Scanner lookup error:", error)
-    }
-  }
-
-
-  return (
-    <div className="w-full p-4 flex flex-col md:flex-row">
-      <div className="flex-2 flex flex-col items-center  gap-4">
-        <BarScanner onScan={handleBarcodeScan} />
-        <div className="w-full flex flex-row items-center justify-between gap-4 border-b-2 p-4">
-          <p>Find item</p>
-          <input
-            type="text"
-            name='searchTerm'
-            id='searchTerm'
-            onChange={(e) => setSearchTerm(e.target.value)}
-            value={searchTerm}
-            className='w-auto border border-sky-400 px-4 p-1 rounded-sm outline-none '
-          />
-        </div>
-
-        {
-          !products || products.length < 1 ? <p>Please search product</p> : <div className="w-full flex flex-col gap-2 items-center justify-center">
-            {
-              products?.map((product) => (
-                <div key={product.product_id} className="w-full flex flex-row items-center justify-center p-1">
-                  <p className="flex-5">{product.name}</p>
-                  <p className="flex-1"> ৳ {product.sale_price - product.discount_price}</p>
-                  <button className="flex-1" onClick={() => addToCart(product)}>Add</button>
-                </div>
-              ))
-            }
-          </div>
+    useEffect(() => {
+        const fetchAnalytics = async () => {
+            try {
+                const res = await axios.get('/api/report/analytics')
+                setData(res.data.payload)
+            } catch (err) { console.log(err) }
+            finally { setLoading(false) }
         }
-      </div>
-      <SalesCart />
-    </div>
-  )
+        fetchAnalytics()
+    }, [])
+
+    if (loading) return <div className='p-10 text-center text-sky-400 animate-pulse'>Aggregating Data...</div>
+
+    const chartConfig = {
+        labels: data?.chartData?.map(d => d.date) || [],
+        datasets: [{
+            label: 'Daily Sales',
+            data: data?.chartData?.map(d => Number(d.amount)) || [],
+            borderColor: '#0ea5e9',
+            backgroundColor: 'rgba(14, 165, 233, 0.1)',
+            fill: true,
+            tension: 0.4,
+        }]
+    }
+
+    const formatNum = (val) => Number(val || 0).toLocaleString();
+
+    return (
+        <div className=' mx-auto w-full p-8 flex flex-col gap-8 bg-white min-h-screen'>
+            <div className='flex flex-col gap-1'>
+                <h1 className='text-3xl font-black text-sky-900'>Business Analytics</h1>
+                <p className='text-sky-400 text-sm font-medium tracking-widest uppercase'>Periodic Growth & Capital Overview</p>
+            </div>
+
+            <div className='grid grid-cols-2 lg:grid-cols-4 gap-4'>
+                {[
+                    { label: 'Today', val: data?.sales?.today },
+                    { label: 'Yesterday', val: data?.sales?.yesterday },
+                    { label: 'Last 7 Days', val: data?.sales?.last_week },
+                    { label: 'This Year', val: data?.sales?.last_year },
+                ].map((s, i) => (
+                    <div key={i} className='p-6 bg-sky-50 rounded-2xl border border-sky-100'>
+                        <span className='text-[10px] font-bold text-sky-400 uppercase tracking-widest'>{s.label}</span>
+                        <p className='text-xl font-black text-sky-800 mt-1'>৳{formatNum(s.val)}</p>
+                    </div>
+                ))}
+            </div>
+
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+                <div className='p-8 bg-sky-600 rounded text-white shadow shadow-sky-100'>
+                    <span className='text-xs font-bold opacity-80 uppercase tracking-wider'>Total Invested</span>
+                    <p className='text-3xl font-black mt-2'>৳{formatNum(data?.finance?.total_invested)}</p>
+                </div>
+                <div className='p-8 bg-emerald-600 rounded text-white shadow shadow-emerald-100'>
+                    <span className='text-xs font-bold opacity-80 uppercase tracking-wider'>Total Earned</span>
+                    <p className='text-3xl font-black mt-2'>৳{formatNum(data?.finance?.total_earned)}</p>
+                </div>
+                <div className='p-8 bg-sky-900 rounded text-white shadow shadow-sky-200'>
+                    <span className='text-xs font-bold opacity-80 uppercase tracking-wider'>Remaining Capitals</span>
+                    <p className='text-3xl font-black mt-2'>৳{formatNum(data?.finance?.remaining_capitals)}</p>
+                </div>
+            </div>
+
+            <div className='w-full p-8 border border-sky-100 rounded bg-white shadow-sm'>
+                <h3 className='text-lg font-bold text-sky-800 mb-6'>Sales Growth (Last 7 Days)</h3>
+                <div className='h-75 w-full'>
+                    <Line data={chartConfig} options={{ maintainAspectRatio: false, responsive: true }} />
+                </div>
+            </div>
+        </div>
+    )
 }
 
-export default ManageHome
+export default AnalyticsPage
