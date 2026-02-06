@@ -2,13 +2,13 @@
 import { Context } from '@/components/helper/Context'
 import React, { useContext, useEffect, useState } from 'react'
 import { MdDeleteOutline } from "react-icons/md";
-import { FaMinus } from "react-icons/fa6";
+import { FaMinus, FaPlus } from "react-icons/fa6";
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import Link from 'next/link';
 
 const Cart = () => {
-  const { cart, removeFromCart, decreaseQuantity, clearCart } = useContext(Context)
+  const { cart, removeFromCart,addToCart, decreaseQuantity, clearCart } = useContext(Context)
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -102,6 +102,10 @@ const Cart = () => {
                     onClick={() => decreaseQuantity(item?.product_id)} 
                   />
                   <span className=' text-gray-800'>{item?.quantity}</span>
+                  <FaPlus 
+                    className='cursor-pointer text-gray-600 hover:text-black transition-colors' 
+                    onClick={() => addToCart(item)} 
+                  />
                 </div>
                 <p className=' w-24 text-right text-gray-800'>
                    ৳{(parseFloat(item.price) * item.quantity).toFixed(2)}

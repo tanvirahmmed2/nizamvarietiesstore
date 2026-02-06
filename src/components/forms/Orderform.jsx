@@ -3,12 +3,13 @@ import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { Context } from '../helper/Context'
-import { MdOutlineDeleteOutline } from 'react-icons/md'
+import { MdDeleteOutline, MdOutlineDeleteOutline } from 'react-icons/md'
 import { generateReceipt } from '@/lib/database/print'
+import { FaMinus, FaPlus } from 'react-icons/fa6'
 
 const Orderform = ({ cartItems = [] }) => {
-    const { decreaseQuantity, clearCart, setCart } = useContext(Context)
-    const [saleType, setSaleType] = useState('retail') // retail or wholesale
+    const { decreaseQuantity, clearCart, addToCart, removeFromCart, setCart } = useContext(Context)
+    const [saleType, setSaleType] = useState('retail')
 
     const [data, setData] = useState({
         name: 'Walk-in Customer',
@@ -21,7 +22,6 @@ const Orderform = ({ cartItems = [] }) => {
         paymentMethod: 'cash'
     })
 
-    // Update item prices in the cart when switching sale type
     const handleSaleTypeChange = (type) => {
         setSaleType(type)
         setCart(prev => ({
@@ -36,7 +36,6 @@ const Orderform = ({ cartItems = [] }) => {
     }
 
     useEffect(() => {
-        // Calculate Subtotal based on the selected mode's BASE price
         const subTotal = cartItems.reduce((sum, item) => {
             const base = saleType === 'retail'
                 ? (parseFloat(item.sale_price) || 0)
@@ -44,7 +43,6 @@ const Orderform = ({ cartItems = [] }) => {
             return sum + (base * (item.quantity || 0));
         }, 0)
 
-        // Calculate Automatic Discount (applied in both modes as requested)
         const productDiscount = cartItems.reduce((sum, item) => {
             return sum + (parseFloat(item.discount_price || 0) * (item.quantity || 0));
         }, 0)
@@ -82,7 +80,7 @@ const Orderform = ({ cartItems = [] }) => {
             items: cartItems.map(item => ({
                 product_id: item.product_id,
                 quantity: item.quantity,
-                price: item.price // This is the net price (Base - Discount)
+                price: item.price
             }))
         }
 
@@ -146,8 +144,24 @@ const Orderform = ({ cartItems = [] }) => {
                             <p className='text-[10px] text-sky-600 font-bold uppercase'>{saleType} Mode</p>
                         </div>
                         <div className='flex items-center gap-3'>
-                            <p className='text-xs'>{item.quantity} x {parseFloat(item.price).toFixed(2)}</p>
-                            <MdOutlineDeleteOutline className='cursor-pointer text-red-500 text-lg hover:scale-110' onClick={() => decreaseQuantity(item.product_id)} />
+                            <div className='flex items-center gap-4 bg-gray-100 px-4 py-2 rounded-full'>
+                                <FaMinus
+                                    className='cursor-pointer text-gray-600 hover:text-black transition-colors'
+                                    onClick={() => decreaseQuantity(item?.product_id)}
+                                />
+                                <span className=' text-gray-800'>{item?.quantity}</span>
+                                <FaPlus
+                                    className='cursor-pointer text-gray-600 hover:text-black transition-colors'
+                                    onClick={() => addToCart(item)}
+                                />
+                            </div>
+                            <p className=' w-24 text-right text-gray-800'>
+                                ৳{(parseFloat(item.price) * item.quantity).toFixed(2)}
+                            </p>
+                            <MdDeleteOutline
+                                className='text-2xl text-red-400 cursor-pointer hover:text-red-600 transition-colors'
+                                onClick={() => removeFromCart(item?.product_id)}
+                            />
                         </div>
                     </div>
                 ))}
