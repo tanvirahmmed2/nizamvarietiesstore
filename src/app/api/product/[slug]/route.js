@@ -12,7 +12,7 @@ export async function GET(req, { params }) {
             }, { status: 400 })
         }
 
-        const data = await pool.query(`SELECT p.*, c.name as category_name, b.name as brand_name FROM products p
+        const data = await pool.query(`SELECT p.*,c.category_id, c.name as category_name, b.name as brand_name FROM products p
             LEFT JOIN categories c ON p.category_id= c.category_id
             LEFT JOIN brands b on p.brand_id= b.brand_id
             WHERE slug= $1`, [slug])

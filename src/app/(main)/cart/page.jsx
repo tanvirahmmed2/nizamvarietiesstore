@@ -138,22 +138,8 @@ const Cart = () => {
             />
             
             <label className='text-xs  text-gray-400 uppercase ml-2'>Payment Method</label>
-            <select 
-              name="paymentMethod" onChange={handleChange} value={formData.paymentMethod} 
-              className='w-full p-4 border border-gray-200 rounded-2xl outline-none bg-white focus:border-sky-500 appearance-none'
-            >
-              <option value="cash">Cash on Delivery</option>
-              <option value="online">Online Payment</option>
-              <option value="card">Card Payment</option>
-            </select>
-
-            {formData.paymentMethod !== 'cash' && (
-               <input 
-                 type="text" name="transactionId" placeholder="Transaction ID (TrxID)" 
-                 onChange={handleChange} value={formData.transactionId} 
-                 className='w-full p-4 border border-sky-200 bg-sky-50 rounded-2xl outline-none focus:border-sky-500' 
-               />
-            )}
+            <input type="text"  name="paymentMethod" onChange={handleChange} value={formData.paymentMethod} readOnly className='w-full p-4 border border-gray-200 rounded-2xl outline-none focus:border-sky-500 transition-all' />
+            
           </div>
 
           <div className='flex flex-col gap-3 border-t border-gray-100 pt-6 mt-2'>

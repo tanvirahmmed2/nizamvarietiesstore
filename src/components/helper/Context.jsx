@@ -46,10 +46,8 @@ const ContextProvider = ({ children }) => {
   const addToCart = (product) => {
     if (!product?.product_id) return;
 
-    // 1. Check if it exists first for the toast logic
     const exists = cart.items.find(item => item.product_id === product.product_id);
 
-    // 2. Perform the state update (Keep this pure!)
     setCart((prev) => {
       const existing = prev.items.find(item => item.product_id === product.product_id)
 
