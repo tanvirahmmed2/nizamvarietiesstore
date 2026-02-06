@@ -126,37 +126,37 @@ const AddProductForm = () => {
                     </div>
                     <div className='w-full flex flex-col gap-1'>
                         <label htmlFor="stock">Stock *</label>
-                        <input type="number" name='stock' id='stock' required value={formData.stock} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
+                        <input type="number" min={0} name='stock' id='stock' required value={formData.stock} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
                     </div>
                 </div>
 
                 <div className='w-full flex flex-col md:flex-row items-center justify-center gap-2'>
                     <div className='w-full flex flex-col gap-1'>
                         <label htmlFor="purchasePrice">Purchase Price *</label>
-                        <input type="number" name='purchasePrice' id='purchasePrice' required value={formData.purchasePrice} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
+                        <input type="number" min={0} name='purchasePrice' id='purchasePrice' required value={formData.purchasePrice} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
                     </div>
                     <div className='w-full flex flex-col gap-1'>
                         <label htmlFor="salePrice">Sale Price *</label>
-                        <input type="number" name='salePrice' id='salePrice' required value={formData.salePrice} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
+                        <input type="number" min={0} name='salePrice' id='salePrice' required value={formData.salePrice} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
                     </div>
                     <div className='w-full flex flex-col gap-1'>
                         <label htmlFor="discountPrice">Discount Price</label>
-                        <input type="number" name='discountPrice' id='discountPrice' value={formData.discountPrice} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
+                        <input type="number" min={0} name='discountPrice' id='discountPrice' value={formData.discountPrice} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
                     </div>
                 </div>
 
                 <div className='w-full flex flex-col md:flex-row items-center justify-center gap-2'>
                     <div className='w-full flex flex-col gap-1'>
                         <label htmlFor="retailPrice">Retail Price</label>
-                        <input type="number" name='retailPrice' id='retailPrice' value={formData.retailPrice} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
+                        <input type="number" min={0} name='retailPrice' id='retailPrice' value={formData.retailPrice} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
                     </div>
                     <div className='w-full flex flex-col gap-1'>
                         <label htmlFor="wholeSalePrice">Whole Sale Price *</label>
-                        <input type="number" name='wholeSalePrice' id='wholeSalePrice' required value={formData.wholeSalePrice} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
+                        <input type="number" min={0} name='wholeSalePrice' id='wholeSalePrice' required value={formData.wholeSalePrice} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
                     </div>
                     <div className='w-full flex flex-col gap-1'>
                         <label htmlFor="dealerPrice">Dealer Price</label>
-                        <input type="number" name='dealerPrice' id='dealerPrice' value={formData.dealerPrice} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
+                        <input type="number" min={0} name='dealerPrice' id='dealerPrice' value={formData.dealerPrice} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none ' />
                     </div>
                 </div>
 
