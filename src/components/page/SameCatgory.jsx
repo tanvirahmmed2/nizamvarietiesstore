@@ -29,7 +29,7 @@ const SameCategory = ({ category }) => {
         products && <div className='w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4'>
           {
             products.map((item) => (
-              <Item product={item} key={item._id}/>
+              <Item product={item} key={item.product_id}/>
             ))
           }
         </div>

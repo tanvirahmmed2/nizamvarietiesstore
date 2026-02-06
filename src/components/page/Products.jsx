@@ -4,7 +4,7 @@ import Item from "@/components/card/Item"
 import axios from "axios"
 import { useEffect, useState } from "react"
 
-const Offer = () => {
+const Products = () => {
   const [products, setProducts] = useState([])
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
@@ -14,7 +14,7 @@ const Offer = () => {
     const fetchOffers = async () => {
       setLoading(true)
       try {
-        const response = await axios.get('/api/product/offer', {
+        const response = await axios.get('/api/product', {
           params: {
             page: page
           }
@@ -37,7 +37,7 @@ const Offer = () => {
   return (
     <div className="w-full p-4 min-h-screen">
       <div className="w-full flex flex-col items-center justify-center gap-4">
-        <h1 className='font-semibold text-center text-2xl mt-4'>Offer available on specific items</h1>
+        <h1 className='font-semibold text-center text-2xl mt-4'>Find Best Choice</h1>
 
         {loading ? (
           <p>Loading offers...</p>
@@ -85,4 +85,4 @@ const Offer = () => {
   )
 }
 
-export default Offer
+export default Products

@@ -11,7 +11,7 @@ const Item = ({ product }) => {
 
   return (
     <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.6 }} className='w-auto text-black text-center text-sm bg-white p-1 border border-black/10 flex flex-col items-center justify-between group gap-1'>
-      <Image src={`${product?.image}`} alt='image' width={1000} height={1000} className='w-50 h-50 object-cover' />
+      <Image src={`${product?.image}`} alt='image' width={1000} height={1000} className='w-full h-50 object-cover' />
       <Link href={`/products/${product?.slug}`}>{product?.name}</Link>
       {
         product?.discount_price > 0 ? <div>
