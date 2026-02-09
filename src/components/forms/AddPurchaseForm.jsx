@@ -29,14 +29,15 @@ const AddPurchaseForm = () => {
     }
     return (
         <form onSubmit={handleSubmit} className='flex-1 flex flex-col items-center justify-center gap-6'>
-            <div>
-                <div>
+            <h1 className='w-full text-center text-2xl font-semibold'>Add Purchase</h1>
+            <div className='w-full flex flex-col items-center justify-center gap-4 md:flex-row'>
+                <div className='w-full flex flex-col gap-1'>
                     <label htmlFor="supplier_name">Supplier Name</label>
-                    <input type="text" name='supplier_name' id='supplier_name' onChange={handleChange} value={formData.supplier_name} />
+                    <input type="text" name='supplier_name' id='supplier_name' className='w-full px-3 p-1 rounded-lg outline-none border border-blue-400' onChange={handleChange} value={formData.supplier_name} />
                 </div>
-                <div>
+                <div className='w-full flex flex-col gap-1'>
                     <label htmlFor="supplier_phone">Supplier Phone</label>
-                    <input type="text" name='supplier_phone' id='supplier_phone' onChange={handleChange} value={formData.supplier_phone}/>
+                    <input type="text" name='supplier_phone' id='supplier_phone' className='w-full px-3 p-1 rounded-lg outline-none border border-blue-400' onChange={handleChange} value={formData.supplier_phone}/>
                 </div>
             </div>
             <div>
