@@ -83,7 +83,6 @@ const ContextProvider = ({ children }) => {
       }
     });
 
-    // 3. Show the toast AFTER the setCart call (Outside the updater)
     if (exists) {
       toast.info("Quantity increased");
     } else {
@@ -136,9 +135,46 @@ const ContextProvider = ({ children }) => {
 
   }, [])
 
+const [purchaseItems, setPurchaseItems] = useState([]);
+
+const addToPurchase = (product) => {
+    setPurchaseItems((prev) => {
+        const existingItem = prev.find(item => item.product_id === product.product_id);
+
+        if (existingItem) {
+            return prev.map(item =>
+                item.product_id === product.product_id
+                    ? { ...item, quantity: item.quantity + 1 }
+                    : item
+            );
+        }
+
+        return [...prev, {
+            product_id: product.product_id,
+            name: product.name,
+            purchase_price: parseFloat(product.purchase_price) || 0, 
+            sale_price: parseFloat(product.sale_price) || 0,
+            quantity: 1
+        }];
+    });
+};
+
+const decreaseFromPurchase = (productId) => {
+    setPurchaseItems((prev) =>
+        prev.map(item =>
+            item.product_id === productId
+                ? { ...item, quantity: item.quantity - 1 }
+                : item
+        ).filter(item => item.quantity > 0)
+    );
+};
+
+const removeFromPurchase = (productId) => {
+    setPurchaseItems((prev) => prev.filter(item => item.product_id !== productId));
+};
   return (
     <Context.Provider value={{
-      isBrandBox, setIsBrandBox, isCategoryBox, setIsCategoryBox, brands, setBrands,
+      isBrandBox, setIsBrandBox, isCategoryBox, setIsCategoryBox, brands, setBrands,purchaseItems, addToPurchase, removeFromPurchase, decreaseFromPurchase,
       categories, fetchCategory, cart, setCart, fetchCart, addToCart, clearCart, removeFromCart, decreaseQuantity
     }}>
       {children}

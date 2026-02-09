@@ -1,9 +1,10 @@
+import AddPurchaseForm from '@/components/forms/AddPurchaseForm'
 import React from 'react'
 
 const PurchasePage = () => {
   return (
-    <div>
-      
+    <div className='w-full'>
+      <AddPurchaseForm/>
     </div>
   )
 }
