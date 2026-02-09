@@ -98,6 +98,7 @@ const DashboardSidebar = () => {
         <MenuItem href="/dashboard/support" icon={RiSuperscript} label="Support" />
         <MenuItem href="/dashboard/help" icon={TbReport} label="Help" />
         <button onClick={handleLogout} className="hidden group-hover:inline whitespace-nowrap w-full bg-orange-500 text-white py-5 mt-5 cursor-pointer">Logout</button>
+        <MenuItem href="/" icon={TbReport} label="Website" />
       </div>
     </aside>
   )

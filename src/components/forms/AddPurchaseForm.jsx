@@ -6,10 +6,10 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 
 const AddPurchaseForm = () => {
-    const { purchaseItems, removeFromPurchase, decreaseFromPurchase, addToPurchase } = useContext(Context)
+    const { purchaseItems, removeFromPurchase, decreaseFromPurchase, addToPurchase, clearPurchase } = useContext(Context)
 
     const [formData, setFormData] = useState({
-        supplier_name: '',
+        supplier_name: 'Dealer',
         supplier_phone: '+88',
         invoice_no: '',
         extra_discount: 0,
@@ -72,7 +72,7 @@ const AddPurchaseForm = () => {
                 note: ''
             });
 
-            if (clearCart) clearCart();
+            if (clearPurchase) clearPurchase();
 
         } catch (error) {
             console.error("Submission Error:", error);

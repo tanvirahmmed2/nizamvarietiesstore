@@ -173,10 +173,17 @@ const decreaseFromPurchase = (productId) => {
 const removeFromPurchase = (productId) => {
     setPurchaseItems((prev) => prev.filter(item => item.product_id !== productId));
 };
+
+
+const clearPurchase = () => {
+    setPurchaseItems([]);
+};
+
+
   return (
     <Context.Provider value={{
       isBrandBox, setIsBrandBox, isCategoryBox, setIsCategoryBox, brands, setBrands,purchaseItems, addToPurchase, removeFromPurchase, decreaseFromPurchase,
-      categories, fetchCategory, cart, setCart, fetchCart, addToCart, clearCart, removeFromCart, decreaseQuantity
+      categories, fetchCategory, cart, setCart, fetchCart, addToCart, clearCart, removeFromCart, decreaseQuantity, clearPurchase
     }}>
       {children}
     </Context.Provider>
