@@ -1,6 +1,3 @@
-
-
-
 import { pool } from "@/lib/database/db";
 import { NextResponse } from "next/server";
 
@@ -18,16 +15,24 @@ export async function POST(req) {
             payment_method,
             transaction_id,
             note,
-            items
+            items 
         } = body;
 
-        if (!supplier_name || !items || items.length === 0) {
+        if (!supplier_name || !supplier_phone || !items || items.length === 0) {
             return NextResponse.json({
-                success: false, message: 'Missing required purchase data'
+                success: false, message: 'Supplier info and items are required'
             }, { status: 400 });
         }
 
         await client.query('BEGIN');
+
+        const supplierUpsertQuery = `
+            INSERT INTO suppliers (name, phone)
+            VALUES ($1, $2)
+            ON CONFLICT (phone) DO UPDATE SET name = EXCLUDED.name
+            RETURNING supplier_id`;
+        
+        await client.query(supplierUpsertQuery, [supplier_name, supplier_phone]);
 
         const purchaseQuery = `
             INSERT INTO purchases (
@@ -38,8 +43,15 @@ export async function POST(req) {
             RETURNING purchase_id`;
 
         const purchaseValues = [
-            supplier_name, supplier_phone, invoice_no, subtotal_amount,
-            extra_discount, total_amount, payment_method, transaction_id, note
+            supplier_name, 
+            supplier_phone, 
+            invoice_no, 
+            Number(subtotal_amount) || 0, 
+            Number(extra_discount) || 0, 
+            Number(total_amount) || 0, 
+            payment_method, 
+            transaction_id, 
+            note
         ];
 
         const purchaseResult = await client.query(purchaseQuery, purchaseValues);
@@ -49,37 +61,36 @@ export async function POST(req) {
             INSERT INTO purchase_payments (
                 purchase_id, payment_method, amount_paid, transaction_id
             ) VALUES ($1, $2, $3, $4)`;
-
-        await client.query(paymentQuery, [purchaseId, payment_method, total_amount, transaction_id]);
+        
+        await client.query(paymentQuery, [purchaseId, payment_method, Number(total_amount) || 0, transaction_id]);
 
         for (const item of items) {
             const itemQuery = `
                 INSERT INTO purchase_items (purchase_id, product_id, quantity, purchase_price) 
                 VALUES ($1, $2, $3, $4)`;
-            await client.query(itemQuery, [purchaseId, item.product_id, item.quantity, item.purchase_price]);
+            await client.query(itemQuery, [purchaseId, item.product_id, item.quantity, Number(item.purchase_price)]);
 
             const stockUpdateQuery = `
                 UPDATE products 
                 SET stock = stock + $1,
                     purchase_price = $2
                 WHERE product_id = $3`;
-            await client.query(stockUpdateQuery, [item.quantity, item.purchase_price, item.product_id]);
+            await client.query(stockUpdateQuery, [item.quantity, Number(item.purchase_price), item.product_id]);
         }
 
-        await client.query('COMMIT');
+        await client.query('COMMIT'); 
 
         return NextResponse.json({
-            success: true,
-            message: 'Purchase recorded and stock updated successfully'
+            success: true, 
+            message: 'Purchase saved and stock increased'
         }, { status: 201 });
 
     } catch (error) {
         await client.query('ROLLBACK');
-        console.error("Purchase Error:", error);
-
+        console.error(error);
         return NextResponse.json({
-            success: false,
-            message: error.message || 'Internal server error'
+            success: false, 
+            message: `Database Error: ${error.message}`
         }, { status: 500 });
     } finally {
         client.release();

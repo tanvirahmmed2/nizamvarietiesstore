@@ -63,7 +63,7 @@ const AddPurchaseForm = () => {
             toast.success(response.data.message || "Purchase recorded successfully");
 
             setFormData({
-                supplier_name: '',
+                supplier_name: 'Dealer',
                 supplier_phone: '+88',
                 invoice_no: '',
                 extra_discount: 0,
@@ -79,6 +79,7 @@ const AddPurchaseForm = () => {
             toast.error(error?.response?.data?.message || "Failed to add purchase");
         }
     };
+
     return (
         <form onSubmit={handleSubmit} className='flex-1 mx-auto p-4 flex flex-col gap-6 bg-white min-h-screen'>
 
@@ -92,7 +93,7 @@ const AddPurchaseForm = () => {
                 </div>
             </div>
 
-            <div className='grid grid-cols-1 gap-4  bg-gray-50 rounded-2xl border border-gray-100'>
+            <div className='grid grid-cols-1 gap-4 bg-gray-50 p-4 rounded-2xl border border-gray-100'>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                     <div className='flex flex-col gap-1'>
                         <label className='text-xs font-bold text-gray-500 uppercase ml-1'>Supplier</label>
@@ -126,7 +127,6 @@ const AddPurchaseForm = () => {
                             </div>
 
                             <div className='flex items-center gap-4'>
-                                {/* Quantity Controls */}
                                 <div className='flex items-center bg-gray-100 rounded-xl p-1 gap-3'>
                                     <button type='button' onClick={() => decreaseFromPurchase(item.product_id)} className='w-7 h-7 flex items-center justify-center bg-white rounded-lg text-red-500 shadow-sm'>
                                         <FaMinus size={10} />
@@ -151,7 +151,7 @@ const AddPurchaseForm = () => {
                 )}
             </div>
 
-            <div className='w-full flex flex-col items-center justify-center gap-2 p-2 bg-gray-400 rounded-xl'>
+            <div className='w-full flex flex-col items-center justify-center gap-2 p-4 bg-gray-400 rounded-xl'>
                 <div className='w-full flex flex-col items-center justify-center gap-2'>
                     <div className='w-full flex flex-row items-center justify-between gap-1 text-white'>
                         <span>Subtotal</span>
@@ -159,11 +159,11 @@ const AddPurchaseForm = () => {
                     </div>
                     <div className='w-full flex flex-row items-center justify-between gap-1 text-white'>
                         <span>Extra Discount</span>
-                        <input type="number" name="extra_discount" value={formData.extra_discount} onChange={handleChange} className='w-20 text-right outline-none rounded px-2 py-1 font-bold' onFocus={(e) => e.target.select()} />
+                        <input type="number" name="extra_discount" value={formData.extra_discount} onChange={handleChange} className='w-20 text-right outline-none rounded px-2 py-1 font-bold text-black' onFocus={(e) => e.target.select()} />
                     </div>
                 </div>
 
-                <div className='flex justify-between items-center'>
+                <div className='w-full flex justify-between items-center py-2 border-t border-white/20 text-white'>
                     <span className='text-lg font-medium opacity-90'>Total Payable</span>
                     <span className='text-3xl font-black'>৳{totals.total.toFixed(2)}</span>
                 </div>

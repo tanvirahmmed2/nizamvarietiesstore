@@ -9,9 +9,7 @@ const PurchaseTransactions = () => {
     useEffect(() => {
         const fetchTransactions = async () => {
             try {
-                // You might need to create a simple GET route for payments 
-                // or filter from a larger report route
-                const res = await axios.get('/api/purchase/payments') 
+                const res = await axios.get('/api/purchase-payment') 
                 if (res.data.success) setTransactions(res.data.payload)
             } catch (error) {
                 console.log("Transaction fetch error")
@@ -25,12 +23,12 @@ const PurchaseTransactions = () => {
     if (loading) return <p className='p-5 text-center'>Loading transactions...</p>
 
     return (
-        <div className='flex-1 p-4 bg-white rounded-xl shadow-sm'>
+        <div className='w-full flex flex-col items-center justify-center gap-4 p-4'>
             <h2 className='text-xl font-bold mb-4 text-gray-800'>Payment Transactions</h2>
-            <div className='overflow-x-auto'>
-                <div className='min-w-full flex flex-col gap-2'>
+            <div className='w-full'>
+                <div className='w-full flex flex-col items-center justify-center gap-1'>
                     {transactions.map((trx) => (
-                        <div key={trx.payment_id} className='flex justify-between items-center p-3 bg-gray-50 rounded-lg border-l-4 border-green-500'>
+                        <div key={trx.payment_id} className='w-full flex flex-row items-center justify-between p-2 rounded-2xl even:bg-gray-200'>
                             <div>
                                 <p className='text-sm font-bold text-gray-700'>Payment for Purchase #{trx.purchase_id}</p>
                                 <p className='text-[10px] text-gray-500'>{new Date(trx.payment_date).toLocaleString()}</p>
