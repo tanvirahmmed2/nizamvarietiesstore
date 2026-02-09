@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react'
 import { Context } from '../helper/Context'
 
 const AddPurchaseForm = () => {
-    const {purchaseItems}= useContext(Context)
+    const {purchaseItems, removeFromPurchase, decreaseFromPurchase,addToPurchase}= useContext(Context)
     const [formData, setFormdata] = useState({
         supplier_name: '',
         supplier_phone: '',
@@ -16,32 +16,8 @@ const AddPurchaseForm = () => {
         items: purchaseItems
 
     })
-// create table public.purchases (
-//   purchase_id serial not null,
-//   supplier_name character varying(200) not null,
-//   supplier_phone character varying(20) null,
-//   invoice_no character varying(100) null,
-//   subtotal_amount numeric(12, 2) not null default 0.00,
-//   extra_discount numeric(12, 2) null default 0.00,
-//   total_amount numeric(12, 2) not null default 0.00,
-//   payment_method character varying(50) not null,
-//   transaction_id character varying(100) null,
-//   note text null,
-//   created_at timestamp without time zone null default CURRENT_TIMESTAMP,
-//   constraint purchases_pkey primary key (purchase_id),
-//   constraint purchases_invoice_no_key unique (invoice_no)
-// ) TABLESPACE pg_default;
 
-// create table public.purchase_items (
-//   purchase_id integer not null,
-//   product_id integer not null,
-//   quantity integer not null,
-//   purchase_price numeric(10, 2) not null,
-//   constraint purchase_items_pkey primary key (purchase_price),
-//   constraint purchase_items_product_id_fkey foreign KEY (product_id) references products (product_id) on delete RESTRICT,
-//   constraint purchase_items_purchase_id_fkey foreign KEY (purchase_id) references purchases (purchase_id) on delete CASCADE,
-//   constraint purchase_items_quantity_check check ((quantity > 0))
-// ) TABLESPACE pg_default;
+
 
 
     const handleChange = async (e) => {
@@ -52,7 +28,7 @@ const AddPurchaseForm = () => {
         e.preventDefault()
     }
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className='flex-1 flex flex-col items-center justify-center gap-6'>
             <div>
                 <div>
                     <label htmlFor="supplier_name">Supplier Name</label>
@@ -65,7 +41,13 @@ const AddPurchaseForm = () => {
             </div>
             <div>
                 <div>
+                    {
+                        formData.items.length>0? <div>
 
+                        </div>: <div>
+                        <p>No item added</p>
+                        </div>
+                    }
                 </div>
                 <div>
                     <p>{formData.subtotal_amount}</p>

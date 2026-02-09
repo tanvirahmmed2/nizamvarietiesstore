@@ -89,6 +89,7 @@ const ContextProvider = ({ children }) => {
       toast.success("Added to cart");
     }
   };
+  
   const removeFromCart = (id) => {
     setCart(prev => ({ ...prev, items: prev.items.filter(item => item.product_id !== id) }))
   }
