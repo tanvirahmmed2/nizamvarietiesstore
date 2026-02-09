@@ -34,16 +34,15 @@ const SupplierPage = async () => {
           <p className='text-gray-400 font-medium'>No supplier records found in the database.</p>
         </div>
       ) : (
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
+        <div className='w-full flex flex-col items-center justify-center gap-1'>
           {suppliers.map((supplier) => {
-            // Safe conversion of data types
             const totalSpent = Number(supplier.total_amount_spent || 0);
             const totalPurchases = Number(supplier.total_purchases || 0);
 
             return (
               <div 
                 key={supplier.supplier_id} 
-                className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-all group"
+                className="flex w-full even:bg-gray-200 rounded-2xl shadow p-4 flex-row items-center justify-between group"
               >
                 <div className="flex justify-between items-start mb-4">
                   <div>
