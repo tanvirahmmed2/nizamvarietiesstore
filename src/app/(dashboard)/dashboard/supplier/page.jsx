@@ -1,29 +1,88 @@
-
 import { BASE_URL } from '@/lib/database/secret'
 import React from 'react'
 
 const SupplierPage = async () => {
-
+  // 1. Fetch data from the API
   const res = await fetch(`${BASE_URL}/api/supplier`, {
     method: 'GET',
     cache: 'no-store'
   })
-  const data = res.json()
-  if (!data.success) return <p className='w-full text-center'>No result found</p>
+
+  // 2. Await the JSON parsing
+  const data = await res.json()
+
+  // 3. Handle cases where the API fails or returns success: false
+  if (!data.success) {
+    return (
+      <div className='w-full text-center py-20'>
+        <p className='text-gray-500 text-lg'>{data.message || 'No result found'}</p>
+      </div>
+    )
+  }
+
   const suppliers = data.payload
+
   return (
-    <div className='w-full p-4 flex flex-col gap-6 items-center'>
-      {
-        suppliers.length === 0 ? <div className='w-full min-h-30 flex items-center justify-center text-center'>
-          <p className='text-red-500'>Supplier data not Found !</p>
-        </div> : <div>
-          {
-            suppliers.map((supplier) => (
-              <p key={supplier}>{supplier}</p>
-            ))
-          }
+    <div className='w-full p-4 flex flex-col gap-6'>
+      <div className="flex flex-col gap-1 border-b pb-4">
+        <h1 className='text-2xl font-black text-gray-800 uppercase tracking-tight'>Supplier Directory</h1>
+        <p className='text-xs text-gray-500 font-medium'>Overview of procurement and vendor stats</p>
+      </div>
+
+      {suppliers.length === 0 ? (
+        <div className='w-full min-h-60 flex items-center justify-center text-center bg-gray-50 rounded-3xl border-2 border-dashed'>
+          <p className='text-gray-400 font-medium'>No supplier records found in the database.</p>
         </div>
-      }
+      ) : (
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
+          {suppliers.map((supplier) => {
+            // Safe conversion of data types
+            const totalSpent = Number(supplier.total_amount_spent || 0);
+            const totalPurchases = Number(supplier.total_purchases || 0);
+
+            return (
+              <div 
+                key={supplier.supplier_id} 
+                className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-all group"
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h2 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                      {supplier.name}
+                    </h2>
+                    <p className="text-xs text-gray-500 font-bold tracking-wider">{supplier.phone}</p>
+                  </div>
+                  <span className="bg-blue-50 text-blue-600 text-[10px] font-black px-2 py-1 rounded-lg uppercase">
+                    Vendor
+                  </span>
+                </div>
+                
+                <div className="space-y-2 pt-4 border-t border-gray-50">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[11px] font-bold text-gray-400 uppercase">Total Purchases</span>
+                    <span className="text-sm font-black text-gray-700">{totalPurchases}</span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <span className="text-[11px] font-bold text-gray-400 uppercase">Total Investment</span>
+                    <span className="text-sm font-black text-green-600">
+                      ৳{totalSpent.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                    </span>
+                  </div>
+
+                  {supplier.last_purchase_date && (
+                    <div className="pt-2">
+                      <p className="text-[10px] text-gray-400 font-medium italic">
+                        Last Invoice: {new Date(supplier.last_purchase_date).toLocaleDateString('en-GB')}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }
