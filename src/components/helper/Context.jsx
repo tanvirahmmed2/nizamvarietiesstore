@@ -173,15 +173,7 @@ const addToPurchase = (product) => {
     });
 };
 
-const decreaseFromPurchase = (productId) => {
-    setPurchaseItems((prev) =>
-        prev.map(item =>
-            item.product_id === productId
-                ? { ...item, quantity: item.quantity - 1 }
-                : item
-        ).filter(item => item.quantity > 0)
-    );
-};
+
 
 const removeFromPurchase = (productId) => {
     setPurchaseItems((prev) => prev.filter(item => item.product_id !== productId));
@@ -195,8 +187,8 @@ const clearPurchase = () => {
 
   return (
     <Context.Provider value={{
-      isBrandBox, setIsBrandBox, isCategoryBox, setIsCategoryBox, brands, setBrands,purchaseItems, addToPurchase, removeFromPurchase, decreaseFromPurchase,
-      isSupplierBox,setIsSupplierBox,fetchSupplier,suppliers, setSuppliers,
+      isBrandBox, setIsBrandBox, isCategoryBox, setIsCategoryBox, brands, setBrands,purchaseItems, addToPurchase, removeFromPurchase, 
+      isSupplierBox,setIsSupplierBox,fetchSupplier,suppliers, setSuppliers, setPurchaseItems,
       categories, fetchCategory, cart, setCart, fetchCart, addToCart, clearCart, removeFromCart, decreaseQuantity, clearPurchase
     }}>
       {children}

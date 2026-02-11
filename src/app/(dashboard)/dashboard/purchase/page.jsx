@@ -50,7 +50,7 @@ const PurchasePage = () => {
           <AddSupplierForm/>
         </div>
       <AddPurchaseForm />
-      <div className="flex-1 flex flex-col items-center  gap-4">
+      <div className="w-1/2flex flex-col items-center  gap-4">
         <BarScanner onScan={handleBarcodeScan} />
         <div className="w-full flex flex-row items-center justify-between gap-4 border-b-2 p-4">
           <p>Find item</p>
