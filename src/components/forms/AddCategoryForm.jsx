@@ -3,20 +3,22 @@ import React, { useContext, useState } from 'react'
 import { ImCancelCircle } from "react-icons/im";
 import { Context } from '../helper/Context';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const AddCategoryForm = () => {
     const [category, setCategory] = useState('')
-    const { setIsCategoryBox, fetchCategory } = useContext(Context)
+    const { setIsCategoryBox, fetchCategory, isCategoryBox } = useContext(Context)
     
     
     const addNewCategory = async (e) => {
         e.preventDefault()
         try {
             const response = await axios.post('/api/category', {name:category}, { withCredentials: true })
-            alert(response.data.message)
+           toast(response.data.message)
             fetchCategory()
+            setIsCategoryBox(false)
         } catch (error) {
-            alert(error?.response?.data?.message || "failed to add Category")
+            toast(error?.response?.data?.message || "failed to add Category")
 
         }
     }

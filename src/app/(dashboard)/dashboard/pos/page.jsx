@@ -5,6 +5,7 @@ import { Context } from "@/components/helper/Context"
 import SalesCart from "@/components/page/SalesCart"
 import axios from "axios"
 import { useContext, useEffect, useState, } from "react"
+import { toast } from "react-toastify"
 
 
 
@@ -41,6 +42,10 @@ const PosPage = () => {
       const foundItems = response.data.payload
 
       if (foundItems && foundItems.length === 1) {
+        if(foundItems[0].stock===0){
+          toast.error('Out of stock')
+          setSearchTerm('') 
+        }
         addToCart(foundItems[0])
         setSearchTerm('') 
       }
@@ -72,7 +77,7 @@ const PosPage = () => {
           !products || products.length < 1 ? <p>Please search product</p> : <div className="w-full flex flex-col gap-2 items-center justify-center">
             {
               products?.map((product) => (
-                <div key={product.product_id} className="w-full flex flex-row even:bg-gray-100 items-center justify-center p-1">
+                <div key={product.product_id} className="w-full flex flex-row even:bg-gray-200 items-center justify-center p-1">
                   <p className="flex-5">{product.name}</p>
                   <p className="flex-1"> ৳ {product.sale_price - product.discount_price}</p>
                   <button className="flex-1" onClick={() => addToCart(product)}>Add</button>

@@ -91,7 +91,7 @@ const ProductListPage = () => {
             ) : (
                 <div className="w-full flex flex-col">
                     {products.map((item) => (
-                        <div key={item.product_id} className="w-full grid grid-cols-12 border-b border-gray-100 px-4 py-3 items-center hover:bg-gray-50 transition-colors group">
+                        <div key={item.product_id} className="w-full grid grid-cols-12 border-b border-gray-100 px-4 py-3 items-center hover:bg-gray-300 transition-colors group   rounded-xl even:bg-gray-200">
                             <div className="col-span-6 flex flex-col">
                                 <Link className='font-bold text-gray-800 hover:text-sky-600' href={`/products/${item.slug}`}>
                                     {item.name}

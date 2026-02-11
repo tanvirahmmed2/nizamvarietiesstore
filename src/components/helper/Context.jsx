@@ -45,8 +45,16 @@ const ContextProvider = ({ children }) => {
     }
   }, [cart, hydrated])
 
-  const addToCart = (product) => {
+ const addToCart = (product) => {
+    // 1. Basic ID check
     if (!product?.product_id) return;
+
+    // 2. STOCK CHECK: Prevent adding if stock is 0 or less
+    // Converting to Number to ensure comparison works even if it's a string from DB
+    if (Number(product.stock) <= 0) {
+        toast.error("Item is out of stock!");
+        return;
+    }
 
     const exists = cart.items.find(item => item.product_id === product.product_id);
 
@@ -54,6 +62,12 @@ const ContextProvider = ({ children }) => {
       const existing = prev.items.find(item => item.product_id === product.product_id)
 
       if (existing) {
+        // 3. OPTIONAL: Check if user is trying to add more than available stock
+        if (existing.quantity >= product.stock) {
+            toast.warning(`Only ${product.stock} items available in stock`);
+            return prev; // Return current state without changes
+        }
+
         return {
           ...prev,
           items: prev.items.map(item =>
@@ -86,12 +100,14 @@ const ContextProvider = ({ children }) => {
     });
 
     if (exists) {
-      toast.info("Quantity increased");
+      const currentItem = cart.items.find(item => item.product_id === product.product_id);
+      if (currentItem && currentItem.quantity < product.stock) {
+          toast.info("Quantity increased");
+      }
     } else {
       toast.success("Added to cart");
     }
-  };
-  
+};
   const removeFromCart = (id) => {
     setCart(prev => ({ ...prev, items: prev.items.filter(item => item.product_id !== id) }))
   }

@@ -3,31 +3,36 @@ import { NextResponse } from 'next/server'
 
 export async function POST(req) {
   try {
-    const { name, description } = await req.json()
+    const { name, description } = await req.json();
 
+    // 1. Validation
     if (!name || name.trim() === '') {
       return NextResponse.json(
         { success: false, message: 'Please add brand name' },
         { status: 400 }
-      )
+      );
     }
 
+    const brandName = name.trim();
+
+    // 2. Check if exists
     const existBrand = await pool.query(
       'SELECT 1 FROM brands WHERE name = $1',
-      [name.trim()]
-    )
+      [brandName]
+    );
 
     if (existBrand.rowCount > 0) {
       return NextResponse.json(
         { success: false, message: 'Brand already exists' },
         { status: 409 }
-      )
+      );
     }
 
+    // 3. Insert only NAME and DESCRIPTION (No slug)
     const newBrand = await pool.query(
       'INSERT INTO brands(name, description) VALUES($1, $2) RETURNING *',
-      [name.trim(), description || null]
-    )
+      [brandName, description || null]
+    );
 
     return NextResponse.json(
       {
@@ -36,12 +41,14 @@ export async function POST(req) {
         data: newBrand.rows[0],
       },
       { status: 201 }
-    )
+    );
   } catch (error) {
+    console.error("DATABASE ERROR:", error.message);
+    // Returning the actual error message helps us debug in real-time
     return NextResponse.json(
-      { success: false, message: 'Internal server error' },
+      { success: false, message: `Database Error: ${error.message}` },
       { status: 500 }
-    )
+    );
   }
 }
 

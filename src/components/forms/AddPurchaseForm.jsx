@@ -126,7 +126,7 @@ const AddPurchaseForm = () => {
 
                 {purchaseItems.length > 0 ? (
                     purchaseItems.map((item) => (
-                        <div key={item.product_id} className="grid grid-cols-12 items-center gap-3 p-4 bg-white border border-gray-100 rounded-2xl shadow-sm">
+                        <div key={item.product_id} className="grid grid-cols-12 items-center gap-3 px-4 p-1 even:bg-gray-200 bg-white border border-gray-100 rounded-2xl shadow-sm">
                          
                             <div className="col-span-12 lg:col-span-4">
                                 <p className="text-sm font-bold text-gray-800 truncate">{item.name}</p>

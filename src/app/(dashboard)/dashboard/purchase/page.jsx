@@ -7,7 +7,7 @@ import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 
 const PurchasePage = () => {
-  const {addToPurchase,isSupplierBox,setIsSupplierBox}= useContext(Context)
+  const {addToPurchase,isSupplierBox,setIsSupplierBox, }= useContext(Context)
   const [products, setProducts] = useState([])
 
   const [searchTerm, setSearchTerm] = useState('')
@@ -35,7 +35,7 @@ const PurchasePage = () => {
       const foundItems = response.data.payload
 
       if (foundItems && foundItems.length === 1) {
-        addToCart(foundItems[0])
+        addToPurchase(foundItems[0])
         setSearchTerm('') 
       }
     } catch (error) {
@@ -68,7 +68,7 @@ const PurchasePage = () => {
           !products || products.length < 1 ? <p>Please search product</p> : <div className="w-full flex flex-col gap-2 items-center justify-center">
             {
               products?.map((product) => (
-                <div key={product.product_id} className="w-full flex even:bg-gray-100 flex-row items-center justify-center p-1">
+                <div key={product.product_id} className="w-full flex even:bg-gray-200 flex-row items-center justify-center p-1">
                   <p className="flex-5">{product.name}</p>
                   <p className="flex-1"> ৳ {product.purchase_price}</p>
                   <button className="flex-1" onClick={() => addToPurchase(product)}>Add</button>

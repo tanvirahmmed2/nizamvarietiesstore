@@ -3,6 +3,7 @@ import React, { useContext, useState } from 'react'
 import { ImCancelCircle } from 'react-icons/im'
 import { Context } from '../helper/Context'
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const AddBrandForm = () => {
     const [formData, setFormData]= useState({
@@ -18,13 +19,15 @@ const AddBrandForm = () => {
     
     const addNewBrand=async(e)=>{
         e.preventDefault()
+        
         try {
-            const response= await axios.post('/api/brand', formData, {withCredentials:true})
-            alert(response.data.message)
+            const response = await axios.post('/api/brand', formData, { withCredentials: true })
+            toast(response.data.message)
             fetchBrand()
+            setIsBrandBox(false)
         } catch (error) {
-            alert(error?.response?.data?.message || "failed to add brand")
-            
+            toast(error?.response?.data?.message || "failed to add Brand")
+
         }
     }
   return (

@@ -24,11 +24,11 @@ export async function GET(req) {
 
         const data = await pool.query(query, values);
         const result = data.rows
-        if (q.length<1 || result.length === 0) {
-            return NextResponse.json({
-                success: false, message: 'No product found'
-            }, { status: 400 })
-        }
+        // if (q.length<1 || result.length === 0) {
+        //     return NextResponse.json({
+        //         success: false, message: 'No product found'
+        //     }, { status: 400 })
+        // }
 
         return NextResponse.json(
             { success: true, message: 'Successfully fetched data', payload: result },

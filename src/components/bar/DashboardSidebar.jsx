@@ -11,7 +11,7 @@ import axios from 'axios'
 import { FaChevronDown } from 'react-icons/fa6'
 
 const MenuItem = ({ href, icon: Icon, label }) => {
-  
+
   const pathname = usePathname()
   const isActive = pathname === href
   return (
@@ -22,17 +22,52 @@ const MenuItem = ({ href, icon: Icon, label }) => {
   )
 }
 
-const handleLogout=async()=>{
+const handleLogout = async () => {
   try {
-    const response= await axios.get('/api/staff/login', {withCredentials:true})
+    const response = await axios.get('/api/staff/login', { withCredentials: true })
     toast.success(response.data.message)
     window.location.replace('/login')
   } catch (error) {
     console.log(error)
     toast.error(error?.response?.data?.message || 'Failed to logout')
-    
+
   }
 }
+
+const downloadDB = async () => {
+  try {
+    // 1. Fetch the data from your API
+    const response = await fetch('/api/backup');
+
+    if (!response.ok) {
+      throw new Error('Failed to generate backup');
+    }
+
+    // 2. Convert response to a Blob (Binary Large Object)
+    const blob = await response.blob();
+
+    // 3. Create a temporary download link in the browser memory
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    
+    // Set the filename with today's date
+    const date = new Date().toISOString().split('T')[0];
+    link.setAttribute('download', `nizam_store_backup_${date}.json`);
+
+    // 4. Trigger the click and clean up
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+    toast.success("Database backup downloaded successfully!");
+  } catch (error) {
+    console.error("Download Error:", error);
+    toast.error("Could not download database backup.");
+  }
+};
+
 
 const DashboardSidebar = () => {
   return (
@@ -97,6 +132,7 @@ const DashboardSidebar = () => {
         <MenuItem href="/dashboard/rolemanagement" icon={RiUserAddLine} label="Role Management" />
         <MenuItem href="/dashboard/support" icon={RiSuperscript} label="Support" />
         <MenuItem href="/dashboard/help" icon={TbReport} label="Help" />
+        <button onClick={downloadDB} className="font-semibold  text-xs hidden group-hover:flex items-center gap-2 mb-2 uppercase w-full bg-white text-black p-2  cursor-pointer">Download DB</button>
         <button onClick={handleLogout} className="hidden group-hover:inline whitespace-nowrap w-full bg-orange-500 text-white py-5 mt-5 cursor-pointer">Logout</button>
         <MenuItem href="/" icon={TbReport} label="Website" />
       </div>

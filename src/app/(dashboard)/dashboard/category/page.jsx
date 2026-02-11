@@ -29,7 +29,7 @@ const CategoryPage = () => {
           <h1 className='text-center text-2xl font-semibold'>Category</h1>
           {
             categories.map((cat) => (
-              <div key={cat.category_id} className='w-full grid grid-cols-2 p-2 border'>
+              <div key={cat.category_id} className='w-full grid grid-cols-2 p-2 border  border-black/50 rounded-xl even:bg-gray-200'>
                 <p>{cat.name}</p>
                 <button className='cursor-pointer' onClick={()=> removeCategory(cat.category_id)}>Delete</button>
               </div>

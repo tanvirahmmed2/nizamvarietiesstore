@@ -26,7 +26,7 @@ const BrandPage = () => {
           <h1 className='text-center text-2xl font-semibold'>Brands</h1>
           {
             brands.map((brand) => (
-              <div key={brand.brand_id} className='w-full grid grid-cols-3 p-2 border'>
+              <div key={brand.brand_id} className='w-full grid grid-cols-3 p-2 border border-black/50 rounded-xl even:bg-gray-200'>
                 <p>{brand.name}</p>
                 <p>{brand.description}</p>
                 <button className='cursor-pointer' onClick={()=> removeBrand(brand.brand_id)}>Delete</button>
