@@ -44,7 +44,10 @@ const AddProductForm = () => {
         try {
             const newData = new FormData()
             Object.keys(formData).forEach(key => {
-                newData.append(key, formData[key])
+                // Only append if value exists to avoid sending "null" strings for optional fields
+                if (formData[key] !== null && formData[key] !== '') {
+                    newData.append(key, formData[key])
+                }
             })
 
             const response = await axios.post('/api/product', newData, { withCredentials: true })
@@ -77,17 +80,21 @@ const AddProductForm = () => {
                     </div>
 
                     <div className='w-full flex flex-col gap-1'>
-                        <label htmlFor="barcode">Barcode (Scan with Laser)</label>
+                        <label htmlFor="barcode">Barcode (Auto-generated if empty)</label>
                         <input
                             type="text"
                             name='barcode'
                             id='barcode'
-                            readOnly
-                            placeholder="Waiting for scan..."
+                            // Removed readOnly so you can type manually if scanner fails
+                            placeholder="Scan, type, or leave empty"
                             value={formData.barcode}
+                            onChange={handleChange}
                             className='w-full border border-sky-400 bg-gray-50 font-mono px-4 p-1 rounded-sm outline-none'
                         />
-                        {formData.barcode && <span className='text-[10px] text-green-600 font-bold'>✓ Scanned</span>}
+                        {formData.barcode ? 
+                            <span className='text-[10px] text-green-600 font-bold'>✓ Code Provided</span> : 
+                            <span className='text-[10px] text-orange-500 font-bold'>⚠ System will generate ID</span>
+                        }
                     </div>
                 </div>
 

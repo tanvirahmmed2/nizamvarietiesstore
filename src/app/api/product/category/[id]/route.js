@@ -11,7 +11,7 @@ export async function GET(req,{params}) {
 
             },{status:400})
         }
-        const data= await pool.query(`SELECT * FROM products WHERE category_id=$1`,[id])
+        const data= await pool.query(`SELECT * FROM products WHERE category_id=$1 LIMIT 50`,[id])
         const result= data.rows
         if(result.length===0){
             return NextResponse.json({
