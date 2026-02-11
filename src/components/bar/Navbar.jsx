@@ -41,7 +41,7 @@ const Navbar = () => {
 
         </div>
       </nav>
-      {products.length > 0 && (
+      {products.length > 0 && searchTerm.length>1 && (
         <div className='fixed w-full z-50 top-14 flex items-center justify-center'>
           <div className='w-auto mx-auto flex flex-col items-center bg-white gap-2'>
             {products.map((product) => (

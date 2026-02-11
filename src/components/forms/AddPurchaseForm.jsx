@@ -182,7 +182,7 @@ const AddPurchaseForm = () => {
                 )}
             </div>
 
-            <div className="w-full flex flex-col gap-1 p-3 bg-slate-900 rounded-3xl mt-auto shadow-2xl">
+            <div className="w-full flex flex-col gap-1 p-3 bg-black rounded-3xl mt-auto shadow-2xl">
                 <div className="flex justify-between text-slate-400 text-sm">
                     <span>Subtotal Amount</span>
                     <span>৳{totals.subtotal.toFixed(2)}</span>
