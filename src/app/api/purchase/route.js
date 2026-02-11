@@ -5,9 +5,10 @@ export async function POST(req) {
     const client = await pool.connect();
     try {
         const body = await req.json();
+        
+        // DESTREUCTURE correctly based on what your frontend actually sends
         const {
-            supplier_name,
-            supplier_phone,
+            supplier_id, // This is what your frontend sends
             invoice_no,
             subtotal_amount,
             extra_discount,
@@ -18,64 +19,80 @@ export async function POST(req) {
             items 
         } = body;
 
-        if (!supplier_name || !supplier_phone || !items || items.length === 0) {
+        // Validation - Match the keys to the data
+        if (!supplier_id || !items || items.length === 0) {
             return NextResponse.json({
-                success: false, message: 'Supplier info and items are required'
+                success: false, 
+                message: 'Supplier info and items are required'
             }, { status: 400 });
         }
 
         await client.query('BEGIN');
 
-        const supplierUpsertQuery = `
-            INSERT INTO suppliers (name, phone)
-            VALUES ($1, $2)
-            ON CONFLICT (phone) DO UPDATE SET name = EXCLUDED.name
-            RETURNING supplier_id`;
-        
-        await client.query(supplierUpsertQuery, [supplier_name, supplier_phone]);
+        // 1. Fetch the supplier details using the ID provided
+        const supplierRes = await client.query(
+            "SELECT name, phone FROM suppliers WHERE supplier_id = $1", 
+            [supplier_id]
+        );
 
+        if (supplierRes.rows.length === 0) {
+            throw new Error("Supplier not found in database");
+        }
+        
+        const s_name = supplierRes.rows[0].name;
+        const s_phone = supplierRes.rows[0].phone;
+
+        // 2. Insert into Purchases (Matches your schema)
         const purchaseQuery = `
             INSERT INTO purchases (
-                supplier_name, supplier_phone, invoice_no, subtotal_amount, 
+                supplier_id, supplier_name, supplier_phone, invoice_no, subtotal_amount, 
                 extra_discount, total_amount, payment_method, transaction_id, note
             ) 
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
             RETURNING purchase_id`;
 
         const purchaseValues = [
-            supplier_name, 
-            supplier_phone, 
-            invoice_no, 
+            supplier_id,
+            s_name, 
+            s_phone, 
+            invoice_no || null, 
             Number(subtotal_amount) || 0, 
             Number(extra_discount) || 0, 
             Number(total_amount) || 0, 
-            payment_method, 
-            transaction_id, 
-            note
+            payment_method || 'cash', 
+            transaction_id || null, 
+            note || null
         ];
 
         const purchaseResult = await client.query(purchaseQuery, purchaseValues);
         const purchaseId = purchaseResult.rows[0].purchase_id;
 
+        // 3. Insert Payment Record
         const paymentQuery = `
             INSERT INTO purchase_payments (
                 purchase_id, payment_method, amount_paid, transaction_id
             ) VALUES ($1, $2, $3, $4)`;
         
-        await client.query(paymentQuery, [purchaseId, payment_method, Number(total_amount) || 0, transaction_id]);
+        await client.query(paymentQuery, [
+            purchaseId, 
+            payment_method || 'cash', 
+            Number(total_amount) || 0, 
+            transaction_id || null
+        ]);
 
+        // 4. Process Items and Inventory
         for (const item of items) {
-            const itemQuery = `
-                INSERT INTO purchase_items (purchase_id, product_id, quantity, purchase_price) 
-                VALUES ($1, $2, $3, $4)`;
-            await client.query(itemQuery, [purchaseId, item.product_id, item.quantity, Number(item.purchase_price)]);
+            // Add to items list
+            await client.query(
+                "INSERT INTO purchase_items (purchase_id, product_id, quantity, purchase_price) VALUES ($1, $2, $3, $4)",
+                [purchaseId, item.product_id, item.quantity, Number(item.purchase_price)]
+            );
 
-            const stockUpdateQuery = `
-                UPDATE products 
-                SET stock = stock + $1,
-                    purchase_price = $2
-                WHERE product_id = $3`;
-            await client.query(stockUpdateQuery, [item.quantity, Number(item.purchase_price), item.product_id]);
+            // Update product stock and cost
+            await client.query(
+                "UPDATE products SET stock = stock + $1, purchase_price = $2 WHERE product_id = $3",
+                [item.quantity, Number(item.purchase_price), item.product_id]
+            );
         }
 
         await client.query('COMMIT'); 
@@ -87,7 +104,7 @@ export async function POST(req) {
 
     } catch (error) {
         await client.query('ROLLBACK');
-        console.error(error);
+        console.error("PURCHASE ERROR:", error.message);
         return NextResponse.json({
             success: false, 
             message: `Database Error: ${error.message}`

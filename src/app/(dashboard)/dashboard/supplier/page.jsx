@@ -1,17 +1,15 @@
+import AddSupplierForm from '@/components/forms/AddSupplierForm'
 import { BASE_URL } from '@/lib/database/secret'
 import React from 'react'
 
 const SupplierPage = async () => {
-  // 1. Fetch data from the API
   const res = await fetch(`${BASE_URL}/api/supplier`, {
     method: 'GET',
     cache: 'no-store'
   })
 
-  // 2. Await the JSON parsing
   const data = await res.json()
 
-  // 3. Handle cases where the API fails or returns success: false
   if (!data.success) {
     return (
       <div className='w-full text-center py-20'>
@@ -27,6 +25,10 @@ const SupplierPage = async () => {
       <div className="flex flex-col gap-1 border-b pb-4">
         <h1 className='text-2xl font-black text-gray-800 uppercase tracking-tight'>Supplier Directory</h1>
         <p className='text-xs text-gray-500 font-medium'>Overview of procurement and vendor stats</p>
+      </div>
+      <div className='w-full flex flex-col items-center justify-center gap-3'>
+        <h1 className='text-center text-2xl font-semibold'>Add new Supplier</h1>
+        <AddSupplierForm/>
       </div>
 
       {suppliers.length === 0 ? (

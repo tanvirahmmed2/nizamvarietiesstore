@@ -8,8 +8,10 @@ export const Context = createContext()
 const ContextProvider = ({ children }) => {
   const [isCategoryBox, setIsCategoryBox] = useState(false)
   const [isBrandBox, setIsBrandBox] = useState(false)
+  const [isSupplierBox,setIsSupplierBox]=useState(false)
   const [categories, setCategories] = useState([])
   const [brands, setBrands] = useState([])
+  const [suppliers, setSuppliers] = useState([])
   const [hydrated, setHydrated] = useState(false)
   const [cart, setCart] = useState({ items: [] })
 
@@ -129,10 +131,21 @@ const ContextProvider = ({ children }) => {
     } catch (error) { setBrands([]) }
   }
 
+  
+  const fetchSupplier = async () => {
+    try {
+      const response = await axios.get('/api/supplier', { withCredentials: true })
+      setSuppliers(response.data.payload || [])
+    } catch (error) { setSuppliers([]) }
+  }
+
+
+
   useEffect(() => {
     fetchCategory()
     fetchCart()
     fetchBrand()
+    fetchSupplier()
 
   }, [])
 
@@ -183,6 +196,7 @@ const clearPurchase = () => {
   return (
     <Context.Provider value={{
       isBrandBox, setIsBrandBox, isCategoryBox, setIsCategoryBox, brands, setBrands,purchaseItems, addToPurchase, removeFromPurchase, decreaseFromPurchase,
+      isSupplierBox,setIsSupplierBox,fetchSupplier,suppliers, setSuppliers,
       categories, fetchCategory, cart, setCart, fetchCart, addToCart, clearCart, removeFromCart, decreaseQuantity, clearPurchase
     }}>
       {children}
