@@ -45,7 +45,7 @@ const ProductListPage = () => {
         if (!confirm("Are you sure you want to delete this product?")) return;
 
         try {
-            const res = await axios.delete(`/api/product`, {data:{id}, withCredentials: true });
+            const res = await axios.delete(`/api/product`, { data: { id }, withCredentials: true });
             if (res.data.success) {
                 toast.success("Product deleted");
                 setProducts(prev => prev.filter(p => p.product_id !== id));
@@ -128,8 +128,9 @@ const ProductListPage = () => {
                 </div>
             )}
 
-            {!searchTerm && (
+            {!searchTerm && pagination.totalPages > 1 && (
                 <div className="mt-16 flex items-center justify-center gap-2">
+                    {/* Previous Button */}
                     <button
                         disabled={pagination.currentPage === 1}
                         onClick={() => loadData(pagination.currentPage - 1)}
@@ -138,19 +139,49 @@ const ProductListPage = () => {
                         Prev
                     </button>
 
-                    <div className="flex gap-1">
-                        {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((num) => (
-                            <button
-                                key={num}
-                                onClick={() => loadData(num)}
-                                className={`w-10 h-10 border-2 border-black text-xs font-black transition-all ${pagination.currentPage === num ? 'bg-black text-white' : 'hover:bg-gray-100'
-                                    }`}
-                            >
-                                {num}
-                            </button>
-                        ))}
+                    <div className="flex items-center gap-1">
+                        {/* Always Show First Page if we are far from it */}
+                        {pagination.currentPage > 2 && (
+                            <>
+                                <button
+                                    onClick={() => loadData(1)}
+                                    className="w-10 h-10 border-2 border-black text-xs font-black hover:bg-gray-100"
+                                >
+                                    1
+                                </button>
+                                {pagination.currentPage > 3 && <span className="px-1 font-bold">...</span>}
+                            </>
+                        )}
+
+                        {/* Sliding Window: Show Current, One Before, and One After */}
+                        {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)
+                            .filter(num => num >= pagination.currentPage - 1 && num <= pagination.currentPage + 1)
+                            .map((num) => (
+                                <button
+                                    key={num}
+                                    onClick={() => loadData(num)}
+                                    className={`w-10 h-10 border-2 border-black text-xs font-black transition-all ${pagination.currentPage === num ? 'bg-black text-white' : 'hover:bg-gray-100'
+                                        }`}
+                                >
+                                    {num}
+                                </button>
+                            ))}
+
+                        {/* Always Show Last Page if we are far from it */}
+                        {pagination.currentPage < pagination.totalPages - 1 && (
+                            <>
+                                {pagination.currentPage < pagination.totalPages - 2 && <span className="px-1 font-bold">...</span>}
+                                <button
+                                    onClick={() => loadData(pagination.totalPages)}
+                                    className="w-10 h-10 border-2 border-black text-xs font-black hover:bg-gray-100"
+                                >
+                                    {pagination.totalPages}
+                                </button>
+                            </>
+                        )}
                     </div>
 
+                    {/* Next Button */}
                     <button
                         disabled={pagination.currentPage === pagination.totalPages}
                         onClick={() => loadData(pagination.currentPage + 1)}
