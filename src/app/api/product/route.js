@@ -222,13 +222,13 @@ export async function PUT(req) {
     try {
         const formData = await req.formData();
         const id = formData.get("id");
+        const name = formData.get("name");
 
         if (!id) {
             return NextResponse.json({ success: false, message: 'Product ID is required' }, { status: 400 });
         }
 
-        // Parse Basic Fields
-        const name = formData.get("name");
+        // 1. Basic Fields Parsing
         const description = formData.get('description');
         const category_id = parseInt(formData.get('category_id'));
         const brand_id = formData.get('brand_id') ? parseInt(formData.get('brand_id')) : null;
@@ -241,14 +241,17 @@ export async function PUT(req) {
         const wholesale_price = parseFloat(formData.get('wholesale_price')) || 0;
         const retail_price = parseFloat(formData.get('retail_price')) || 0;
         const dealer_price = parseFloat(formData.get('dealer_price')) || 0;
-        const slug = slugify(name.trim(), { lower: true, strict: true });
+        
+        // Only generate slug if name is provided
+        const slug = name ? slugify(name.trim(), { lower: true, strict: true }) : null;
 
-        // Handle Optional Image Upload
+        // 2. Image Handling Logic
         const imageFile = formData.get("image");
         let imageUrl = null;
         let imagePublicId = null;
 
-        if (imageFile && typeof imageFile !== 'string') {
+        // Only upload to Cloudinary if a new file (not a string/URL) is provided
+        if (imageFile && typeof imageFile !== 'string' && imageFile.size > 0) {
             const arrayBuffer = await imageFile.arrayBuffer();
             const buffer = Buffer.from(arrayBuffer);
 
@@ -266,14 +269,25 @@ export async function PUT(req) {
             imagePublicId = uploadResponse.public_id;
         }
 
-        // Construct Dynamic SQL
+        // 3. Construct the SQL Query
+        // Values 1 through 14 are standard fields
         let query = `
             UPDATE products 
             SET 
-                name = $1, description = $2, category_id = $3, brand_id = $4, 
-                slug = $5, barcode = $6, unit = $7, stock = $8, 
-                purchase_price = $9, sale_price = $10, discount_price = $11, 
-                wholesale_price = $12, retail_price = $13, dealer_price = $14
+                name = COALESCE($1, name), 
+                description = $2, 
+                category_id = $3, 
+                brand_id = $4, 
+                slug = COALESCE($5, slug), 
+                barcode = $6, 
+                unit = $7, 
+                stock = $8, 
+                purchase_price = $9, 
+                sale_price = $10, 
+                discount_price = $11, 
+                wholesale_price = $12, 
+                retail_price = $13, 
+                dealer_price = $14
         `;
 
         const values = [
@@ -282,11 +296,13 @@ export async function PUT(req) {
             wholesale_price, retail_price, dealer_price
         ];
 
-        // Only add image columns if a new image was uploaded
+        // 4. Conditional Image Update
         if (imageUrl) {
+            // If new image exists, we append it to the SET clause
             query += `, image = $15, image_id = $16 WHERE product_id = $17`;
             values.push(imageUrl, imagePublicId, id);
         } else {
+            // If no new image, we skip those columns entirely
             query += ` WHERE product_id = $15`;
             values.push(id);
         }
