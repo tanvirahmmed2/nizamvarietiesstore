@@ -1,12 +1,9 @@
 'use client'
 import Image from 'next/image'
-import React, { useContext } from 'react'
-import { motion } from 'framer-motion'
-import { Context } from '../helper/Context'
+import React from 'react'
 import Link from 'next/link'
 
 const Intro = () => {
-    const { categories } = useContext(Context)
 
     return (
         <div className=' w-full flex flex-col gap-8'>
@@ -17,12 +14,7 @@ const Intro = () => {
                     <p className='font-semibold font-serif uppercase'>Welcome to</p>
                     <h1 className='text-5xl sm:text-7xl font-extrabold text-sky-500 text-center'>Nizam Varieties Store</h1>
                     <div className='w-full max-w-2xl flex flex-wrap items-center justify-center gap-2'>
-                        {
-                            categories.length > 0 && categories.map((cat) => (
-                                <Link href={`/products/category/${cat?.category_id}`} className='w-auto px-4 p-1 border rounded-full shadow' key={cat.category_id}>{cat?.name}</Link>
-
-                            ))
-                        }
+                       
                     </div>
                 </div>
             </div>
