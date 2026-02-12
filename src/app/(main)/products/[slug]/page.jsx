@@ -16,7 +16,7 @@ const SingleProduct = async ({ params }) => {
     <div className='w-full min-h-screen flex flex-col gap-20 items-center justify-center  rounded-2xl'>
       <div className='w-full md:w-5/6 lg:w-3/4 mx-auto flex flex-col lg:flex-row gap-8 bg-white m-6 p-4 md:p-6 rounded-2xl shadow-sm border border-slate-100'>
 
-        <div className='relative w-full h-100 sm:h-150 aspect-square overflow-hidden rounded-xl bg-slate-50 border border-slate-100'>
+        <div className='relative w-full overflow-hidden rounded-xl bg-slate-50 border border-slate-100'>
           <div className='absolute right-3 top-3 z-10'>
             {product.stock > 0 ? (
               <span className='text-[12px] font-bold uppercase tracking-wider text-white py-1.5 px-3 rounded-full bg-emerald-500'>
@@ -33,7 +33,7 @@ const SingleProduct = async ({ params }) => {
             alt={product?.name}
             width={1000}
             height={1000}
-            className="object-cover w-full h-100 sm:h-150  transition-transform duration-500 group-hover:scale-105"
+            className="object-cover w-full   transition-transform duration-500 group-hover:scale-105"
           />
         </div>
 

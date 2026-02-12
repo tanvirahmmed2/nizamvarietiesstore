@@ -42,14 +42,14 @@ const Navbar = () => {
         </div>
       </nav>
       {products.length > 0 && searchTerm.length>1 && (
-        <div className='fixed w-full z-50 top-14 flex items-center justify-center'>
-          <div className='w-auto mx-auto flex flex-col items-center bg-white gap-2'>
+        <div className='fixed w-full z-50 top-14 flex items-center justify-center '>
+          <div className='w-full sm:w-1/2 mx-auto flex flex-col items-center bg-white gap-2'>
             {products.map((product) => (
             <Link
             onClick={()=>setSearchTerm('')}
               href={`/products/${product.slug}`}
               key={product.slug}
-              className="w-full px-2 py-1 bg-gray-50 hover:bg-white rounded block"
+              className="w-full px-2 py-1 even:bg-gray-300 hover:bg-white rounded block"
             >
               {product.name}
             </Link>

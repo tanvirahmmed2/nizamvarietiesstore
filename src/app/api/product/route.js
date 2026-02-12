@@ -227,64 +227,84 @@ export async function PUT(req) {
             return NextResponse.json({ success: false, message: 'Product ID is required' }, { status: 400 });
         }
 
+        // Parse Basic Fields
         const name = formData.get("name");
         const description = formData.get('description');
         const category_id = parseInt(formData.get('category_id'));
         const brand_id = formData.get('brand_id') ? parseInt(formData.get('brand_id')) : null;
         const barcode = formData.get('barcode');
         const unit = formData.get('unit');
-        const stock = parseInt(formData.get('stock')) || 0;
-        
-        const purchase_price = parseFloat(formData.get('purchase_price'));
-        const sale_price = parseFloat(formData.get('sale_price'));
+        const stock = parseFloat(formData.get('stock')) || 0;
+        const purchase_price = parseFloat(formData.get('purchase_price')) || 0;
+        const sale_price = parseFloat(formData.get('sale_price')) || 0;
         const discount_price = parseFloat(formData.get('discount_price')) || 0;
-        const wholesale_price = parseFloat(formData.get('wholesale_price'));
+        const wholesale_price = parseFloat(formData.get('wholesale_price')) || 0;
         const retail_price = parseFloat(formData.get('retail_price')) || 0;
         const dealer_price = parseFloat(formData.get('dealer_price')) || 0;
-
         const slug = slugify(name.trim(), { lower: true, strict: true });
 
-        const query = `
+        // Handle Optional Image Upload
+        const imageFile = formData.get("image");
+        let imageUrl = null;
+        let imagePublicId = null;
+
+        if (imageFile && typeof imageFile !== 'string') {
+            const arrayBuffer = await imageFile.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+
+            const uploadResponse = await new Promise((resolve, reject) => {
+                cloudinary.uploader.upload_stream(
+                    { folder: "nizam_store_products" },
+                    (error, result) => {
+                        if (error) reject(error);
+                        else resolve(result);
+                    }
+                ).end(buffer);
+            });
+
+            imageUrl = uploadResponse.secure_url;
+            imagePublicId = uploadResponse.public_id;
+        }
+
+        // Construct Dynamic SQL
+        let query = `
             UPDATE products 
             SET 
-                name = $1, 
-                description = $2, 
-                category_id = $3, 
-                brand_id = $4, 
-                slug = $5, 
-                barcode = $6, 
-                unit = $7, 
-                stock = $8, 
-                purchase_price = $9, 
-                sale_price = $10, 
-                discount_price = $11, 
-                wholesale_price = $12, 
-                retail_price = $13, 
-                dealer_price = $14
-            WHERE product_id = $15 
-            RETURNING *`;
+                name = $1, description = $2, category_id = $3, brand_id = $4, 
+                slug = $5, barcode = $6, unit = $7, stock = $8, 
+                purchase_price = $9, sale_price = $10, discount_price = $11, 
+                wholesale_price = $12, retail_price = $13, dealer_price = $14
+        `;
 
         const values = [
             name, description, category_id, brand_id, slug, barcode, unit,
             stock, purchase_price, sale_price, discount_price,
-            wholesale_price, retail_price, dealer_price, id
+            wholesale_price, retail_price, dealer_price
         ];
 
-        const updatedProduct = await pool.query(query, values);
+        // Only add image columns if a new image was uploaded
+        if (imageUrl) {
+            query += `, image = $15, image_id = $16 WHERE product_id = $17`;
+            values.push(imageUrl, imagePublicId, id);
+        } else {
+            query += ` WHERE product_id = $15`;
+            values.push(id);
+        }
+
+        const updatedProduct = await pool.query(query + " RETURNING *", values);
 
         if (updatedProduct.rowCount === 0) {
-            return NextResponse.json({
-                success: false, message: 'Product not found or update failed'
-            }, { status: 404 });
+            return NextResponse.json({ success: false, message: 'Product not found' }, { status: 404 });
         }
 
         return NextResponse.json({
-            success: true, message: 'Successfully updated product'
+            success: true,
+            message: 'Successfully updated product',
+            payload: updatedProduct.rows[0]
         }, { status: 200 });
 
     } catch (error) {
-        return NextResponse.json({
-            success: false, message: error.message 
-        }, { status: 500 });
+        console.error("Update Error:", error);
+        return NextResponse.json({ success: false, message: error.message }, { status: 500 });
     }
 }

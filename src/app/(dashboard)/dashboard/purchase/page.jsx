@@ -50,7 +50,7 @@ const PurchasePage = () => {
           <AddSupplierForm/>
         </div>
       <AddPurchaseForm />
-      <div className="w-1/2flex flex-col items-center  gap-4">
+      <div className="w-1/2 flex flex-col items-center  gap-4">
         <BarScanner onScan={handleBarcodeScan} />
         <div className="w-full flex flex-row items-center justify-between gap-4 border-b-2 p-4">
           <p>Find item</p>
@@ -68,10 +68,10 @@ const PurchasePage = () => {
           !products || products.length < 1 ? <p>Please search product</p> : <div className="w-full flex flex-col gap-2 items-center justify-center">
             {
               products?.map((product) => (
-                <div key={product.product_id} className="w-full flex even:bg-gray-200 flex-row items-center justify-center p-1">
+                <div key={product.product_id} className="w-full flex shadowr rounded-2xl border-black/20  even:bg-gray-200 flex-row items-center justify-center px-4 p-1 border">
                   <p className="flex-5">{product.name}</p>
                   <p className="flex-1"> ৳ {product.purchase_price}</p>
-                  <button className="flex-1" onClick={() => addToPurchase(product)}>Add</button>
+                  <button className="flex-1 bg-black/50 text-white rounded-2xl" onClick={() => addToPurchase(product)}>Add</button>
                 </div>
               ))
             }
