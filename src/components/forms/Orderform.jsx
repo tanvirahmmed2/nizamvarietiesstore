@@ -144,7 +144,7 @@ const Orderform = ({ cartItems = [] }) => {
 
             <div className='w-full max-h-48 overflow-y-auto border-y border-black/5 py-2'>
                 {cartItems.map(item => (
-                    <div key={item.product_id} className='w-full flex justify-between items-center p-2 mb-1 bg-gray-50 rounded-lg'>
+                    <div key={item.product_id} className='w-full flex justify-between items-center p-2 mb-1 even:bg-gray-300 shadow border border-black/30 rounded-lg'>
                         <div className='w-1/2'>
                             <p className='text-xs font-bold truncate'>{item.name}</p>
                             <p className='text-[10px] text-sky-600 font-bold uppercase'>{saleType} Mode</p>

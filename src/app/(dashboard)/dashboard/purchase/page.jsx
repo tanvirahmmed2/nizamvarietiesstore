@@ -1,47 +1,13 @@
 'use client'
 import AddPurchaseForm from '@/components/forms/AddPurchaseForm'
 import AddSupplierForm from '@/components/forms/AddSupplierForm'
-import BarScanner from '@/components/helper/BarcodeScanner'
 import { Context } from '@/components/helper/Context'
-import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 
 const PurchasePage = () => {
-  const {addToPurchase,isSupplierBox,setIsSupplierBox, }= useContext(Context)
-  const [products, setProducts] = useState([])
-
-  const [searchTerm, setSearchTerm] = useState('')
+  const {isSupplierBox}= useContext(Context)
 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const respoonse = await axios.get(`/api/product/search?q=${searchTerm}`, { withCredentials: true })
-        setProducts(respoonse.data.payload)
-      } catch (error) {
-        console.log(error)
-        setProducts([])
-
-      }
-    }
-    fetchData()
-  }, [searchTerm])
-
-  const handleBarcodeScan = async (code) => {
-    try {
-      setSearchTerm(code)
-
-      const response = await axios.get(`/api/product/search?q=${code}`, { withCredentials: true })
-      const foundItems = response.data.payload
-
-      if (foundItems && foundItems.length === 1) {
-        addToPurchase(foundItems[0])
-        setSearchTerm('') 
-      }
-    } catch (error) {
-      console.error("Scanner lookup error:", error)
-    }
-  }
 
 
   return (
@@ -50,34 +16,7 @@ const PurchasePage = () => {
           <AddSupplierForm/>
         </div>
       <AddPurchaseForm />
-      <div className="w-1/2 flex flex-col items-center  gap-4">
-        <BarScanner onScan={handleBarcodeScan} />
-        <div className="w-full flex flex-row items-center justify-between gap-4 border-b-2 p-4">
-          <p>Find item</p>
-          <input
-            type="text"
-            name='searchTerm'
-            id='searchTerm'
-            onChange={(e) => setSearchTerm(e.target.value)}
-            value={searchTerm}
-            className='w-auto border border-sky-400 px-4 p-1 rounded-sm outline-none '
-          />
-        </div>
-
-        {
-          !products || products.length < 1 ? <p>Please search product</p> : <div className="w-full flex flex-col gap-2 items-center justify-center">
-            {
-              products?.map((product) => (
-                <div key={product.product_id} className="w-full flex shadowr rounded-2xl border-black/20  even:bg-gray-200 flex-row items-center justify-center px-4 p-1 border">
-                  <p className="flex-5">{product.name}</p>
-                  <p className="flex-1"> ৳ {product.purchase_price}</p>
-                  <button className="flex-1 bg-black/50 text-white rounded-2xl" onClick={() => addToPurchase(product)}>Add</button>
-                </div>
-              ))
-            }
-          </div>
-        }
-      </div>
+      
     </div>
   )
 }

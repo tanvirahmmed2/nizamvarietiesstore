@@ -8,7 +8,7 @@ export const Context = createContext()
 const ContextProvider = ({ children }) => {
   const [isCategoryBox, setIsCategoryBox] = useState(false)
   const [isBrandBox, setIsBrandBox] = useState(false)
-  const [isSupplierBox,setIsSupplierBox]=useState(false)
+  const [isSupplierBox, setIsSupplierBox] = useState(false)
   const [categories, setCategories] = useState([])
   const [brands, setBrands] = useState([])
   const [suppliers, setSuppliers] = useState([])
@@ -45,44 +45,42 @@ const ContextProvider = ({ children }) => {
     }
   }, [cart, hydrated])
 
- const addToCart = (product) => {
-    // 1. Basic ID check
+  const addToCart = (product) => {
     if (!product?.product_id) return;
 
-    // 2. STOCK CHECK: Prevent adding if stock is 0 or less
-    // Converting to Number to ensure comparison works even if it's a string from DB
+    // 1. Check if product is out of stock entirely
     if (Number(product.stock) <= 0) {
-        toast.error("Item is out of stock!");
-        return;
+      toast.error("Item is out of stock!");
+      return;
     }
 
-    const exists = cart.items.find(item => item.product_id === product.product_id);
+    // 2. Find if item already exists in cart to check quantity limit
+    const existingInCart = cart.items.find(item => item.product_id === product.product_id);
 
-    setCart((prev) => {
-      const existing = prev.items.find(item => item.product_id === product.product_id)
-
-      if (existing) {
-        // 3. OPTIONAL: Check if user is trying to add more than available stock
-        if (existing.quantity >= product.stock) {
-            toast.warning(`Only ${product.stock} items available in stock`);
-            return prev; // Return current state without changes
-        }
-
-        return {
-          ...prev,
-          items: prev.items.map(item =>
-            item.product_id === product.product_id
-              ? { ...item, quantity: item.quantity + 1 }
-              : item
-          )
-        }
+    if (existingInCart) {
+      // 3. Move the toast warning OUTSIDE of the setCart callback
+      if (existingInCart.quantity >= Number(product.stock)) {
+        toast.warning(`Only ${product.stock} items available in stock`);
+        return; // Stop here, do not call setCart
       }
 
+      // If we reach here, quantity is okay to increase
+      setCart((prev) => ({
+        ...prev,
+        items: prev.items.map(item =>
+          item.product_id === product.product_id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      }));
+      toast.info("Quantity increased");
+    } else {
+      // 4. Item is new to cart
       const salePrice = parseFloat(product?.sale_price) || 0;
       const wholeSalePrice = parseFloat(product?.wholesale_price) || 0;
       const discountAmount = parseFloat(product?.discount_price) || 0;
 
-      return {
+      setCart((prev) => ({
         ...prev,
         items: [
           ...prev.items,
@@ -96,18 +94,10 @@ const ContextProvider = ({ children }) => {
             price: salePrice - discountAmount
           }
         ]
-      }
-    });
-
-    if (exists) {
-      const currentItem = cart.items.find(item => item.product_id === product.product_id);
-      if (currentItem && currentItem.quantity < product.stock) {
-          toast.info("Quantity increased");
-      }
-    } else {
+      }));
       toast.success("Added to cart");
     }
-};
+  };
   const removeFromCart = (id) => {
     setCart(prev => ({ ...prev, items: prev.items.filter(item => item.product_id !== id) }))
   }
@@ -129,9 +119,10 @@ const ContextProvider = ({ children }) => {
   }
 
   const clearCart = () => {
-    setCart({ items: [] })
-    if (typeof window !== 'undefined') localStorage.removeItem('cart')
-  }
+    setCart({ items: [] });
+    if (typeof window !== 'undefined') localStorage.removeItem('cart');
+    toast.success("Cart cleared"); // Keep this outside of any logic blocks
+  };
 
   const fetchCategory = async () => {
     try {
@@ -147,7 +138,7 @@ const ContextProvider = ({ children }) => {
     } catch (error) { setBrands([]) }
   }
 
-  
+
   const fetchSupplier = async () => {
     try {
       const response = await axios.get('/api/supplier', { withCredentials: true })
@@ -165,46 +156,46 @@ const ContextProvider = ({ children }) => {
 
   }, [])
 
-const [purchaseItems, setPurchaseItems] = useState([]);
+  const [purchaseItems, setPurchaseItems] = useState([]);
 
-const addToPurchase = (product) => {
+  const addToPurchase = (product) => {
     setPurchaseItems((prev) => {
-        const existingItem = prev.find(item => item.product_id === product.product_id);
+      const existingItem = prev.find(item => item.product_id === product.product_id);
 
-        if (existingItem) {
-            return prev.map(item =>
-                item.product_id === product.product_id
-                    ? { ...item, quantity: item.quantity + 1 }
-                    : item
-            );
-        }
+      if (existingItem) {
+        return prev.map(item =>
+          item.product_id === product.product_id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
 
-        return [...prev, {
-            product_id: product.product_id,
-            name: product.name,
-            purchase_price: parseFloat(product.purchase_price) || 0, 
-            sale_price: parseFloat(product.sale_price) || 0,
-            quantity: 1
-        }];
+      return [...prev, {
+        product_id: product.product_id,
+        name: product.name,
+        purchase_price: parseFloat(product.purchase_price) || 0,
+        sale_price: parseFloat(product.sale_price) || 0,
+        quantity: 1
+      }];
     });
-};
+  };
 
 
 
-const removeFromPurchase = (productId) => {
+  const removeFromPurchase = (productId) => {
     setPurchaseItems((prev) => prev.filter(item => item.product_id !== productId));
-};
+  };
 
 
-const clearPurchase = () => {
+  const clearPurchase = () => {
     setPurchaseItems([]);
-};
+  };
 
 
   return (
     <Context.Provider value={{
-      isBrandBox, setIsBrandBox, isCategoryBox, setIsCategoryBox, brands, setBrands,purchaseItems, addToPurchase, removeFromPurchase, 
-      isSupplierBox,setIsSupplierBox,fetchSupplier,suppliers, setSuppliers, setPurchaseItems,
+      isBrandBox, setIsBrandBox, isCategoryBox, setIsCategoryBox, brands, setBrands, purchaseItems, addToPurchase, removeFromPurchase,
+      isSupplierBox, setIsSupplierBox, fetchSupplier, suppliers, setSuppliers, setPurchaseItems,
       categories, fetchCategory, cart, setCart, fetchCart, addToCart, clearCart, removeFromCart, decreaseQuantity, clearPurchase
     }}>
       {children}
