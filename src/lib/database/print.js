@@ -10,45 +10,33 @@ export const generateReceipt = (order) => {
         <style>
           @page { margin: 0; size: 80mm auto; }
           body { 
-            font-family: 'Arial', sans-serif; 
-            width: 74mm; 
-            margin: 0 auto; 
-            padding: 8mm 2mm; 
-            /* GLOBAL INCREASE STARTS HERE */
-            font-size: 24px; 
-            line-height: 1.4;
-            color: #000;
-            zoom: 1.1; 
+            font-family: 'Courier New', Courier, monospace; 
+            width: 72mm; margin: 0 auto; padding: 5mm 2mm; 
+            font-size: 16px; color: #000; line-height: 1.2; 
           }
           .center { text-align: center; }
           .bold { font-weight: bold; }
-          .divider { border-top: 3px solid #000; margin: 15px 0; }
-          table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-          th { border-bottom: 4px solid #000; text-align: left; padding-bottom: 8px; font-size: 24px; }
-          td { padding: 8px 0; vertical-align: top; }
+          .divider { border-top: 1px dashed #000; margin: 8px 0; }
+          table { width: 100%; border-collapse: collapse; margin: 5px 0; }
+          th { border-bottom: 1px solid #000; text-align: left; padding-bottom: 2px; }
           .qty { width: 15%; }
-          .name { width: 50%; }
-          .price { width: 35%; text-align: right; }
-          .total-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
-          .grand-total { 
-            font-size: 32px; /* Extra large for the total */
-            margin-top: 15px; 
-            border-top: 4px solid #000; 
-            padding-top: 15px; 
-          }
-          .footer-msg { margin-top: 30px; font-size: 20px; }
+          .name { width: 55%; }
+          .price { width: 30%; text-align: right; }
+          .total-row { display: flex; justify-content: space-between; margin-bottom: 2px; }
+          .grand-total { font-size: 16px; margin-top: 5px; border-top: 1px solid #000; padding-top: 5px; }
+          .footer-msg { margin-top: 15px; font-size: 11px; font-style: italic; }
         </style>
       </head>
       <body>
         <div class="center">
-          <h2 style="margin:0; font-size: 30px; text-transform: uppercase;">Nizam Varieties Store</h2>
-          <p style="margin:8px 0; font-size: 22px;">Tel: 01645-172356</p>
+          <h2 style="margin:0; font-size: 18px; text-transform: uppercase;">Nizam Varieties Store</h2>
+          <p style="margin:2px 0;">Tel: 01645-172356</p>
           <div class="divider"></div>
-          <p style="margin:8px 0; font-size: 26px;" class="bold">ORDER: #${order.order_id}</p>
-          <p style="margin:8px 0;">${new Date(order.created_at || Date.now()).toLocaleString()}</p>
+          <p style="margin:2px 0;">ORDER: #${order.order_id}</p>
+          <p style="margin:2px 0;">${new Date(order.created_at || Date.now()).toLocaleString()}</p>
         </div>
 
-        <div style="margin: 25px 0 20px 0;">
+        <div style="margin: 10px 0 5px 0;">
           <div>Customer: <span class="bold">${order.name || 'Walk-in'}</span></div>
           <div>Status: <span class="bold">${order.status?.toUpperCase()}</span></div>
         </div>
@@ -86,9 +74,9 @@ export const generateReceipt = (order) => {
 
         <div class="center footer-msg">
           <p style="margin:0;">Payment Mode: ${order.payment_method?.toUpperCase() || 'CASH'}</p>
-          <div class="divider" style="border-top-style: dotted; border-width: 2px;"></div>
-          <p class="bold" style="font-size: 24px;">Thank you for shopping!</p>
-          <p style="font-size: 14px; opacity: 0.8; margin-top: 15px;">Software by Nizam POS</p>
+          <div class="divider" style="border-top-style: dotted;"></div>
+          <p>Thank you for shopping with us!</p>
+          <p style="font-size: 9px; opacity: 0.8;">Software by Nizam POS</p>
         </div>
       </body>
     </html>
