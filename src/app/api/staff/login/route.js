@@ -32,7 +32,7 @@ export async function POST(req) {
         }
 
         const payload = { 
-            id: user.staff_id || user.id, 
+            id: user.staff_id, 
             email: user.email, 
             role: user.role 
         };

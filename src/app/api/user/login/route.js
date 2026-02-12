@@ -1,63 +1,79 @@
 import { pool } from "@/lib/database/db";
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from "@/lib/database/secret";
+
+const TWENTY_YEARS = 60 * 60 * 24 * 365 * 20;
 
 export async function POST(req) {
     try {
         const { email, password } = await req.json();
 
         // 1. Validate Input
-        if (!email || !password) {
-            return NextResponse.json({ message: "Email and password are required" }, { status: 400 });
+        const existsUser = await pool.query(`SELECT * FROM users WHERE email=$1`, [email]);
+        if (existsUser.rowCount === 0) {
+            return NextResponse.json({ success: false, message: 'User not found' }, { status: 400 });
         }
 
-        const client = await pool.connect();
-        try {
-            // 2. Find user in database
-            const result = await client.query("SELECT * FROM users WHERE email = $1", [email]);
-            const user = result.rows[0];
-
-            if (!user) {
-                return NextResponse.json({ message: "Invalid email or password" }, { status: 401 });
-            }
-
-            // 3. Check Password
-            const isPasswordValid = await bcrypt.compare(password, user.password);
-            if (!isPasswordValid) {
-                return NextResponse.json({ message: "Invalid email or password" }, { status: 401 });
-            }
-
-            // 4. Generate JWT Token
-            const token = jwt.sign(
-                { user_id: user.user_id, email: user.email },
-                JWT_SECRET,
-                { expiresIn: '20y' }
-            );
-
-            // 5. Create Response and set Cookie
-            const response = NextResponse.json({
-                message: `Welcome back, ${user.name}`,
-                success: true
-            }, { status: 200 });
-
-            // Set the cookie (httpOnly for security)
-            response.cookies.set("nvs_user_token", token, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
-                maxAge: 86400, // 1 day
-                path: "/",
-            });
-
-            return response;
-
-        } finally {
-            client.release();
+        const user = existsUser.rows[0];
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return NextResponse.json({ success: false, message: 'Incorrect password' }, { status: 400 });
         }
+
+        const token = jwt.sign(
+            { user_id: user.user_id, email: user.email, phone:user.phone },
+            JWT_SECRET,
+            { expiresIn: "20y" }
+        );
+
+        const response = NextResponse.json({
+            success: true,
+            message: "Successfully logged in",
+            payload: { name: user.name, email: user.email }
+        }, { status: 200 });
+
+        response.cookies.set("nvs_user_token", token, {
+            httpOnly: true, // Prevents JS access (XSS protection)
+            path: "/",      // Essential: makes cookie available to all pages
+            maxAge: TWENTY_YEARS, 
+            sameSite: "lax", // Better for local dev than 'strict'
+            // Only use secure (HTTPS) in production
+            secure: process.env.NODE_ENV === "production", 
+        });
+
+        return response;
+
     } catch (error) {
-        console.error("Login Error:", error);
-        return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+        return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+    }
+}
+
+
+
+
+export async function GET() {
+
+    try {
+        const res = NextResponse.json({
+        success: true,
+        message: "Logout successful",
+    });
+
+
+    res.cookies.set("nvs_user_token", "", {
+        httpOnly: true,
+        expires: new Date(0),
+        path: "/",
+    });
+
+    return res;
+    } catch (error) {
+        return NextResponse.json({
+            success:false,
+            message: "failed to logout",
+            error: error.message
+        }, {status:500})
     }
 }
