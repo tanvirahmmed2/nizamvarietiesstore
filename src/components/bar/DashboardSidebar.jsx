@@ -26,7 +26,7 @@ const handleLogout = async () => {
   try {
     const response = await axios.get('/api/staff/login', { withCredentials: true })
     toast.success(response.data.message)
-    window.location.replace('/login')
+    window.location.replace('/access')
   } catch (error) {
     console.log(error)
     toast.error(error?.response?.data?.message || 'Failed to logout')
@@ -43,7 +43,6 @@ const downloadDB = async () => {
       throw new Error('Failed to generate backup');
     }
 
-    // 2. Convert response to a Blob (Binary Large Object)
     const blob = await response.blob();
 
     // 3. Create a temporary download link in the browser memory

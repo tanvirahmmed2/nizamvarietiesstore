@@ -9,7 +9,8 @@ const RegisterForm = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: '',
-    name:''
+    name:'',
+    phone:''
   })
 
   const handleChange = (e) => {
@@ -31,23 +32,27 @@ const RegisterForm = () => {
 
   }
   return (
-    <motion.form initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.4 }} onSubmit={loginHandle} className='flex-1 flex flex-col  gap-4'>
+    <motion.form initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.4 }} onSubmit={loginHandle} className='w-full flex flex-col   gap-4'>
       <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: .6 }} className='w-full flex flex-col'>
         <label htmlFor="name">Name</label>
-        <input type="text" id='name' name='name' required value={formData.name} onChange={handleChange} className='w-full px-3 p-1 rounded-lg outline-none border border-pink-400/10' />
+        <input type="text" id='name' name='name' required value={formData.name} onChange={handleChange} className='w-full px-3 p-1 rounded-lg outline-none border border-black/30' />
       </motion.div>
       <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: .6 }} className='w-full flex flex-col'>
         <label htmlFor="email">Email</label>
-        <input type="email" id='email' name='email' required value={formData.email} onChange={handleChange} className='w-full px-3 p-1 rounded-lg outline-none border border-pink-400/10' />
+        <input type="email" id='email' name='email' required value={formData.email} onChange={handleChange} className='w-full px-3 p-1 rounded-lg outline-none border border-black/30' />
+      </motion.div>
+      <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: .6 }} className='w-full flex flex-col'>
+        <label htmlFor="phone">Phone</label>
+        <input type="text" id='phone' name='phone' required value={formData.phone} onChange={handleChange} className='w-full px-3 p-1 rounded-lg outline-none border border-black/30' />
       </motion.div>
       <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: .6 }} className='w-full flex flex-col'>
         <label htmlFor="password">Password</label>
-        <input type="password" id='password' name='password' required value={formData.password} onChange={handleChange} className='w-full px-3 p-1 rounded-lg outline-none border border-pink-400/10' />
+        <input type="password" id='password' name='password' required value={formData.password} onChange={handleChange} className='w-full px-3 p-1 rounded-lg outline-none border border-black/30' />
       </motion.div>
       <motion.div className='text-right' initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.7 }}>
         <Link href="/login">Already registered?</Link>
       </motion.div>
-      <motion.button initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.7 }} type='submit' className='bg-pink-400/80 hover:bg-pink-400 text-white rounded-lg cursor-pointer '>Next</motion.button>
+      <motion.button initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.7 }} type='submit' className='bg-black/80 hover:bg-black text-white rounded-lg cursor-pointer '>Next</motion.button>
     </motion.form>
   )
 }
