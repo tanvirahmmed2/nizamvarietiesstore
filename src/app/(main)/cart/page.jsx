@@ -8,10 +8,10 @@ import axios from 'axios';
 import Link from 'next/link';
 
 const Cart = () => {
-  const { cart, removeFromCart,addToCart, decreaseQuantity, clearCart } = useContext(Context)
+  const { cart, removeFromCart, addToCart, decreaseQuantity, clearCart, userData } = useContext(Context)
   const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
+    name: userData.name || '',
+    phone: userData.phone || '',
     subTotal: 0,
     discount: 0,
     totalPrice: 0,
@@ -27,11 +27,9 @@ const Cart = () => {
   useEffect(() => {
     if (!cart?.items) return;
 
-    
     const subTotal = cart.items.reduce((sum, item) => 
         sum + (parseFloat(item.sale_price || 0) * (item.quantity || 0)), 0)
 
-    
     const totalDiscount = cart.items.reduce((sum, item) => 
         sum + (parseFloat(item.discount_price || 0) * (item.quantity || 0)), 0)
 
@@ -57,12 +55,12 @@ const Cart = () => {
       items: cart.items.map(item => ({
         product_id: item.product_id,
         quantity: item.quantity,
-        price: item.price
+        price: item.sale_price
       }))
     }
 
     try {
-      const response = await axios.post('/api/order', payload, { withCredentials: true })
+      const response = await axios.post('/api/order/public', payload, { withCredentials: true })
       toast.success(response.data.message || 'Order placed successfully!');
       clearCart()
       setFormData({ 
@@ -93,7 +91,7 @@ const Cart = () => {
             <div key={item?.product_id} className='flex items-center justify-between border-b border-gray-100 pb-6'>
               <div className='flex-1'>
                 <p className=' text-lg text-gray-800'>{item?.name}</p>
-                <p className='text-sm text-gray-500'>৳{parseFloat(item?.price).toFixed(2)} per unit</p>
+                <p className='text-sm text-gray-500'>৳{parseFloat(item?.sale_price).toFixed(2)} per unit</p>
               </div>
               <div className='flex items-center gap-6'>
                 <div className='flex items-center gap-4 bg-gray-100 px-4 py-2 rounded-full'>
@@ -108,7 +106,7 @@ const Cart = () => {
                   />
                 </div>
                 <p className=' w-24 text-right text-gray-800'>
-                   ৳{(parseFloat(item.price) * item.quantity).toFixed(2)}
+                    ৳{(parseFloat(item.sale_price) * item.quantity).toFixed(2)}
                 </p>
                 <MdDeleteOutline 
                   className='text-2xl text-red-400 cursor-pointer hover:text-red-600 transition-colors' 

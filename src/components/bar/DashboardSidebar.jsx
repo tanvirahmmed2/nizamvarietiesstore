@@ -93,7 +93,7 @@ const DashboardSidebar = () => {
             <MenuItem href="/dashboard/purchase-transactions" icon={TbReport} label="Transaction" />
           </div>
         </div>
-        <MenuItem href="/dashboard/return" icon={RiRefund2Line} label="Return" />
+        <MenuItem href="/dashboard/return-orders" icon={RiRefund2Line} label="Return" />
         <MenuItem href="/dashboard/damage" icon={RiAlertLine} label="Damage" />
       </div>
       <div>

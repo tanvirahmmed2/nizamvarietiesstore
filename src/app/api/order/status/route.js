@@ -7,7 +7,7 @@ export async function GET(req) {
     const filterStatus = searchParams.get('q');
 
     try {
-        if (!filterStatus || !['pending', 'completed'].includes(filterStatus)) {
+        if (!filterStatus || !['pending', 'completed', 'returned'].includes(filterStatus)) {
             return NextResponse.json({ 
                 success: false, 
                 message: "Valid status parameter is required (pending or completed)" 

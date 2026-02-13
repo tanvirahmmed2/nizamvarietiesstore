@@ -79,11 +79,23 @@ export async function PUT(req) {
         const { orderId, action } = await req.json();
         await client.query('BEGIN');
 
-        // ACTION: CONFIRM (Existing logic)
+        // 1. Fetch order info to decide if we need to restore stock
+        const currentOrder = await client.query(
+            "SELECT status FROM orders WHERE order_id = $1", 
+            [orderId]
+        );
+
+        if (currentOrder.rowCount === 0) throw new Error("Order not found");
+        const orderStatus = currentOrder.rows[0].status;
+
+        // --- ACTION: CONFIRM (Move from pending to completed) ---
         if (action === 'confirm') {
             const items = await client.query("SELECT product_id, quantity FROM order_items WHERE order_id = $1", [orderId]);
             for (const item of items.rows) {
-                const update = await client.query("UPDATE products SET stock = stock - $1 WHERE product_id = $2 AND stock >= $1", [item.quantity, item.product_id]);
+                const update = await client.query(
+                    "UPDATE products SET stock = stock - $1 WHERE product_id = $2 AND stock >= $1", 
+                    [item.quantity, item.product_id]
+                );
                 if (update.rowCount === 0) throw new Error("Insufficient stock to confirm order");
             }
             await client.query("UPDATE orders SET status = 'completed' WHERE order_id = $1", [orderId]);
@@ -94,31 +106,40 @@ export async function PUT(req) {
             return NextResponse.json({ success: true, message: 'Order confirmed', payload: fullOrder });
         }
         
-        // ACTION: RETURN (Restore stock and update status)
+        // --- ACTION: RETURN (Keep record but restore stock) ---
         if (action === 'return') {
-            // Check if order is already returned to prevent double stock restoration
-            const orderCheck = await client.query("SELECT status FROM orders WHERE order_id = $1", [orderId]);
-            if (orderCheck.rows[0].status === 'returned') throw new Error("Order is already marked as returned");
-
-            // 1. Get items to restore stock
-            const items = await client.query("SELECT product_id, quantity FROM order_items WHERE order_id = $1", [orderId]);
-            for (const item of items.rows) {
-                await client.query("UPDATE products SET stock = stock + $1 WHERE product_id = $2", [item.quantity, item.product_id]);
+            if (orderStatus === 'returned') throw new Error("Order already returned");
+            
+            // Only restore stock if it was previously deducted
+            if (orderStatus === 'completed' || orderStatus === 'confirm') {
+                const items = await client.query("SELECT product_id, quantity FROM order_items WHERE order_id = $1", [orderId]);
+                for (const item of items.rows) {
+                    await client.query("UPDATE products SET stock = stock + $1 WHERE product_id = $2", [item.quantity, item.product_id]);
+                }
             }
 
-            // 2. Update status to 'returned' and payment to 'refunded'
             await client.query("UPDATE orders SET status = 'returned' WHERE order_id = $1", [orderId]);
             await client.query("UPDATE payments SET payment_status = 'refunded' WHERE order_id = $1", [orderId]);
 
             await client.query('COMMIT');
-            return NextResponse.json({ success: true, message: "Order returned and stock restored" });
+            return NextResponse.json({ success: true, message: "Order marked as returned and stock restored" });
         }
 
-        // ACTION: DELETE (Existing logic)
         if (action === 'delete') {
+            if (orderStatus === 'completed' || orderStatus === 'confirm') {
+                const items = await client.query("SELECT product_id, quantity FROM order_items WHERE order_id = $1", [orderId]);
+                for (const item of items.rows) {
+                    await client.query(
+                        "UPDATE products SET stock = stock + $1 WHERE product_id = $2", 
+                        [item.quantity, item.product_id]
+                    );
+                }
+            }
+
             await client.query("DELETE FROM order_items WHERE order_id = $1", [orderId]);
             await client.query("DELETE FROM payments WHERE order_id = $1", [orderId]);
             await client.query("DELETE FROM orders WHERE order_id = $1", [orderId]);
+
             await client.query('COMMIT');
             return NextResponse.json({ success: true, message: "Order deleted successfully" });
         }
