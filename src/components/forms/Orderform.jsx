@@ -1,4 +1,3 @@
-'use client'
 import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -6,20 +5,65 @@ import { Context } from '../helper/Context'
 import { MdDeleteOutline } from 'react-icons/md'
 import { generateReceipt } from '@/lib/database/print'
 import { FaMinus, FaPlus } from 'react-icons/fa6'
+import BarScanner from '../helper/BarcodeScanner'
 
 const Orderform = ({ cartItems = [] }) => {
     const { decreaseQuantity, clearCart, addToCart, removeFromCart, setCart, customers, setIsCustomerBox } = useContext(Context)
     const [saleType, setSaleType] = useState('retail')
+    const [products, setProducts] = useState([])
+    const [searchTerm, setSearchTerm] = useState('')
 
     const [data, setData] = useState({
-        customer_id: '',
+        customer_id: '22',
         extradiscount: 0,
         subTotal: 0,
         totalDiscount: 0,
         totalPrice: 0,
         transactionId: '',
-        paymentMethod: 'cash'
+        paymentMethod: 'cash',
+        createdAt: new Date().toISOString().split('T')[0]
     })
+
+    // Search functionality
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!searchTerm) {
+                setProducts([])
+                return
+            }
+            try {
+                const response = await axios.get(`/api/product/search?q=${searchTerm}`, { withCredentials: true })
+                setProducts(response.data.payload)
+            } catch (error) {
+                console.error(error)
+                setProducts([])
+            }
+        }
+        const delayDebounceFn = setTimeout(() => fetchData(), 300)
+        return () => clearTimeout(delayDebounceFn)
+    }, [searchTerm])
+
+    const handleBarcodeScan = async (code) => {
+        if (!code) return
+        try {
+            const response = await axios.get(`/api/product/search?q=${code}`, { withCredentials: true })
+            const foundItems = response.data.payload
+
+            if (foundItems && foundItems.length === 1) {
+                const item = foundItems[0];
+                if (Number(item.stock) <= 0) {
+                    toast.error('Out of stock')
+                    return
+                }
+                // Inject the correct price based on current sale type when adding
+                const priceToSet = saleType === 'wholesale' ? item.wholesale_price : item.sale_price;
+                addToCart({ ...item, price: parseFloat(priceToSet) || 0 })
+                setSearchTerm('')
+            }
+        } catch (error) {
+            console.error("Scanner lookup error:", error)
+        }
+    }
 
     const handleSaleTypeChange = (type) => {
         setSaleType(type)
@@ -29,20 +73,31 @@ const Orderform = ({ cartItems = [] }) => {
                 ...item,
                 price: type === 'wholesale'
                     ? (parseFloat(item.wholesale_price) || 0)
-                    : (parseFloat(item.sale_price) || 0) - (parseFloat(item.discount_price) || 0)
+                    : (parseFloat(item.sale_price) || 0)
             }))
         }))
     }
 
+    const handlePriceChange = (productId, newPrice) => {
+        setCart(prev => ({
+            ...prev,
+            items: prev.items.map(item =>
+                item.product_id === productId
+                    ? { ...item, price: parseFloat(newPrice) || 0 }
+                    : item
+            )
+        }))
+    }
+
+    // Master Calculation Effect
     useEffect(() => {
         const subTotal = cartItems.reduce((sum, item) => {
-            const base = saleType === 'retail'
-                ? (parseFloat(item.sale_price) || 0)
-                : (parseFloat(item.wholesale_price) || 0);
-            return sum + (base * (item.quantity || 0));
+            const itemPrice = item.price !== undefined ? item.price : (saleType === 'retail' ? item.sale_price : item.wholesale_price);
+            return sum + (parseFloat(itemPrice) * (item.quantity || 0));
         }, 0)
 
         const productDiscountTotal = cartItems.reduce((sum, item) => {
+            // Usually, wholesale doesn't get additional "per-product" discounts
             const discountPerUnit = saleType === 'wholesale' ? 0 : (parseFloat(item.discount_price) || 0);
             return sum + (discountPerUnit * (item.quantity || 0));
         }, 0)
@@ -68,8 +123,7 @@ const Orderform = ({ cartItems = [] }) => {
         if (cartItems.length === 0) return toast.error("Cart is empty")
         if (!data.customer_id) return toast.error("Please select a customer")
 
-        // Find selected customer details to send with payload
-        const selectedCustomer = customers.find(c => c.customer_id == data.customer_id)
+        const selectedCustomer = customers.find(c => String(c.customer_id) === String(data.customer_id))
 
         const payload = {
             customer_id: data.customer_id,
@@ -82,10 +136,11 @@ const Orderform = ({ cartItems = [] }) => {
             transactionId: data.transactionId,
             saleType: saleType,
             status: 'completed',
+            createdAt: data.createdAt,
             items: cartItems.map(item => ({
                 product_id: item.product_id,
                 quantity: item.quantity,
-                price: item.price
+                price: item.price !== undefined ? item.price : (saleType === 'retail' ? item.sale_price : item.wholesale_price)
             }))
         }
 
@@ -96,13 +151,14 @@ const Orderform = ({ cartItems = [] }) => {
 
             clearCart()
             setData({
-                customer_id: '',
+                customer_id: '22',
                 extradiscount: 0,
                 transactionId: '',
                 paymentMethod: 'cash',
                 subTotal: 0,
                 totalDiscount: 0,
-                totalPrice: 0
+                totalPrice: 0,
+                createdAt: new Date().toISOString().split('T')[0]
             })
             setSaleType('retail')
         } catch (error) {
@@ -111,72 +167,135 @@ const Orderform = ({ cartItems = [] }) => {
     }
 
     return (
-        <form onSubmit={handleSubmit} className='w-full flex flex-col items-center justify-between gap-4 text-sm bg-white p-4 rounded-xl shadow-md border border-gray-100'>
+        <form onSubmit={handleSubmit} className='w-full flex flex-col items-center justify-between gap-2 text-sm bg-white p-4 rounded-xl shadow-md border border-gray-100'>
+            <input
+                type="date"
+                name="createdAt"
+                value={data.createdAt}
+                onChange={handleChange}
+                className='px-3 py-1 border border-black/10 rounded-lg outline-none w-full bg-white'
+            />
 
-            <div className='grid grid-cols-2 gap-2 bg-gray-100 p-1 rounded-lg w-full'>
+            <div className='w-full flex flex-row items-center justify-center gap-1'>
+                <select
+                    name="customer_id"
+                    id="customer_id"
+                    value={data.customer_id}
+                    onChange={handleChange}
+                    required
+                    className='px-3 w-full py-2 border border-black/10 rounded-lg outline-none bg-white'
+                >
+                    <option value="">--select customer--</option>
+                    {customers.map((customer) => (
+                        <option value={customer.customer_id} key={customer.customer_id}>
+                            {customer.name}
+                        </option>
+                    ))}
+                </select>
+                <button type='button' onClick={() => setIsCustomerBox(true)} className='px-4 py-2 rounded-lg bg-sky-600 text-white font-bold'>+</button>
+            </div>
+
+            <div className='grid grid-cols-2 gap-2 bg-gray-100  rounded-lg w-full'>
                 <button type="button" onClick={() => handleSaleTypeChange('retail')}
                     className={`py-2 rounded-md font-bold transition-all ${saleType === 'retail' ? 'bg-white text-sky-600 shadow-sm' : 'text-gray-500'}`}>Retail</button>
                 <button type="button" onClick={() => handleSaleTypeChange('wholesale')}
                     className={`py-2 rounded-md font-bold transition-all ${saleType === 'wholesale' ? 'bg-sky-600 text-white shadow-sm' : 'text-gray-500'}`}>Wholesale</button>
             </div>
 
-            <div className='w-full flex flex-col gap-3'>
-                <div className='w-full flex flex-row items-center justify-center gap-4'>
-                    <select 
-                        name="customer_id" 
-                        id="customer_id" 
-                        value={data.customer_id} 
-                        onChange={handleChange} 
-                        required
-                        className='px-3 w-full py-2 border border-black/10 rounded-lg outline-none bg-white'
-                    >
-                        <option value="">--select customer--</option>
-                        {customers.map((customer) => (
-                            <option value={customer.customer_id} key={customer.customer_id}>
-                                {customer.name} ({customer.phone})
-                            </option>
+            <div className="w-full flex flex-col items-center gap-2 relative">
+                <BarScanner onScan={handleBarcodeScan} />
+                <div className="w-full flex flex-row items-center justify-between">
+                    <input
+                        type="text"
+                        name='searchTerm'
+                        id='searchTerm'
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        value={searchTerm}
+                        placeholder='search product name or barcode'
+                        className='w-full border border-sky-400 px-4 p-1 rounded-sm  outline-none'
+                    />
+                </div>
+
+                {searchTerm.length > 0 && products && products.length > 0 && (
+                    <div className="w-full flex flex-col gap-2 items-center justify-center absolute bg-white top-full border z-50 shadow-xl max-h-60 overflow-y-auto">
+                        {products.map((product) => (
+                            <div key={product.product_id} className="w-full flex flex-row even:bg-gray-200 items-center justify-between p-2">
+                                <p className="flex-1">{product.name}</p>
+                                <p className="mx-2"> ৳ {saleType === 'retail' ? (product.sale_price - product.discount_price) : product.wholesale_price}</p>
+                                <button type="button" className="bg-sky-500 text-white px-3 py-1 rounded-md" onClick={() => {
+                                    if (Number(product.stock) > 0) {
+                                        const price = saleType === 'wholesale' ? product.wholesale_price : product.sale_price;
+                                        addToCart({ ...product, price: parseFloat(price) });
+                                        setSearchTerm('')
+                                    } else {
+                                        toast.error('Out of stock')
+                                    }
+                                }}>Add</button>
+                            </div>
                         ))}
-                    </select>
-                    <button type='button' onClick={() => setIsCustomerBox(true)} className='px-4 py-2 rounded-lg bg-sky-600 text-white font-bold'>+</button>
-                </div>
-
-                <div className='w-full flex flex-row items-center justify-between'>
-                    <label className='font-semibold'>Payment</label>
-                    <select name="paymentMethod" value={data.paymentMethod} onChange={handleChange} className='px-3 py-1 border border-black/10 rounded-lg outline-none w-2/3 bg-white'>
-                        <option value="cash">Cash</option>
-                        <option value="card">Card</option>
-                        <option value="online">Online</option>
-                    </select>
-                </div>
-
-                {data.paymentMethod !== 'cash' && (
-                    <div className='w-full flex flex-row items-center justify-between'>
-                        <label className='font-semibold text-sky-600'>Trx ID</label>
-                        <input type="text" name='transactionId' value={data.transactionId} onChange={handleChange} className='px-3 py-1 border border-sky-200 rounded-lg outline-none w-2/3' />
                     </div>
                 )}
             </div>
 
-            <div className='w-full max-h-48 overflow-y-auto border-y border-black/5 py-2'>
-                {cartItems.map(item => (
-                    <div key={item.product_id} className='w-full flex justify-between items-center p-2 mb-1 even:bg-gray-100 shadow-sm border border-black/10 rounded-lg'>
-                        <div className='w-1/2'>
-                            <p className='text-xs font-bold truncate'>{item.name}</p>
-                            <p className='text-[10px] text-sky-600 font-bold uppercase'>{saleType} Mode</p>
-                        </div>
-                        <div className='flex items-center gap-3'>
-                            <div className='flex items-center gap-4 bg-gray-100 px-4 py-1 rounded-full border border-black/5'>
-                                <FaMinus className='cursor-pointer text-gray-600' onClick={() => decreaseQuantity(item?.product_id)} />
-                                <span className='text-gray-800 font-bold'>{item?.quantity}</span>
-                                <FaPlus className='cursor-pointer text-gray-600' onClick={() => addToCart(item)} />
+            <div className='w-full flex flex-col gap-2 max-h-48 overflow-y-auto border-y border-black/5 py-2'>
+                <div className='w-full grid grid-cols-8 gap-2 font-bold text-gray-600 border-b pb-1'>
+                    <p className='col-span-2'>Product</p>
+                    <p className='col-span-2 text-center'>Qty</p>
+                    <p className='col-span-1'>Rate</p>
+                    <p className='col-span-1'>Disc</p>
+                    <p className='col-span-1'>Total</p>
+                    <p className='col-span-1 text-right'>Del</p>
+                </div>
+
+                {cartItems.map(item => {
+                    const itemRate = item.price !== undefined ? item.price : (saleType === 'wholesale'
+                        ? (parseFloat(item.wholesale_price) || 0)
+                        : (parseFloat(item.sale_price) || 0));
+
+                    const itemDiscount = saleType === 'wholesale'
+                        ? 0
+                        : (parseFloat(item.discount_price) || 0);
+
+                    const rowTotal = (itemRate - itemDiscount) * (item.quantity || 0);
+
+                    return (
+                        <div key={item.product_id} className='w-full grid grid-cols-8 gap-2 p-2 mb-1 even:bg-gray-50 shadow-sm border border-black/10 rounded-lg items-center'>
+                            <div className='col-span-2'>
+                                <p className='text-xs font-bold truncate' title={item.name}>{item.name}</p>
+                                <p className='text-[10px] text-sky-600 font-bold uppercase'>{saleType}</p>
                             </div>
-                            <p className='w-24 text-right text-gray-800 font-bold'>
-                                ৳{((parseFloat(item.price) || 0) * item.quantity).toFixed(2)}
+
+                            <div className='flex col-span-2 items-center justify-between bg-gray-100 px-2 py-1 rounded-full border border-black/5'>
+                                <FaMinus className='cursor-pointer text-gray-600 hover:text-red-500 text-xs' onClick={() => decreaseQuantity(item?.product_id)} />
+                                <span className='text-gray-800 font-bold'>{item?.quantity}</span>
+                                <FaPlus className='cursor-pointer text-gray-600 hover:text-sky-600 text-xs' onClick={() => addToCart(item)} />
+                            </div>
+
+                            <div className='col-span-1 flex items-center'>
+                                <input
+                                    type="number"
+                                    value={itemRate}
+                                    onChange={(e) => handlePriceChange(item.product_id, e.target.value)}
+                                    className='w-full bg-transparent border-b border-black/10 outline-none focus:border-sky-600'
+                                    step="0.01"
+                                />
+                            </div>
+
+                            <p className='col-span-1 text-red-500 text-[10px]'>
+                                {itemDiscount > 0 ? `-${itemDiscount}` : '0'}
                             </p>
-                            <MdDeleteOutline className='text-2xl text-red-400 cursor-pointer hover:text-red-600' onClick={() => removeFromCart(item?.product_id)} />
+
+                            <p className='col-span-1 font-bold text-gray-800 text-[11px]'>৳{rowTotal.toFixed(1)}</p>
+
+                            <div className='col-span-1 flex justify-end'>
+                                <MdDeleteOutline
+                                    className='text-xl text-red-400 cursor-pointer hover:text-red-600 transition-all'
+                                    onClick={() => removeFromCart(item?.product_id)}
+                                />
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    )
+                })}
             </div>
 
             <div className='w-full flex flex-col gap-2 pt-2'>
@@ -215,4 +334,4 @@ const Orderform = ({ cartItems = [] }) => {
     )
 }
 
-export default Orderform
+export default Orderform;

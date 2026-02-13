@@ -59,6 +59,8 @@ const SalesListPage = () => {
     }
   }
 
+  console.log(orders)
+
   return (
     <div className='w-full min-h-screen flex flex-col items-center p-6 gap-6 '>
       <h1 className='text-center text-3xl font-bold text-gray-800 mb-4'>Sales History</h1>
@@ -81,7 +83,6 @@ const SalesListPage = () => {
                     <p className='col-span-4'>{product.name}</p>
                     <p className='col-span-1'>Qty: {product.quantity}</p>
                     <div className='col-span-1 flex flex-col'>
-                      {/* FIXED: Changed from sale_price to price */}
                       <p >৳{Number(product.price) * Number(product.quantity)}</p>
                     </div>
                   </li>

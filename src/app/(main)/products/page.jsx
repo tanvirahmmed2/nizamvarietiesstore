@@ -65,7 +65,7 @@ const Products = () => {
               </div>
 
               <div className="flex items-center gap-2 mt-8">
-                {/* Prev Button */}
+               
                 <button
                   disabled={page === 1}
                   onClick={() => setPage(prev => prev - 1)}
@@ -82,7 +82,6 @@ const Products = () => {
                   </>
                 )}
 
-                {/* Display Range: Prev, Current, Next */}
                 {Array.from({ length: totalPages }, (_, i) => i + 1)
                   .filter(num => num >= page - 1 && num <= page + 1) // Only show current and neighbors
                   .map(num => (
@@ -96,7 +95,6 @@ const Products = () => {
                     </button>
                   ))}
 
-                {/* Last Page (Optional, but helpful) */}
                 {page < totalPages - 1 && (
                   <>
                     {page < totalPages - 2 && <span className="px-1">...</span>}
@@ -106,7 +104,6 @@ const Products = () => {
                   </>
                 )}
 
-                {/* Next Button */}
                 <button
                   disabled={page === totalPages}
                   onClick={() => setPage(prev => prev + 1)}

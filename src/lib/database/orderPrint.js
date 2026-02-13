@@ -47,7 +47,7 @@ export const printOrder = (order) => {
                 <tr>
                   <td class="qty">${item.quantity}</td>
                   <td class="name">${item.name}</td>
-                  <td class="price">${(parseFloat(item.sale_price) * item.quantity).toFixed(2)}</td>
+                  <td class="price">${(parseFloat(item.price) * item.quantity).toFixed(2)}</td>
                 </tr>
               `).join('')}
             </tbody>
