@@ -3,6 +3,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { Package, Truck, CheckCircle, Clock, CreditCard } from 'lucide-react' // Optional: npm install lucide-react
+import Image from 'next/image'
 
 const ProfilePageForUser = () => {
   const [orders, setOrders] = useState([])
@@ -102,9 +103,9 @@ const ProfilePageForUser = () => {
                 <div className='space-y-4'>
                   {order.items.map((item, idx) => (
                     <div key={idx} className='flex items-center gap-4'>
-                      <div className='w-16 h-16 bg-gray-100 rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden'>
+                      <div className='w-16 h-16 bg-gray-100 rounded-lg  shrink-0 flex items-center justify-center overflow-hidden'>
                         {item.image ? (
-                           <img src={item.image} alt={item.name} className='object-cover w-full h-full' />
+                           <Image src={item.image} alt={item.name} width={15} height={15} className='object-cover w-full h-full' />
                         ) : (
                           <Package className='text-gray-400' size={20} />
                         )}

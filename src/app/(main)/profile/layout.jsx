@@ -1,8 +1,6 @@
 import { isUserLogin } from '@/lib/usermiddleware'
 import { redirect } from 'next/navigation'
-import Link from 'next/link'
 import React from 'react'
-import { BASE_URL } from '@/lib/database/secret'
 
 export const metadata = {
     title: 'Profile | User Dashboard',
@@ -30,15 +28,7 @@ const UserProfileLayout = async ({ children }) => {
                         </span>
                     </div>
 
-                    <nav className='flex items-center gap-6'>
-                        <Link href="/profile" className='text-sm font-medium hover:text-black transition-colors'>
-                            Dashboard
-                        </Link>
-                        <Link href="/profile/orders" className='text-sm font-medium hover:text-black transition-colors'>
-                            Orders
-                        </Link>
-                        
-                    </nav>
+                    
                 </div>
             </header>
 
