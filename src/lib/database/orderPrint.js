@@ -66,10 +66,16 @@ export const printOrder = (order) => {
             <div style="display:flex; justify-content: space-between; font-weight: bold; font-size: 14px; margin-top: 5px; border-top: 1px solid #000; padding-top: 5px;">
               <span>NET TOTAL:</span><span>৳${parseFloat(order.total_amount).toFixed(2)}</span>
             </div>
+            <div style="display:flex; justify-content: space-between; margin-top: 5px;">
+              <span>Received:</span><span>৳${parseFloat(order.amount_received || 0).toFixed(2)}</span>
+            </div>
+            <div style="display:flex; justify-content: space-between;">
+              <span>Change:</span><span>৳${parseFloat(order.change_amount || 0).toFixed(2)}</span>
+            </div>
           </div>
 
           <div class="center" style="margin-top: 15px;">
-            <p style="margin:0;">Method: ${order.payment_method?.toUpperCase()}</p>
+            <p style="margin:0;">Method: ${order.payment_method?.toUpperCase() || 'CASH'}</p>
             <p style="margin:5px 0 0 0; font-size: 10px;">Thank You for Shopping!</p>
           </div>
         </body>
@@ -86,4 +92,4 @@ export const printOrder = (order) => {
       pri.print();
       document.body.removeChild(iframe);
     }, 500);
-  }
+}

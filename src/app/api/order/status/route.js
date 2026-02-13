@@ -10,7 +10,7 @@ export async function GET(req) {
         if (!filterStatus || !['pending', 'completed', 'returned'].includes(filterStatus)) {
             return NextResponse.json({ 
                 success: false, 
-                message: "Valid status parameter is required (pending or completed)" 
+                message: "Valid status parameter is required (pending, completed, or returned)" 
             }, { status: 400 });
         }
 
@@ -26,6 +26,8 @@ export async function GET(req) {
                 p.payment_status,
                 p.payment_method,
                 p.transaction_id,
+                p.amount_received,
+                p.change_amount,
                 o.created_at AS date,
                 JSON_AGG(
                     JSON_BUILD_OBJECT(
@@ -42,7 +44,20 @@ export async function GET(req) {
             JOIN order_items oi ON o.order_id = oi.order_id
             JOIN products pr ON oi.product_id = pr.product_id
             WHERE o.status = $1
-            GROUP BY o.order_id, c.name, c.phone, p.payment_status, p.payment_method, p.transaction_id, o.created_at
+            GROUP BY 
+                o.order_id, 
+                c.name, 
+                c.phone, 
+                o.total_amount, 
+                o.total_discount_amount, 
+                o.subtotal_amount, 
+                o.status, 
+                p.payment_status, 
+                p.payment_method, 
+                p.transaction_id, 
+                p.amount_received,
+                p.change_amount,
+                o.created_at
             ORDER BY o.created_at DESC
         `;
 
@@ -55,6 +70,7 @@ export async function GET(req) {
         }, { status: 200 });
 
     } catch (error) {
+        console.error("Database Error:", error.message);
         return NextResponse.json({ success: false, message: error.message }, { status: 500 });
     } finally {
         client.release();

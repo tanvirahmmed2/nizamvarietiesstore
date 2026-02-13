@@ -56,7 +56,7 @@ const ProductListPage = () => {
     }
 
     return (
-        <div className="w-full mx-auto p-6 bg-white min-h-screen">
+        <div className="w-full text-xs sm:text-base mx-auto p-6 bg-white min-h-screen">
 
             <div className="mb-10 pl-6 flex justify-between items-center">
                 <h1 className="text-3xl font-black uppercase">Product List</h1>

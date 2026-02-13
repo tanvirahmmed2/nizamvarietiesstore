@@ -3,6 +3,7 @@ export const generateReceipt = (order) => {
   const iframe = document.createElement('iframe');
   iframe.style.display = 'none';
   document.body.appendChild(iframe);
+  console.log(order)
 
   const receiptContent = `
     <html>
@@ -70,6 +71,8 @@ export const generateReceipt = (order) => {
             <span>TOTAL:</span>
             <span>BDT ${Number(order.total_amount).toFixed(2)}</span>
           </div>
+          <div class="total-row" style="margin-top: 5px;"><span>Paid Amount:</span><span>${Number(order.paid_amount || 0).toFixed(2)}</span></div>
+          <div class="total-row"><span>Change Amount:</span><span>${Number(order.change_amount || 0).toFixed(2)}</span></div>
         </div>
 
         <div class="center footer-msg">

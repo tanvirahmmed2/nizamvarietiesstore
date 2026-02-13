@@ -40,16 +40,16 @@ const AddSupplierForm = () => {
                 </div>
                 <div className=' w-full flex flex-col gap-1 '>
                     <label htmlFor="phone">Phone*</label>
-                    <input type="number" id='phone' name='phone' required onChange={handleChnage} value={formData.phone}  className='px-3 p-1 border border-black/50 outline-none'/>
+                    <input type="text" id='phone' name='phone' required onChange={handleChnage} value={formData.phone}  className='px-3 p-1 border border-black/50 outline-none'/>
                 </div>
             </div>
             <div className='w-full flex flex-col md:flex-row items-center justify-center gap-2'>
                 <div className=' w-full flex flex-col gap-1 '>
-                    <label htmlFor="email">Name</label>
+                    <label htmlFor="email">Email</label>
                     <input type="email" id='email' name='email'  onChange={handleChnage} value={formData.email} className='px-3 p-1 border border-black/50 outline-none' />
                 </div>
                 <div className=' w-full flex flex-col gap-1 '>
-                    <label htmlFor="address">Phone</label>
+                    <label htmlFor="address">address</label>
                     <input type="text" id='address' name='address'   onChange={handleChnage} value={formData.address} className='px-3 p-1 border border-black/50 outline-none' />
                 </div>
             </div>

@@ -1,7 +1,7 @@
 'use client'
 import React, { useContext, useEffect, useState } from 'react'
 import { Context } from '../helper/Context'
-import { FaPlus, FaMinus, FaTrash, FaFileInvoiceDollar } from 'react-icons/fa6'
+import { FaPlus, FaMinus, FaTrash, FaFileInvoiceDollar, FaBarcode } from 'react-icons/fa6'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import BarScanner from '../helper/BarcodeScanner'
@@ -115,35 +115,31 @@ const AddPurchaseForm = () => {
                 
                 <div className="w-full flex flex-row items-center justify-between gap-4 border-b-2 p-4 bg-white z-20">
                     <p className='font-bold'>Find item</p>
-                    <input
+                    <div  className='w-auto flex flex-row items-center justify-between px-2 border border-sky-400'>
+                        <FaBarcode className='text-2xl text-sky-600'/>
+                        <input
                         type="text"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         placeholder="Search product name or barcode..."
-                        className='flex-1 max-w-md border border-sky-400 px-4 p-1 rounded-sm outline-none'
+                        className='w-full max-w-md  px-4 p-1 rounded-sm outline-none'
                     />
+                    </div>
                 </div>
 
-                {/* Fixed: Absolute container for the LIST, not the items */}
                 {searchTerm.length > 0 && (
                     <div className="w-full flex flex-col gap-2 items-center justify-center absolute bg-white top-full border">
                         {products.length > 0 ? products.map((product) => (
-                            <div key={product.product_id} className="w-full flex flex-row even:bg-gray-200 items-center justify-center p-1">
+                            <div  onClick={() => {
+                                        addToPurchase(product);
+                                        setSearchTerm('');
+                                    }} key={product.product_id} className="w-full flex flex-row even:bg-gray-200 items-center justify-center p-1">
                                 <div className="flex-1">
                                     <p className="font-bold text-gray-800">{product.name}</p>
                                     <p className="text-xs text-gray-500 font-mono">{product.barcode || 'No Barcode'}</p>
                                 </div>
                                 <p className="flex-1 text-center font-semibold text-sky-600">৳{product.purchase_price}</p>
-                                <button 
-                                    type="button"
-                                    className="bg-sky-500 hover:bg-sky-600 text-white px-4 py-1 rounded-full text-sm font-bold transition-all" 
-                                    onClick={() => {
-                                        addToPurchase(product);
-                                        setSearchTerm('');
-                                    }}
-                                >
-                                    Add
-                                </button>
+                                
                             </div>
                         )) : <div className="p-4 text-center text-gray-400">No products found</div>}
                     </div>
@@ -213,18 +209,18 @@ const AddPurchaseForm = () => {
                 </div>
 
                 {/* Checkout Footer */}
-                <div className="w-full flex flex-col gap-1 p-5 bg-slate-900 rounded-3xl mt-auto shadow-2xl">
-                    <div className="flex justify-between text-slate-400 text-sm">
+                <div className="w-full md:w-1/4 ml-auto flex flex-col gap-1 p-5  rounded-3xl mt-auto shadow-2xl">
+                    <div className="flex justify-between  text-sm">
                         <span>Subtotal</span>
                         <span>৳{totals.subtotal.toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between items-center text-white mt-2">
+                    <div className="flex justify-between items-center  mt-2">
                         <span className="text-sm">Discount</span>
                         <input type="number" name="extra_discount" value={formData.extra_discount} onChange={handleChange} className="w-24 bg-slate-800 border border-slate-700 text-right rounded-lg px-2 py-1 text-sky-400 font-bold outline-none" onFocus={(e) => e.target.select()} />
                     </div>
-                    <div className="h-px bg-white/10 my-3"></div>
+                    <div className="h-px  my-3"></div>
                     <div className="flex justify-between items-center">
-                        <span className="text-slate-300 font-medium">Grand Total</span>
+                        <span className=" font-medium">Grand Total</span>
                         <span className="text-3xl font-black text-sky-400">৳{totals.total.toFixed(2)}</span>
                     </div>
                     <button type="submit" className="w-full bg-sky-500 hover:bg-sky-400 text-white p-3 rounded-2xl font-black text-sm uppercase mt-4 transition-all active:scale-95">Complete Purchase</button>

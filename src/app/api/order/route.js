@@ -1,12 +1,12 @@
 import { pool } from "@/lib/database/db";
 import { NextResponse } from "next/server";
 
-// Helper to fetch full order details for the frontend/receipt
 async function getOrderDetails(client, orderId) {
     const res = await client.query(`
         SELECT 
             o.order_id, o.subtotal_amount, o.total_discount_amount, o.total_amount, o.status, o.created_at,
-            c.name, p.payment_method, p.payment_status,
+            c.name, p.payment_method, p.payment_status, p.amount AS actual_paid, 
+            p.amount_received, p.change_amount,
             JSON_AGG(JSON_BUILD_OBJECT('name', pr.name, 'quantity', oi.quantity, 'price', oi.price)) AS items
         FROM orders o
         JOIN customers c ON o.customer_id = c.customer_id
@@ -14,15 +14,16 @@ async function getOrderDetails(client, orderId) {
         JOIN order_items oi ON o.order_id = oi.order_id
         JOIN products pr ON oi.product_id = pr.product_id
         WHERE o.order_id = $1
-        GROUP BY o.order_id, c.name, p.payment_method, p.payment_status
+        GROUP BY o.order_id, c.name, p.payment_method, p.payment_status, p.amount_received, p.change_amount, p.amount
     `, [orderId]);
     return res.rows[0];
 }
 
+// 2. Main POST Handler
 export async function POST(req) {
     const client = await pool.connect();
     try {
-        // Added createdAt to the destructured body
+        const body = await req.json();
         const { 
             customer_id, 
             phone, 
@@ -30,18 +31,19 @@ export async function POST(req) {
             subtotal, 
             discount, 
             total, 
+            paid_amount,    
+            change_amount,  
             paymentMethod, 
             transactionId, 
             status, 
             createdAt 
-        } = await req.json();
+        } = body;
         
         if (!customer_id) throw new Error("Customer ID is required");
 
         await client.query('BEGIN');
 
-        // 1. Insert Order using the customer_id and the date from frontend
-        // We use COALESCE or a ternary to handle cases where createdAt might be undefined
+        // Insert Order
         const orderRes = await client.query(
             `INSERT INTO orders (customer_id, phone, subtotal_amount, total_discount_amount, total_amount, status, created_at) 
              VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING order_id`,
@@ -52,19 +54,18 @@ export async function POST(req) {
                 discount, 
                 total, 
                 status || 'completed', 
-                createdAt || new Date() // Fallback to current date if not provided
+                createdAt || new Date()
             ]
         );
         const orderId = orderRes.rows[0].order_id;
 
-        // 2. Process Items and Manage Stock
+        // Process Items and Stock
         for (const item of items) {
             await client.query(
                 "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES ($1, $2, $3, $4)", 
                 [orderId, item.product_id, item.quantity, item.price]
             );
 
-            // Deduct stock immediately if the order is completed or confirmed
             if (status === 'completed' || status === 'confirm' || !status) {
                 const stockUpdate = await client.query(
                     "UPDATE products SET stock = stock - $1 WHERE product_id = $2 AND stock >= $1", 
@@ -74,25 +75,37 @@ export async function POST(req) {
             }
         }
 
-        // 3. Insert Payment
+        // Insert Payment with Received and Change
         const pStatus = (status === 'completed' || status === 'confirm' || !status) ? 'paid' : 'pending';
+        
         await client.query(
-            "INSERT INTO payments (order_id, payment_method, amount, payment_status, transaction_id) VALUES ($1, $2, $3, $4, $5)", 
-            [orderId, paymentMethod, total, pStatus, transactionId || null]
+            `INSERT INTO payments (
+                order_id, payment_method, amount, amount_received, change_amount, payment_status, transaction_id
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7)`, 
+            [orderId, paymentMethod, total, paid_amount, change_amount, pStatus, transactionId || null]
         );
 
         await client.query('COMMIT');
         
         const fullOrder = await getOrderDetails(client, orderId);
-        return NextResponse.json({ success: true, message: 'Order placed successfully', payload: fullOrder }, { status: 201 });
+
+        // Use the imported NextResponse
+        return NextResponse.json({ 
+            success: true, 
+            message: 'Order placed successfully', 
+            payload: fullOrder 
+        }, { status: 201 });
 
     } catch (error) {
         if (client) await client.query('ROLLBACK');
+        console.error("Order Error:", error);
         return NextResponse.json({ success: false, message: error.message }, { status: 500 });
     } finally {
         client.release();
     }
 }
+
+
 export async function PUT(req) {
     const client = await pool.connect();
     try {
