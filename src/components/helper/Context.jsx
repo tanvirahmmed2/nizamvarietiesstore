@@ -9,6 +9,7 @@ const ContextProvider = ({ children }) => {
   const [isCategoryBox, setIsCategoryBox] = useState(false)
   const [isBrandBox, setIsBrandBox] = useState(false)
   const [isSupplierBox, setIsSupplierBox] = useState(false)
+  const [isCustomerBox, setIsCustomerBox] = useState(false)
   const [categories, setCategories] = useState([])
   const [brands, setBrands] = useState([])
   const [suppliers, setSuppliers] = useState([])
@@ -145,6 +146,13 @@ const ContextProvider = ({ children }) => {
       setSuppliers(response.data.payload || [])
     } catch (error) { setSuppliers([]) }
   }
+  const [customers,setCustomers]= useState([])
+  const fetchCustomer = async () => {
+    try {
+      const response = await axios.get('/api/customer', { withCredentials: true })
+      setCustomers(response.data.payload || [])
+    } catch (error) { setCustomers([]) }
+  }
 
 
 
@@ -153,6 +161,7 @@ const ContextProvider = ({ children }) => {
     fetchCart()
     fetchBrand()
     fetchSupplier()
+    fetchCustomer()
 
   }, [])
 
@@ -196,6 +205,7 @@ const ContextProvider = ({ children }) => {
     <Context.Provider value={{
       isBrandBox, setIsBrandBox, isCategoryBox, setIsCategoryBox, brands, setBrands, purchaseItems, addToPurchase, removeFromPurchase,
       isSupplierBox, setIsSupplierBox, fetchSupplier, suppliers, setSuppliers, setPurchaseItems,
+      isCustomerBox, setIsCustomerBox,customers,setCustomers,
       categories, fetchCategory, cart, setCart, fetchCart, addToCart, clearCart, removeFromCart, decreaseQuantity, clearPurchase
     }}>
       {children}

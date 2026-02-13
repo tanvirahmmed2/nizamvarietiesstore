@@ -1,45 +1,80 @@
 import { pool } from "@/lib/database/db";
 import { NextResponse } from "next/server";
 
-export async function GET(req) {
+// GET: Fetch all customers
+export async function GET() {
     const client = await pool.connect();
     try {
-        const { searchParams } = new URL(req.url);
-        const searchTerm = searchParams.get('q');
-
-       
-
-        const query = `
-            SELECT 
-                c.name,
-                c.phone,
-                COUNT(o.order_id) AS total_orders,
-                COALESCE(SUM(o.total_amount), 0) AS total_purchased_amount
-            FROM customers c
-            LEFT JOIN orders o ON c.customer_id = o.customer_id
-            WHERE c.phone ILIKE $1 OR c.name ILIKE $1
-            GROUP BY c.customer_id, c.name, c.phone
-            ORDER BY total_purchased_amount DESC
-        `;
-
-        const data = await client.query(query, [`%${searchTerm}%`]);
-        const result = data.rows;
-
-        if (result.length === 0) {
-            return NextResponse.json({
-                success: false,
-                message: 'No customer found matching that search'
-            }, { status: 404 });
-        }
-
+        const result = await client.query(`
+            SELECT * FROM customers 
+            ORDER BY created_at DESC
+        `);
+        
         return NextResponse.json({
             success: true,
-            message: 'Successfully fetched customer data',
-            payload: result
+            payload: result.rows
         }, { status: 200 });
 
     } catch (error) {
-        return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+        console.error("Fetch Customers Error:", error);
+        return NextResponse.json({ 
+            success: false, 
+            message: "Internal server error" 
+        }, { status: 500 });
+    } finally {
+        client.release();
+    }
+}
+
+// POST: Create a new customer
+export async function POST(req) {
+    const client = await pool.connect();
+    try {
+        const body = await req.json();
+        const { name, phone, email, address } = body;
+
+        // 1. Basic Validation
+        if (!name || !phone) {
+            return NextResponse.json({ 
+                success: false, 
+                message: "Name and Phone are required" 
+            }, { status: 400 });
+        }
+
+        // 2. Check if phone already exists (unique constraint check)
+        const checkExist = await client.query(
+            "SELECT customer_id FROM customers WHERE phone = $1", 
+            [phone]
+        );
+
+        if (checkExist.rowCount > 0) {
+            return NextResponse.json({ 
+                success: false, 
+                message: "A customer with this phone number already exists" 
+            }, { status: 400 });
+        }
+
+        // 3. Insert into Database
+        const query = `
+            INSERT INTO customers (name, phone, email, address) 
+            VALUES ($1, $2, $3, $4) 
+            RETURNING *
+        `;
+        const values = [name, phone, email || null, address || null];
+        const result = await client.query(query, values);
+
+        return NextResponse.json({
+            success: true,
+            message: "Customer added successfully",
+            payload: result.rows[0]
+        }, { status: 201 });
+
+    } catch (error) {
+        console.error("Create Customer Error:", error);
+        return NextResponse.json({ 
+            success: false, 
+            message: "Failed to create customer: " + error.message 
+        }, { status: 500 });
     } finally {
         client.release();
     }

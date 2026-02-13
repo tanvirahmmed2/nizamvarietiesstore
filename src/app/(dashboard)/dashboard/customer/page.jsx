@@ -1,4 +1,5 @@
 'use client'
+import AddCutomerForm from '@/components/forms/AddCustomerForm'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
@@ -9,7 +10,7 @@ const CustomerPage = () => {
   useEffect(() => {
     const fetchCustomer = async () => {
       try {
-        const response = await axios.get(`/api/customer?q=${searchTerm}`, { withCredentials: true })
+        const response = await axios.get(`/api/customer/search?q=${searchTerm}`, { withCredentials: true })
         setCustomers(response.data.payload)
       } catch (error) {
         setCustomers([])
@@ -20,7 +21,7 @@ const CustomerPage = () => {
 
   return (
     <div className='w-full mx-auto p-8 flex flex-col gap-10 items-center min-h-screen bg-white'>
-
+      <AddCutomerForm/>
       <h1 className='text-2xl font-black text-gray-900 '> Customer Directory </h1>
 
        <input type="text" placeholder="Search by name or phone..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}  className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none '/>

@@ -8,12 +8,11 @@ import { generateReceipt } from '@/lib/database/print'
 import { FaMinus, FaPlus } from 'react-icons/fa6'
 
 const Orderform = ({ cartItems = [] }) => {
-    const { decreaseQuantity, clearCart, addToCart, removeFromCart, setCart } = useContext(Context)
+    const { decreaseQuantity, clearCart, addToCart, removeFromCart, setCart, customers, setIsCustomerBox } = useContext(Context)
     const [saleType, setSaleType] = useState('retail')
 
     const [data, setData] = useState({
-        name: 'Walk-in Customer',
-        phone: '+88',
+        customer_id: '',
         extradiscount: 0,
         subTotal: 0,
         totalDiscount: 0,
@@ -67,10 +66,15 @@ const Orderform = ({ cartItems = [] }) => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (cartItems.length === 0) return toast.error("Cart is empty")
+        if (!data.customer_id) return toast.error("Please select a customer")
+
+        // Find selected customer details to send with payload
+        const selectedCustomer = customers.find(c => c.customer_id == data.customer_id)
 
         const payload = {
-            customerName: data.name,
-            phone: data.phone,
+            customer_id: data.customer_id,
+            phone: selectedCustomer?.phone || '',
+            customerName: selectedCustomer?.name || '',
             subtotal: data.subTotal,
             discount: data.totalDiscount + (parseFloat(data.extradiscount) || 0),
             total: data.totalPrice,
@@ -89,12 +93,11 @@ const Orderform = ({ cartItems = [] }) => {
             const response = await axios.post('/api/order', payload, { withCredentials: true })
             toast.success(response.data.message)
             if (generateReceipt) generateReceipt(response.data.payload)
-            
+
             clearCart()
             setData({
-                name: 'Walk-in Customer', 
-                phone: '+88', 
-                extradiscount: 0, 
+                customer_id: '',
+                extradiscount: 0,
                 transactionId: '',
                 paymentMethod: 'cash',
                 subTotal: 0,
@@ -118,14 +121,25 @@ const Orderform = ({ cartItems = [] }) => {
             </div>
 
             <div className='w-full flex flex-col gap-3'>
-                <div className='w-full flex flex-row items-center justify-between'>
-                    <label className='font-semibold'>Customer</label>
-                    <input type="text" name='name' value={data.name} onChange={handleChange} className='px-3 py-1 border border-black/10 rounded-lg outline-none w-2/3' />
+                <div className='w-full flex flex-row items-center justify-center gap-4'>
+                    <select 
+                        name="customer_id" 
+                        id="customer_id" 
+                        value={data.customer_id} 
+                        onChange={handleChange} 
+                        required
+                        className='px-3 w-full py-2 border border-black/10 rounded-lg outline-none bg-white'
+                    >
+                        <option value="">--select customer--</option>
+                        {customers.map((customer) => (
+                            <option value={customer.customer_id} key={customer.customer_id}>
+                                {customer.name} ({customer.phone})
+                            </option>
+                        ))}
+                    </select>
+                    <button type='button' onClick={() => setIsCustomerBox(true)} className='px-4 py-2 rounded-lg bg-sky-600 text-white font-bold'>+</button>
                 </div>
-                <div className='w-full flex flex-row items-center justify-between'>
-                    <label className='font-semibold'>Phone</label>
-                    <input type="text" name='phone' value={data.phone} onChange={handleChange} className='px-3 py-1 border border-black/10 rounded-lg outline-none w-2/3' />
-                </div>
+
                 <div className='w-full flex flex-row items-center justify-between'>
                     <label className='font-semibold'>Payment</label>
                     <select name="paymentMethod" value={data.paymentMethod} onChange={handleChange} className='px-3 py-1 border border-black/10 rounded-lg outline-none w-2/3 bg-white'>
@@ -134,6 +148,7 @@ const Orderform = ({ cartItems = [] }) => {
                         <option value="online">Online</option>
                     </select>
                 </div>
+
                 {data.paymentMethod !== 'cash' && (
                     <div className='w-full flex flex-row items-center justify-between'>
                         <label className='font-semibold text-sky-600'>Trx ID</label>
@@ -144,30 +159,21 @@ const Orderform = ({ cartItems = [] }) => {
 
             <div className='w-full max-h-48 overflow-y-auto border-y border-black/5 py-2'>
                 {cartItems.map(item => (
-                    <div key={item.product_id} className='w-full flex justify-between items-center p-2 mb-1 even:bg-gray-300 shadow border border-black/30 rounded-lg'>
+                    <div key={item.product_id} className='w-full flex justify-between items-center p-2 mb-1 even:bg-gray-100 shadow-sm border border-black/10 rounded-lg'>
                         <div className='w-1/2'>
                             <p className='text-xs font-bold truncate'>{item.name}</p>
                             <p className='text-[10px] text-sky-600 font-bold uppercase'>{saleType} Mode</p>
                         </div>
                         <div className='flex items-center gap-3'>
-                            <div className='flex items-center gap-4 bg-gray-100 px-4 py-2 rounded-full'>
-                                <FaMinus
-                                    className='cursor-pointer text-gray-600 hover:text-black transition-colors'
-                                    onClick={() => decreaseQuantity(item?.product_id)}
-                                />
-                                <span className=' text-gray-800'>{item?.quantity}</span>
-                                <FaPlus
-                                    className='cursor-pointer text-gray-600 hover:text-black transition-colors'
-                                    onClick={() => addToCart(item)}
-                                />
+                            <div className='flex items-center gap-4 bg-gray-100 px-4 py-1 rounded-full border border-black/5'>
+                                <FaMinus className='cursor-pointer text-gray-600' onClick={() => decreaseQuantity(item?.product_id)} />
+                                <span className='text-gray-800 font-bold'>{item?.quantity}</span>
+                                <FaPlus className='cursor-pointer text-gray-600' onClick={() => addToCart(item)} />
                             </div>
-                            <p className=' w-24 text-right text-gray-800 font-medium'>
+                            <p className='w-24 text-right text-gray-800 font-bold'>
                                 ৳{((parseFloat(item.price) || 0) * item.quantity).toFixed(2)}
                             </p>
-                            <MdDeleteOutline
-                                className='text-2xl text-red-400 cursor-pointer hover:text-red-600 transition-colors'
-                                onClick={() => removeFromCart(item?.product_id)}
-                            />
+                            <MdDeleteOutline className='text-2xl text-red-400 cursor-pointer hover:text-red-600' onClick={() => removeFromCart(item?.product_id)} />
                         </div>
                     </div>
                 ))}
@@ -175,7 +181,7 @@ const Orderform = ({ cartItems = [] }) => {
 
             <div className='w-full flex flex-col gap-2 pt-2'>
                 <div className='flex justify-between'>
-                    <span>Sub Total ({saleType})</span>
+                    <span>Sub Total</span>
                     <span>{data.subTotal.toFixed(2)}</span>
                 </div>
                 {data.totalDiscount > 0 && (
@@ -186,14 +192,14 @@ const Orderform = ({ cartItems = [] }) => {
                 )}
                 <div className='flex justify-between items-center'>
                     <label>Manual Discount</label>
-                    <input 
-                        type="number" 
-                        name="extradiscount" 
+                    <input
+                        type="number"
+                        name="extradiscount"
                         min={0}
-                        step="0.01" 
-                        value={data.extradiscount} 
-                        onChange={handleChange} 
-                        className='w-20 border-b border-black/10 outline-none text-right focus:border-sky-600 transition-colors' 
+                        step="0.01"
+                        value={data.extradiscount}
+                        onChange={handleChange}
+                        className='w-20 border-b border-black/10 outline-none text-right focus:border-sky-600 transition-colors'
                     />
                 </div>
                 <div className='flex justify-between font-extrabold text-xl border-t border-dashed pt-2 mt-2 text-sky-700'>
