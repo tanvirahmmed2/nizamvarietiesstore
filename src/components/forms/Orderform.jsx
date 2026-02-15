@@ -241,10 +241,7 @@ const Orderform = ({ cartItems = [] }) => {
                     {searchTerm.length > 0 && products && products.length > 0 && (
                         <div className="w-full flex flex-col gap-2 items-center justify-center absolute bg-white top-full border z-50 shadow-xl max-h-60 overflow-y-auto">
                             {products.map((product) => (
-                                <div key={product.product_id} className="w-full flex flex-row even:bg-gray-200 items-center justify-between p-2">
-                                    <p className="flex-1">{product.name}</p>
-                                    <p className="mx-2"> ৳ {saleType === 'retail' ? (product.sale_price - product.discount_price) : product.wholesale_price}</p>
-                                    <button type="button" className="bg-sky-500 text-white px-3 py-1 rounded-md" onClick={() => {
+                                <div key={product.product_id} onClick={() => {
                                         if (Number(product.stock) > 0) {
                                             const price = saleType === 'wholesale' ? product.wholesale_price : product.sale_price;
                                             addToCart({ ...product, price: parseFloat(price) });
@@ -252,7 +249,9 @@ const Orderform = ({ cartItems = [] }) => {
                                         } else {
                                             toast.error('Out of stock')
                                         }
-                                    }}>Add</button>
+                                    }} className="w-full cursor-pointer flex flex-row even:bg-gray-200 items-center justify-between p-2">
+                                    <p className="flex-1">{product.name}</p>
+                                    <p className="mx-2"> ৳ {saleType === 'retail' ? (product.sale_price - product.discount_price) : product.wholesale_price}</p>
                                 </div>
                             ))}
                         </div>
@@ -260,9 +259,9 @@ const Orderform = ({ cartItems = [] }) => {
                 </div>
 
                 <div className='w-full flex flex-col gap-2 max-h-48 overflow-y-auto border-y border-black/5 py-2'>
-                    <div className='w-full grid grid-cols-8 gap-2 font-bold text-gray-600 border-b pb-1'>
-                        <p className='col-span-2'>Product</p>
-                        <p className='col-span-2 text-center'>Qty</p>
+                    <div className='w-full grid grid-cols-10 gap-2 font-bold text-gray-600 border-b pb-1'>
+                        <p className='col-span-4'>Product</p>
+                        <p className='col-span-2 text-center'>Quatity</p>
                         <p className='col-span-1'>Rate</p>
                         <p className='col-span-1'>Disc</p>
                         <p className='col-span-1'>Total</p>
@@ -281,8 +280,8 @@ const Orderform = ({ cartItems = [] }) => {
                         const rowTotal = (itemRate - itemDiscount) * (item.quantity || 0);
 
                         return (
-                            <div key={item.product_id} className='w-full grid grid-cols-8 gap-2 p-2 mb-1 even:bg-gray-50 shadow-sm border border-black/10 rounded-lg items-center'>
-                                <div className='col-span-2'>
+                            <div key={item.product_id} className='w-full grid grid-cols-10 gap-2 p-2 mb-1 even:bg-gray-50 shadow-sm border border-black/10 rounded-lg items-center'>
+                                <div className='col-span-4'>
                                     <p className='text-xs font-bold truncate' title={item.name}>{item.name}</p>
                                     <p className='text-[10px] text-sky-600 font-bold uppercase'>{saleType}</p>
                                 </div>

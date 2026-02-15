@@ -60,6 +60,8 @@ const PendingOrdersPage = () => {
   if (loading) return <p className='text-center text-gray-500 mt-10'>Loading pending orders...</p>
   if (orders.length === 0) return <p className='text-center text-gray-500 mt-10'>No pending orders found</p>
 
+  console.log(orders)
+
   return (
     <div className='w-full min-h-screen flex flex-col items-center p-6 gap-6 '>
       <h1 className='text-center text-3xl font-bold text-gray-800 mb-4'>Pending Orders</h1>
@@ -75,9 +77,9 @@ const PendingOrdersPage = () => {
               <p className='text-xs text-blue-600 font-bold uppercase'>{order.status}</p>
             </div>
             <div className=' w-full flex flex-col gap-1 col-span-5'>
-              <p className='font-medium text-gray-700 mb-1'>Products ({order.items?.length || 0} items):</p>
+              <p className='font-medium text-gray-700 mb-1'>Products ({order.product_list?.length || 0} items):</p>
               <ul className='w-full list-disc list-inside text-gray-800'>
-                {order.items?.map((product, pIdx) => (
+                {order.product_list?.map((product, pIdx) => (
                   <li key={pIdx} className='w-full grid grid-cols-6'>
                     <p className='col-span-4'>{product.name}</p>
                     <p className='col-span-1'>Qty: {product.quantity}</p>
