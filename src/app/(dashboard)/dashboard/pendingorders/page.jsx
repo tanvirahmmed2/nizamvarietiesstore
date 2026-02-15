@@ -77,7 +77,6 @@ const PendingOrdersPage = () => {
             <div className=' w-full flex flex-col gap-1 col-span-5'>
               <p className='font-medium text-gray-700 mb-1'>Products ({order.items?.length || 0} items):</p>
               <ul className='w-full list-disc list-inside text-gray-800'>
-                {/* Changed product_list to items to match API */}
                 {order.items?.map((product, pIdx) => (
                   <li key={pIdx} className='w-full grid grid-cols-6'>
                     <p className='col-span-4'>{product.name}</p>

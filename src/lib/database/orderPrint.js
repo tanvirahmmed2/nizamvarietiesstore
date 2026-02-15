@@ -9,45 +9,81 @@ export const printOrder = (order) => {
           <style>
             @page { margin: 0; size: 80mm auto; }
             body { 
-              font-family: 'Courier New', Courier, monospace; 
-              width: 72mm; margin: 0 auto; padding: 5mm 2mm;
-              font-size: 12px; color: #000; line-height: 1.4;
+              font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+              width: 72mm; margin: 0 auto; padding: 8mm 2mm;
+              font-size: 11px; color: #000; line-height: 1.5;
             }
-            .center { text-align: center; }
-            .bold { font-weight: bold; }
-            .divider { border-top: 1px dashed #000; margin: 8px 0; }
-            table { width: 100%; border-collapse: collapse; }
-            th { border-bottom: 1px solid #000; text-align: left; }
-            .qty { width: 15%; }
-            .name { width: 55%; }
-            .price { width: 30%; text-align: right; }
+            .header { text-align: center; margin-bottom: 6mm; }
+            .brand { font-size: 20px; font-weight: 900; letter-spacing: -0.5px; margin: 0; text-transform: uppercase; }
+            .address { font-size: 10px; color: #444; margin: 2px 0; }
+            
+            .info-grid { display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 4mm; font-size: 10px; }
+            .info-label { color: #666; text-transform: uppercase; font-size: 9px; font-weight: bold; }
+            
+            .divider { border-top: 1px dashed #000; margin: 4mm 0; }
+            .thick-divider { border-top: 2px solid #000; margin: 2mm 0; }
+
+            table { width: 100%; border-collapse: collapse; margin: 2mm 0; }
+            th { text-align: left; font-size: 9px; text-transform: uppercase; padding-bottom: 2mm; border-bottom: 1px solid #000; }
+            td { padding: 1.5mm 0; vertical-align: top; }
+            
+            .item-name { font-weight: bold; display: block; word-break: break-word; line-height: 1.2; }
+            .item-meta { font-size: 9px; color: #555; }
+            
+            .totals-container { margin-top: 2mm; }
+            .total-row { display: flex; justify-content: space-between; padding: 0.5mm 0; }
+            .grand-total { 
+              margin-top: 2mm; 
+              padding-top: 2mm; 
+              border-top: 1px solid #000; 
+              font-size: 14px; 
+              font-weight: 900; 
+            }
+
+            .footer { text-align: center; margin-top: 8mm; }
+            .barcode { font-family: 'Libre Barcode 39', cursive; font-size: 30px; margin: 2mm 0; }
+            .footer-msg { font-size: 10px; font-style: italic; }
           </style>
         </head>
         <body>
-          <div class="center">
-            <h2 style="margin:0; font-size: 18px;">NIZAM VARIETIES</h2>
-            <p style="margin:2px 0;">Phone: ${order.phone}</p>
-            <div class="divider"></div>
-            <p class="bold">INVOICE: #${order.order_id}</p>
-            <p>${new Date(order.date).toLocaleString()}</p>
+          <div class="header">
+            <h1 class="brand">NIZAM VARIETIES</h1>
+            <p class="address">Dhaka, Bangladesh</p>
+            <p class="address">Phone: ${order.phone}</p>
           </div>
 
-          <p>Customer: <span class="bold">${order.name}</span></p>
+          <div class="info-grid">
+            <div>
+                <span class="info-label">Invoice</span><br>
+                <span style="font-weight:bold;">#${order.order_id}</span>
+            </div>
+            <div style="text-align: right;">
+                <span class="info-label">Date</span><br>
+                <span>${new Date(order.date).toLocaleDateString()} ${new Date(order.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+            </div>
+          </div>
+          
+          <div style="font-size: 10px; margin-bottom: 2mm;">
+            <span class="info-label">Customer:</span> ${order.name}
+          </div>
 
           <table>
             <thead>
               <tr>
-                <th class="qty">Qty</th>
-                <th class="name">Item</th>
-                <th class="price">Total</th>
+                <th style="width: 60%">Description</th>
+                <th style="width: 15%; text-align: center;">Qty</th>
+                <th style="width: 25%; text-align: right;">Total</th>
               </tr>
             </thead>
             <tbody>
               ${order.product_list?.map(item => `
                 <tr>
-                  <td class="qty">${item.quantity}</td>
-                  <td class="name">${item.name}</td>
-                  <td class="price">${(parseFloat(item.price) * item.quantity).toFixed(2)}</td>
+                  <td>
+                    <span class="item-name">${item.name}</span>
+                    <span class="item-meta">@৳${parseFloat(item.price).toFixed(2)}</span>
+                  </td>
+                  <td style="text-align: center;">${item.quantity}</td>
+                  <td style="text-align: right; font-weight: bold;">৳${(parseFloat(item.price) * item.quantity).toFixed(0)}</td>
                 </tr>
               `).join('')}
             </tbody>
@@ -55,28 +91,38 @@ export const printOrder = (order) => {
 
           <div class="divider"></div>
 
-          <div style="width: 100%;">
-            <div style="display:flex; justify-content: space-between;">
-              <span>Subtotal:</span><span>৳${parseFloat(order.subtotal || 0).toFixed(2)}</span>
+          <div class="totals-container">
+            <div class="total-row">
+              <span>Subtotal</span>
+              <span>৳${parseFloat(order.subtotal || 0).toFixed(2)}</span>
             </div>
+            
             ${order.discount > 0 ? `
-            <div style="display:flex; justify-content: space-between;">
-              <span>Discount:</span><span>-৳${parseFloat(order.discount).toFixed(2)}</span>
+            <div class="total-row">
+              <span>Discount</span>
+              <span>-৳${parseFloat(order.discount).toFixed(2)}</span>
             </div>` : ''}
-            <div style="display:flex; justify-content: space-between; font-weight: bold; font-size: 14px; margin-top: 5px; border-top: 1px solid #000; padding-top: 5px;">
-              <span>NET TOTAL:</span><span>৳${parseFloat(order.total_amount).toFixed(2)}</span>
+
+            <div class="total-row grand-total">
+              <span>NET TOTAL</span>
+              <span>৳${parseFloat(order.total_amount).toFixed(0)}</span>
             </div>
-            <div style="display:flex; justify-content: space-between; margin-top: 5px;">
-              <span>Received:</span><span>৳${parseFloat(order.amount_received || 0).toFixed(2)}</span>
+
+            <div class="total-row" style="margin-top: 2mm; font-size: 10px;">
+              <span>Payment (${order.payment_method?.toUpperCase() || 'CASH'})</span>
+              <span>৳${parseFloat(order.amount_received || 0).toFixed(2)}</span>
             </div>
-            <div style="display:flex; justify-content: space-between;">
-              <span>Change:</span><span>৳${parseFloat(order.change_amount || 0).toFixed(2)}</span>
+            
+            <div class="total-row" style="font-size: 10px;">
+              <span>Change</span>
+              <span>৳${parseFloat(order.change_amount || 0).toFixed(2)}</span>
             </div>
           </div>
 
-          <div class="center" style="margin-top: 15px;">
-            <p style="margin:0;">Method: ${order.payment_method?.toUpperCase() || 'CASH'}</p>
-            <p style="margin:5px 0 0 0; font-size: 10px;">Thank You for Shopping!</p>
+          <div class="footer">
+            <div class="thick-divider"></div>
+            <p class="footer-msg">Thank you for your business!</p>
+            <p style="font-size: 8px; color: #888; margin-top: 2mm;">Software by YourBrand</p>
           </div>
         </body>
       </html>
@@ -87,9 +133,10 @@ export const printOrder = (order) => {
     pri.document.write(receiptContent);
     pri.document.close();
 
+    // Use a slightly longer timeout for font rendering
     setTimeout(() => {
       pri.focus();
       pri.print();
       document.body.removeChild(iframe);
-    }, 500);
+    }, 800);
 }

@@ -266,7 +266,7 @@ const Orderform = ({ cartItems = [] }) => {
                         <p className='col-span-1'>Rate</p>
                         <p className='col-span-1'>Disc</p>
                         <p className='col-span-1'>Total</p>
-                        <p className='col-span-1 text-right'>Del</p>
+                        <p className='col-span-1 text-right'>Delete</p>
                     </div>
 
                     {cartItems.map(item => {
@@ -307,11 +307,11 @@ const Orderform = ({ cartItems = [] }) => {
                                     {itemDiscount > 0 ? `-${itemDiscount}` : '0'}
                                 </p>
 
-                                <p className='col-span-1 font-bold text-gray-800 text-[11px]'>৳{rowTotal.toFixed(1)}</p>
+                                <p className='col-span-1 font-bold text-gray-800 text-xs'>৳{rowTotal.toFixed(1)}</p>
 
                                 <div className='col-span-1 flex justify-end'>
                                     <MdDeleteOutline
-                                        className='text-xl text-red-400 cursor-pointer hover:text-red-600 transition-all'
+                                        className='text-3xl text-red-400 cursor-pointer hover:text-red-600 transition-all'
                                         onClick={() => removeFromCart(item?.product_id)}
                                     />
                                 </div>
