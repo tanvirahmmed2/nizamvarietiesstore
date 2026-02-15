@@ -27,11 +27,11 @@ const Cart = () => {
   useEffect(() => {
     if (!cart?.items) return;
 
-    const subTotal = cart.items.reduce((sum, item) => 
-        sum + (parseFloat(item.sale_price || 0) * (item.quantity || 0)), 0)
+    const subTotal = cart.items.reduce((sum, item) =>
+      sum + (parseFloat(item.sale_price || 0) * (item.quantity || 0)), 0)
 
-    const totalDiscount = cart.items.reduce((sum, item) => 
-        sum + (parseFloat(item.discount_price || 0) * (item.quantity || 0)), 0)
+    const totalDiscount = cart.items.reduce((sum, item) =>
+      sum + (parseFloat(item.discount_price || 0) * (item.quantity || 0)), 0)
 
     const totalPrice = subTotal - totalDiscount
 
@@ -40,7 +40,7 @@ const Cart = () => {
 
   const placeOrder = async (e) => {
     e.preventDefault()
-    
+
     if (cart.items.length === 0) return toast.error("Your cart is empty");
 
     const payload = {
@@ -51,7 +51,7 @@ const Cart = () => {
       total: formData.totalPrice,
       paymentMethod: formData.paymentMethod,
       transactionId: formData.transactionId,
-      status: 'pending', 
+      status: 'pending',
       items: cart.items.map(item => ({
         product_id: item.product_id,
         quantity: item.quantity,
@@ -63,9 +63,9 @@ const Cart = () => {
       const response = await axios.post('/api/order/public', payload, { withCredentials: true })
       toast.success(response.data.message || 'Order placed successfully!');
       clearCart()
-      setFormData({ 
-        name: '', phone: '', subTotal: 0, discount: 0, 
-        totalPrice: 0, paymentMethod: 'cash', transactionId: '' 
+      setFormData({
+        name: '', phone: '', subTotal: 0, discount: 0,
+        totalPrice: 0, paymentMethod: 'cash', transactionId: ''
       })
     } catch (error) {
       toast.error(error?.response?.data?.message || 'Failed to place order')
@@ -83,40 +83,40 @@ const Cart = () => {
 
   return (
     <div className='w-full max-w-6xl mx-auto p-4 flex flex-col lg:flex-row gap-8 mt-10'>
-      
+
       <div className='flex-1'>
         <h1 className='text-3xl font-semibold mb-8 text-gray-800'>Shopping Cart</h1>
         <div className='flex flex-col gap-6'>
           {cart.items.map((item) => (
-            <div key={item?.product_id} className='flex items-center justify-between border-b border-gray-100 pb-6'>
-              <div className='flex-1'>
+            <div key={item?.product_id} className='w-full grid grid-cols-1 justify-items-center shadow sm:grid-cols-2  rounded-2xl border border-black/30 p-2'>
+              <div className='col-span-1 w-full text-start'>
                 <p className=' text-lg text-gray-800'>{item?.name}</p>
                 <p className='text-sm text-gray-500'>৳{parseFloat(item?.sale_price).toFixed(2)} per unit</p>
               </div>
-              <div className='flex items-center gap-6'>
-                <div className='flex items-center gap-4 bg-gray-100 px-4 py-2 rounded-full'>
-                  <FaMinus 
-                    className='cursor-pointer text-gray-600 hover:text-black transition-colors' 
-                    onClick={() => decreaseQuantity(item?.product_id)} 
+              <div className='col-span-1 grid grid-cols-3 justify-items-center gap-6'>
+                <div className='grid-cols-1 flex items-center gap-4 bg-gray-100 px-4  rounded-full'>
+                  <FaMinus
+                    className='cursor-pointer text-gray-600 hover:text-black transition-colors'
+                    onClick={() => decreaseQuantity(item?.product_id)}
                   />
                   <span className=' text-gray-800'>{item?.quantity}</span>
-                  <FaPlus 
-                    className='cursor-pointer text-gray-600 hover:text-black transition-colors' 
-                    onClick={() => addToCart(item)} 
+                  <FaPlus
+                    className='cursor-pointer text-gray-600 hover:text-black transition-colors'
+                    onClick={() => addToCart(item)}
                   />
                 </div>
-                <p className=' w-24 text-right text-gray-800'>
-                    ৳{(parseFloat(item.sale_price) * item.quantity).toFixed(2)}
+                <p className='grid-cols-1   text-gray-800'>
+                  ৳{(parseFloat(item.sale_price) * item.quantity).toFixed(2)}
                 </p>
-                <MdDeleteOutline 
-                  className='text-2xl text-red-400 cursor-pointer hover:text-red-600 transition-colors' 
-                  onClick={() => removeFromCart(item?.product_id)} 
+                <MdDeleteOutline
+                  className='grid-cols-1 text-2xl text-red-400 cursor-pointer hover:text-red-600 transition-colors'
+                  onClick={() => removeFromCart(item?.product_id)}
                 />
               </div>
             </div>
           ))}
-          <button 
-            onClick={clearCart} 
+          <button
+            onClick={clearCart}
             className='text-sm text-red-400 self-start mt-4 hover:text-red-600 hover:underline transition-all'
           >
             Clear All Items
@@ -128,39 +128,39 @@ const Cart = () => {
         <h2 className='text-2xl  mb-6 text-gray-800'>Order Summary</h2>
         <form onSubmit={placeOrder} className='flex flex-col gap-5'>
           <div className='space-y-4'>
-            <input 
-              type="text" name='name' required placeholder="Your Full Name" 
-              onChange={handleChange} value={formData.name} 
-              className='w-full p-4 border border-gray-200 rounded-2xl outline-none focus:border-sky-500 transition-all' 
+            <input
+              type="text" name='name' required placeholder="Your Full Name"
+              onChange={handleChange} value={formData.name}
+              className='w-full p-4 border border-gray-200 rounded-2xl outline-none focus:border-sky-500 transition-all'
             />
-            <input 
-              type="text" name='phone' required placeholder="Phone Number" 
-              onChange={handleChange} value={formData.phone} 
-              className='w-full p-4 border border-gray-200 rounded-2xl outline-none focus:border-sky-500 transition-all' 
+            <input
+              type="text" name='phone' required placeholder="Phone Number"
+              onChange={handleChange} value={formData.phone}
+              className='w-full p-4 border border-gray-200 rounded-2xl outline-none focus:border-sky-500 transition-all'
             />
-            
+
             <label className='text-xs  text-gray-400 uppercase ml-2'>Payment Method</label>
-            <input type="text"  name="paymentMethod" onChange={handleChange} value={formData.paymentMethod} readOnly className='w-full p-4 border border-gray-200 rounded-2xl outline-none focus:border-sky-500 transition-all' />
-            
+            <input type="text" name="paymentMethod" onChange={handleChange} value={formData.paymentMethod} readOnly className='w-full p-4 border border-gray-200 rounded-2xl outline-none focus:border-sky-500 transition-all' />
+
           </div>
 
           <div className='flex flex-col gap-3 border-t border-gray-100 pt-6 mt-2'>
             <div className='flex justify-between text-gray-500'>
-                <span>Subtotal</span>
-                <span>৳{formData.subTotal.toFixed(2)}</span>
+              <span>Subtotal</span>
+              <span>৳{formData.subTotal.toFixed(2)}</span>
             </div>
             <div className='flex justify-between text-green-600 font-semibold'>
-                <span>Discount Applied</span>
-                <span>-৳{formData.discount.toFixed(2)}</span>
+              <span>Discount Applied</span>
+              <span>-৳{formData.discount.toFixed(2)}</span>
             </div>
             <div className='flex justify-between text-xl font-black mt-2 text-gray-900'>
-                <span>Net Total</span>
-                <span>৳{formData.totalPrice.toFixed(2)}</span>
+              <span>Net Total</span>
+              <span>৳{formData.totalPrice.toFixed(2)}</span>
             </div>
           </div>
 
-          <button 
-            className='w-full bg-sky-600 text-white py-5 rounded-2xl  hover:bg-sky-700 active:scale-95   transition-all mt-6 uppercase tracking-wider' 
+          <button
+            className='w-full bg-sky-600 text-white py-5 rounded-2xl  hover:bg-sky-700 active:scale-95   transition-all mt-6 uppercase tracking-wider'
             type='submit'
           >
             Confirm Order
