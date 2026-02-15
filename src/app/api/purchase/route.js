@@ -73,36 +73,44 @@ export async function POST(req) {
 }
 
 export async function GET(req) {
-  try {
-    const { searchParams } = new URL(req.url);
-    const q = searchParams.get('q') || '';
+    try {
+        const { searchParams } = new URL(req.url);
+        const q = searchParams.get('q') || '';
+        const searchTerm = `%${q}%`;
 
-    const query = `
-      SELECT 
-        p.*, 
-        COALESCE(
-          (SELECT json_agg(json_build_object(
-            'name', pr.name,
-            'quantity', pi.quantity,
-            'purchase_price', pi.purchase_price
-          ))
-          FROM purchase_items pi
-          JOIN products pr ON pi.product_id = pr.product_id
-          WHERE pi.purchase_id = p.purchase_id
-        ), '[]') AS items
-      FROM purchases p
-      WHERE p.supplier_name ILIKE $1 
-         OR p.invoice_no ILIKE $1
-      ORDER BY p.created_at DESC
-    `;
+        const query = `
+            SELECT 
+                p.*,
+                COALESCE(
+                    (SELECT json_agg(json_build_object(
+                        'name', pr.name,
+                        'quantity', pi.quantity,
+                        'purchase_price', pi.purchase_price
+                    ))
+                    FROM purchase_items pi
+                    JOIN products pr ON pi.product_id = pr.product_id
+                    WHERE pi.purchase_id = p.purchase_id
+                ), '[]') as items
+            FROM purchases p
+            WHERE 
+                p.supplier_name ILIKE $1 
+                OR p.supplier_phone ILIKE $1 
+                OR p.invoice_no ILIKE $1
+                OR p.created_at::text ILIKE $1
+                OR EXISTS (
+                    SELECT 1 FROM purchase_items pi
+                    JOIN products pr ON pi.product_id = pr.product_id
+                    WHERE pi.purchase_id = p.purchase_id
+                    AND (pr.name ILIKE $1 OR pr.barcode ILIKE $1)
+                )
+            ORDER BY p.created_at DESC`;
 
-    const res = await pool.query(query, [`%${q}%`]);
-    return NextResponse.json({ success: true, payload: res.rows });
-  } catch (error) {
-    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
-  }
+        const res = await pool.query(query, [searchTerm]);
+        return NextResponse.json({ success: true, payload: res.rows });
+    } catch (error) {
+        return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+    }
 }
-
 
 
 export async function DELETE(req) {
