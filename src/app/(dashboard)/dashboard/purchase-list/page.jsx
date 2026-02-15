@@ -2,7 +2,8 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import { FaBarcode, FaTrash, FaTriangleExclamation, FaCheck, FaXmark } from 'react-icons/fa6'
+import { FaBarcode, FaTrash, FaTriangleExclamation, FaCheck, FaXmark, FaPrint } from 'react-icons/fa6'
+import { printPurchaseInvoice } from '@/lib/database/printPurchaseInvoice'
 
 const PurchaseList = () => {
     const [purchases, setPurchases] = useState([])
@@ -42,15 +43,15 @@ const PurchaseList = () => {
     return (
         <div className='w-full min-h-screen flex flex-col items-center p-6 gap-6 bg-white'>
             <h1 className='text-3xl font-black text-sky-900 uppercase tracking-tighter'>Purchase History</h1>
-            
-            <div className='w-full max-w-4xl flex flex-row items-center gap-2 px-4 py-1 border border-sky-400 rounded-xl bg-sky-50/30 shadow-sm'>
+
+            <div className='w-full flex flex-row items-center gap-2 px-4 py-1 border border-sky-400 rounded-xl bg-sky-50/30 shadow-sm'>
                 <FaBarcode className='text-2xl text-sky-500' />
-                <input 
-                    type="text" 
+                <input
+                    type="text"
                     placeholder="Search by supplier or invoice..."
-                    value={searchTerm} 
-                    onChange={(e) => setSearchTerm(e.target.value)} 
-                    className='w-full px-4 py-3 bg-transparent outline-none text-gray-700 font-medium' 
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className='w-full px-4 py-3 bg-transparent outline-none text-gray-700 font-medium'
                 />
             </div>
 
@@ -59,8 +60,8 @@ const PurchaseList = () => {
                     <p className='text-center text-sky-400 animate-pulse font-bold py-20'>FETCHING DATA...</p>
                 ) : purchases.map((purchase) => (
                     <div key={purchase.purchase_id} className='w-full grid grid-cols-12 p-5 border border-gray-100 rounded-2xl bg-white shadow-sm hover:shadow-md transition-shadow'>
-                        
-                        {/* Supplier Info */}
+
+
                         <div className='col-span-12 md:col-span-3 border-b md:border-b-0 md:border-r border-gray-100 pb-3 md:pb-0'>
                             <p className='text-[10px] font-black text-sky-500 uppercase tracking-widest'>Source</p>
                             <p className='font-black text-gray-900 text-lg leading-tight'>{purchase.supplier_name}</p>
@@ -69,8 +70,6 @@ const PurchaseList = () => {
                                 <span className='text-[10px] font-bold bg-gray-100 px-2 py-0.5 rounded'>INV: {purchase.invoice_no || 'N/A'}</span>
                             </div>
                         </div>
-
-                        {/* PRODUCT ITEMS SECTION */}
                         <div className='col-span-12 md:col-span-5 p-3'>
                             <p className='text-[10px] font-black text-gray-400 uppercase mb-2 tracking-widest'>Manifest</p>
                             <div className='flex flex-col gap-2'>
@@ -88,7 +87,6 @@ const PurchaseList = () => {
                             </div>
                         </div>
 
-                        {/* Finance */}
                         <div className='col-span-12 md:col-span-3 p-3 flex flex-col justify-center bg-gray-50 md:bg-transparent rounded-xl'>
                             <div className='flex justify-between text-xs mb-1'>
                                 <span className='text-gray-400 font-bold uppercase'>Gross</span>
@@ -102,17 +100,17 @@ const PurchaseList = () => {
                                 {new Date(purchase.created_at).toLocaleString()}
                             </p>
                         </div>
-                        
+
                         <div className='col-span-12 md:col-span-1 flex items-center justify-center p-2'>
                             {confirmDelete === purchase.purchase_id ? (
                                 <div className='flex flex-col gap-2 w-full animate-in fade-in zoom-in duration-200'>
-                                    <button 
+                                    <button
                                         onClick={() => handleDelete(purchase.purchase_id)}
                                         className='w-full bg-rose-600 text-white p-2 rounded-lg flex items-center justify-center'
                                     >
                                         <FaCheck />
                                     </button>
-                                    <button 
+                                    <button
                                         onClick={() => setConfirmDelete(null)}
                                         className='w-full bg-gray-200 text-gray-600 p-2 rounded-lg flex items-center justify-center'
                                     >
@@ -120,22 +118,30 @@ const PurchaseList = () => {
                                     </button>
                                 </div>
                             ) : (
-                                <button 
-                                    onClick={() => {
-                                        if(confirm("Confirm: This will permanently remove stock. Proceed?")) {
-                                            setConfirmDelete(purchase.purchase_id)
-                                        }
-                                    }}
-                                    className='p-4 text-rose-400 hover:text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-2xl transition-all'
-                                >
-                                    <FaTrash size={20} />
-                                </button>
+                                <div>
+                                    <button
+                                        onClick={() => {
+                                            if (confirm("Confirm: This will permanently remove stock. Proceed?")) {
+                                                setConfirmDelete(purchase.purchase_id)
+                                            }
+                                        }}
+                                        className='p-4 text-rose-400 hover:text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-2xl transition-all'
+                                    >
+                                        <FaTrash size={20} />
+                                    </button>
+                                    <button
+                                        onClick={() => printPurchaseInvoice(purchase)}
+                                        className='w-full bg-gray-200 text-gray-600 p-2 rounded-lg flex items-center justify-center'
+                                    >
+                                        <FaPrint />
+                                    </button>
+                                </div>
                             )}
                         </div>
                     </div>
                 ))}
             </div>
-            
+
             {confirmDelete && (
                 <div className='fixed bottom-10 right-10 bg-rose-600 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 animate-bounce'>
                     <FaTriangleExclamation />
