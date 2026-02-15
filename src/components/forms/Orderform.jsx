@@ -233,6 +233,7 @@ const Orderform = ({ cartItems = [] }) => {
                             id='searchTerm'
                             onChange={(e) => setSearchTerm(e.target.value)}
                             value={searchTerm}
+                            onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); }}
                             placeholder='search product name or barcode'
                             className='w-full  px-4 p-1 rounded-sm  outline-none'
                         />
@@ -261,7 +262,7 @@ const Orderform = ({ cartItems = [] }) => {
                 <div className='w-full flex flex-col gap-2 max-h-48 overflow-y-auto border-y border-black/5 py-2'>
                     <div className='w-full grid grid-cols-10 gap-2 font-bold text-gray-600 border-b pb-1'>
                         <p className='col-span-4'>Product</p>
-                        <p className='col-span-2 text-center'>Quatity</p>
+                        <p className='col-span-2 text-center'>Quatityy</p>
                         <p className='col-span-1'>Rate</p>
                         <p className='col-span-1'>Disc</p>
                         <p className='col-span-1'>Total</p>

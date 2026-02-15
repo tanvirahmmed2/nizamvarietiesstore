@@ -47,26 +47,22 @@ const ContextProvider = ({ children }) => {
     }
   }, [cart, hydrated])
 
-  const addToCart = (product) => {
+ const addToCart = (product) => {
     if (!product?.product_id) return;
 
-    // 1. Check if product is out of stock entirely
     if (Number(product.stock) <= 0) {
       toast.error("Item is out of stock!");
       return;
     }
 
-    // 2. Find if item already exists in cart to check quantity limit
     const existingInCart = cart.items.find(item => item.product_id === product.product_id);
 
     if (existingInCart) {
-      // 3. Move the toast warning OUTSIDE of the setCart callback
       if (existingInCart.quantity >= Number(product.stock)) {
         toast.warning(`Only ${product.stock} items available in stock`);
-        return; // Stop here, do not call setCart
+        return; 
       }
 
-      // If we reach here, quantity is okay to increase
       setCart((prev) => ({
         ...prev,
         items: prev.items.map(item =>
@@ -77,7 +73,6 @@ const ContextProvider = ({ children }) => {
       }));
       toast.info("Quantity increased");
     } else {
-      // 4. Item is new to cart
       const salePrice = parseFloat(product?.sale_price) || 0;
       const wholeSalePrice = parseFloat(product?.wholesale_price) || 0;
       const discountAmount = parseFloat(product?.discount_price) || 0;
@@ -93,7 +88,9 @@ const ContextProvider = ({ children }) => {
             sale_price: salePrice,
             wholesale_price: wholeSalePrice,
             discount_price: discountAmount,
-            price: salePrice - discountAmount
+            // FIX: Set the base price to the FULL sale price. 
+            // Do NOT subtract the discount here.
+            price: salePrice 
           }
         ]
       }));
