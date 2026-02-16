@@ -21,7 +21,7 @@ const SupplierPage = async () => {
   const suppliers = data.payload
 
   return (
-    <div className='w-full p-4 flex flex-col gap-6'>
+    <div className='w-full p-1 sm:p-4 flex flex-col gap-6'>
       <div className="flex flex-col gap-1 border-b pb-4">
         <h1 className='text-2xl font-black text-gray-800 uppercase tracking-tight'>Supplier Directory</h1>
         <p className='text-xs text-gray-500 font-medium'>Overview of procurement and vendor stats</p>

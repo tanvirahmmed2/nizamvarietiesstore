@@ -31,7 +31,7 @@ const RolemanagementPage = () => {
     }
   }
   return (
-    <div className='w-full flex flex-col items-center gap-6 p-4'>
+    <div className='w-full flex flex-col items-center gap-6 p-1 sm:p-4'>
 
       {
         staffs.length === 0 ? <div className='w-full min-h-30 flex items-center justify-center text-center'>

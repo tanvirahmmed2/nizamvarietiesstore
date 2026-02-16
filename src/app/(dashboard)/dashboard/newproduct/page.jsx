@@ -8,7 +8,7 @@ import React, { useContext } from 'react'
 const NewProductPage = () => {
   const {isCategoryBox, isBrandBox}= useContext(Context)
   return (
-    <div className='w-full p-4 relative'>
+    <div className='w-full p-1 sm:p-4 relative'>
       <div className={`absolute ${isCategoryBox?'block': 'hidden'} z-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white min-w-100 border p-4 rounded-xl shadow-lg`}>
         <AddCategoryForm />
 

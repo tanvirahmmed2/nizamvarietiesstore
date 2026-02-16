@@ -27,7 +27,7 @@ const PurchasePaymentsPage = () => {
     }, [searchTerm])
 
     return (
-        <div className='w-full min-h-screen flex flex-col items-center p-6 gap-6 bg-gray-50'>
+        <div className='w-full min-h-screen flex flex-col items-center p-1 sm:p-4 gap-6 bg-gray-50'>
             <div className='flex items-center gap-3'>
                 <FaFileInvoiceDollar className='text-3xl text-sky-600' />
                 <h1 className='text-3xl font-black text-gray-800 uppercase tracking-tighter'>Purchase Payments</h1>

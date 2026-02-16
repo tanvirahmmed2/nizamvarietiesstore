@@ -20,7 +20,7 @@ const CustomerPage = () => {
   }, [searchTerm])
 
   return (
-    <div className='w-full mx-auto p-8 flex flex-col gap-10 items-center min-h-screen bg-white'>
+    <div className='w-full mx-auto p-1 sm:p-4 flex flex-col gap-10 items-center min-h-screen bg-white'>
       <AddCutomerForm/>
       <h1 className='text-2xl font-black text-gray-900 '> Customer Directory </h1>
 

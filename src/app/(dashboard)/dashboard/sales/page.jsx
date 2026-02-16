@@ -23,7 +23,7 @@ const SalesReport = () => {
     if (loading) return <div className='w-full min-h-screen flex items-center justify-center font-medium text-sky-400'>Generating Report...</div>
 
     return (
-        <div className=' w-full p-8 flex flex-col gap-10 bg-white min-h-screen'>
+        <div className=' w-full p-1 sm:p-4 flex flex-col gap-10 bg-white min-h-screen'>
             <div className='text-center flex flex-col gap-2'>
                 <h1 className='text-2xl font-black '>Sales Performance</h1>
                 <p className='text-sky-400 text-sm uppercase tracking-widest font-medium '>Business Analytics</p>

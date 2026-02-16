@@ -41,7 +41,7 @@ const PurchaseList = () => {
     }
 
     return (
-        <div className='w-full min-h-screen flex flex-col items-center p-6 gap-6 bg-white'>
+        <div className='w-full min-h-screen flex flex-col items-center p-1 sm:p-4 gap-6 bg-white'>
             <h1 className='text-3xl font-black text-sky-900 uppercase tracking-tighter'>Purchase History</h1>
 
             <div className='w-full flex flex-row items-center gap-2 px-4 py-1 border border-sky-400 rounded-xl bg-sky-50/30 shadow-sm'>

@@ -21,7 +21,7 @@ const CategoryPage = () => {
 
 
   return (
-    <div className='w-full flex flex-col items-center p-4'>
+    <div className='w-full flex flex-col items-center p-1 sm:p-4'>
       {
         categories.length === 0 ? <div className='w-full min-h-30 flex items-center justify-center text-center'>
           <p className='text-red-500'>Category data not Found !</p>

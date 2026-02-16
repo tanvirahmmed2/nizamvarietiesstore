@@ -70,7 +70,7 @@ const AnalyticsPage = () => {
     const formatNum = (val) => Number(val || 0).toLocaleString();
 
     return (
-        <div className='mx-auto w-full p-8 flex flex-col gap-8 bg-white min-h-screen'>
+        <div className='mx-auto w-full p-1 sm:p-4 flex flex-col gap-8 bg-white min-h-screen'>
             <div className='flex justify-between items-end'>
                 <div className='flex flex-col gap-1'>
                     <h1 className='text-3xl font-black text-sky-900 tracking-tighter'>Business Analytics</h1>

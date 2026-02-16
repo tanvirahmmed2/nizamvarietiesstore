@@ -26,7 +26,7 @@ const StockReport = () => {
     const currentList = viewMode === 'low' ? data?.lowStock : data?.highStock
 
     return (
-        <div className=' mx-auto w-full p-8 flex flex-col gap-10 bg-white min-h-screen'>
+        <div className=' mx-auto w-full p-1 sm:p-4 flex flex-col gap-10 bg-white min-h-screen'>
             
             <div className='text-center flex flex-col gap-2'>
                 <h1 className='text-4xl font-black text-sky-900 tracking-tight'>Inventory Analysis</h1>

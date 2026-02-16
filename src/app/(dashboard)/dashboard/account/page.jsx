@@ -10,7 +10,7 @@ const Profile = async () => {
 
 
   return (
-    <div className='w-full min-h-screen flex items-center justify-center p-4'>
+    <div className='w-full min-h-screen flex items-center justify-center p-1 sm:p-4'>
       <div className='w-full  border border-orange-400 min-h-[60vh]  rounded-lg flex flex-col items-center p-4 justify-between'>
 
         <div className='flex flex-col items-center justify-center gap-2'>

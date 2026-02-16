@@ -45,7 +45,7 @@ const DamagePage = () => {
     }
 
     return (
-        <div className='max-w-6xl mx-auto w-full p-10 bg-white min-h-screen'>
+        <div className='max-w-6xl mx-auto w-full p-1 sm:p-4 bg-white min-h-screen'>
             {/* Header Area */}
             <div className='flex flex-col gap-1 mb-12 border-l-4 border-red-500 pl-6'>
                 <h1 className='text-3xl  text-gray-900 tracking-tight uppercase'>

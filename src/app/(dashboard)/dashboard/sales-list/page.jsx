@@ -61,7 +61,7 @@ const SalesListPage = () => {
   }
 
   return (
-    <div className='w-full min-h-screen flex flex-col items-center p-6 gap-6 '>
+    <div className='w-full min-h-screen flex flex-col items-center p-1 sm:p-4 gap-6 '>
       <h1 className='text-center text-3xl font-bold text-gray-800 mb-4'>Sales History</h1>
       <div className='w-full flex flex-row items-center justify-center gap-2 px-2 border border-sky-400'>
         <FaBarcode className='text-2xl text-sky-500'/>
