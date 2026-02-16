@@ -11,7 +11,6 @@ const ProductListPage = () => {
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
 
-    // Unified fetcher
     const loadData = useCallback(async (page = 1, search = '') => {
         setLoading(true)
         try {
@@ -56,10 +55,10 @@ const ProductListPage = () => {
     }
 
     return (
-        <div className="w-full text-xs sm:text-base mx-auto p-6 bg-white min-h-screen">
+        <div className="w-full text-[8px] sm:text-base mx-auto p-1 sm:p-4 bg-white min-h-screen">
 
             <div className="mb-10 pl-6 flex justify-between items-center">
-                <h1 className="text-3xl font-black uppercase">Product List</h1>
+                <h1 className="sm:text-xl font-black uppercase">Product List</h1>
                 <input
                     type="text"
                     placeholder="search..."
@@ -75,10 +74,10 @@ const ProductListPage = () => {
                 </div>
             </div>
 
-            <div className="w-full grid grid-cols-12 border-b-2 px-4 py-2 text-[10px] font-black uppercase tracking-widest mb-1">
-                <div className="col-span-6">Product Name</div>
-                <div className="col-span-2 text-center">Price</div>
-                <div className="col-span-2 text-center">Stock</div>
+            <div className="w-full grid grid-cols-8 border-b-2 px-4 py-2 text-[10px] font-black uppercase tracking-widest mb-1">
+                <div className="col-span-4">Product Name</div>
+                <div className="col-span-1 text-center">Price</div>
+                <div className="col-span-1 text-center">Stock</div>
                 <div className="col-span-2 text-right">Actions</div>
             </div>
 
@@ -91,25 +90,25 @@ const ProductListPage = () => {
             ) : (
                 <div className="w-full flex flex-col">
                     {products.map((item) => (
-                        <div key={item.product_id} className="w-full grid grid-cols-12 border-b border-gray-100 px-4 py-3 items-center hover:bg-gray-300 transition-colors group   rounded-xl even:bg-gray-200">
-                            <div className="col-span-6 flex flex-col">
+                        <div key={item.product_id} className="w-full grid grid-cols-8 border-b border-gray-100 px-4 py-3 items-center hover:bg-gray-300 transition-colors group   rounded-xl even:bg-gray-200">
+                            <div className="col-span-4 flex flex-col">
                                 <Link className='font-bold text-gray-800 hover:text-sky-600' href={`/products/${item.slug}`}>
                                     {item.name}
                                 </Link>
                                 <span className='text-[9px] text-gray-400 font-mono'>ID: {item.product_id}</span>
                             </div>
 
-                            <p className="col-span-2 text-center font-black text-gray-700">
+                            <p className="col-span-1 text-center font-black text-gray-700">
                                 ৳ {parseFloat(item.sale_price).toFixed(2)}
                             </p>
 
-                            <div className="col-span-2 text-center">
+                            <div className="col-span-1 text-center">
                                 <span className={`px-2 py-1 text-[10px] font-bold rounded ${item.stock > 10 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                                     {item.stock} IN STOCK
                                 </span>
                             </div>
 
-                            <div className="col-span-2 flex justify-end gap-2">
+                            <div className="col-span-2 flex justify-end ">
                                 <Link href={`/dashboard/products/${item.slug}`} className='p-2 hover:bg-sky-100 text-sky-600 rounded-full transition-all'>
                                     <MdEdit size={18} />
                                 </Link>

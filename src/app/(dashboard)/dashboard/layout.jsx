@@ -14,7 +14,7 @@ const PosLayout = async ({ children, }) => {
   const auth=await isManager()
   if(!auth.success) return redirect('/access')
   return (
-    <div className="w-full pl-16 flex flex-col items-center justify-between min-h-screen py-4 gap-4 relative">
+    <div className="w-full pl-16 flex flex-col items-center justify-between min-h-screen py-4 gap-4 relative overflow-x-hidden">
       <DashboardSidebar />
       {children}
       <FooterTagline />
