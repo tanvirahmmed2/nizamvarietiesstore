@@ -104,7 +104,7 @@ const ProductListPage = () => {
 
                             <div className="col-span-1 text-center">
                                 <span className={`px-2 py-1 text-[10px] font-bold rounded ${item.stock > 10 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                                    {item.stock} IN STOCK
+                                    {item.stock}
                                 </span>
                             </div>
 
@@ -138,41 +138,49 @@ const ProductListPage = () => {
                         Prev
                     </button>
 
-                    <div className="flex items-center gap-1">
-                        {/* Always Show First Page if we are far from it */}
-                        {pagination.currentPage > 2 && (
+                    <div className="flex items-center gap-1 font-sans scale-70 sm:scale-100">
+                        {pagination.currentPage > 4 && pagination.totalPages > 5 && (
                             <>
                                 <button
                                     onClick={() => loadData(1)}
-                                    className="w-10 h-10 border-2 border-black text-xs font-black hover:bg-gray-100"
+                                    className="w-10 h-10 border-2 border-black text-xs font-black hover:bg-gray-100 transition-all"
                                 >
                                     1
                                 </button>
-                                {pagination.currentPage > 3 && <span className="px-1 font-bold">...</span>}
+                                <span className="px-1 font-bold text-gray-400">...</span>
                             </>
                         )}
 
-                        {/* Sliding Window: Show Current, One Before, and One After */}
                         {Array.from({ length: pagination.totalPages }, (_, i) => i + 1)
-                            .filter(num => num >= pagination.currentPage - 1 && num <= pagination.currentPage + 1)
+                            .filter(num => {
+                                const current = pagination.currentPage;
+                                const total = pagination.totalPages;
+
+                                if (total <= 5) return true;
+                                if (current <= 4) return num <= 5;
+                                if (current >= total - 3) return num >= total - 4;
+
+                                return num >= current - 1 && num <= current + 1;
+                            })
                             .map((num) => (
                                 <button
                                     key={num}
                                     onClick={() => loadData(num)}
-                                    className={`w-10 h-10 border-2 border-black text-xs font-black transition-all ${pagination.currentPage === num ? 'bg-black text-white' : 'hover:bg-gray-100'
+                                    className={`w-10 h-10 border-2 border-black text-xs font-black transition-all ${pagination.currentPage === num
+                                            ? 'bg-black text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,0.1)]'
+                                            : 'hover:bg-gray-100'
                                         }`}
                                 >
                                     {num}
                                 </button>
                             ))}
 
-                        {/* Always Show Last Page if we are far from it */}
-                        {pagination.currentPage < pagination.totalPages - 1 && (
+                        {pagination.currentPage < pagination.totalPages - 3 && pagination.totalPages > 5 && (
                             <>
-                                {pagination.currentPage < pagination.totalPages - 2 && <span className="px-1 font-bold">...</span>}
+                                <span className="px-1 font-bold text-gray-400">...</span>
                                 <button
                                     onClick={() => loadData(pagination.totalPages)}
-                                    className="w-10 h-10 border-2 border-black text-xs font-black hover:bg-gray-100"
+                                    className="w-10 h-10 border-2 border-black text-xs font-black hover:bg-gray-100 transition-all"
                                 >
                                     {pagination.totalPages}
                                 </button>
@@ -180,7 +188,6 @@ const ProductListPage = () => {
                         )}
                     </div>
 
-                    {/* Next Button */}
                     <button
                         disabled={pagination.currentPage === pagination.totalPages}
                         onClick={() => loadData(pagination.currentPage + 1)}

@@ -51,7 +51,7 @@ const Offers = () => {
               ))}
             </div>
 
-            <div className="flex items-center gap-2 mt-8">
+            <div className="flex items-center gap-2 mt-8 scale-70 sm:scale-100">
               {/* Prev Button */}
               <button
                 disabled={page === 1}
@@ -71,7 +71,12 @@ const Offers = () => {
 
               {/* Display Range: Prev, Current, Next */}
               {Array.from({ length: totalPages }, (_, i) => i + 1)
-                .filter(num => num >= page - 1 && num <= page + 1) // Only show current and neighbors
+                .filter(num => {
+                  // Logic: Show 1-5 if page is low, or show a window around the current page
+                  if (page <= 4) return num <= 5;
+                  if (page >= totalPages - 3) return num >= totalPages - 4;
+                  return num >= page - 1 && num <= page + 1;
+                })
                 .map(num => (
                   <button
                     key={num}

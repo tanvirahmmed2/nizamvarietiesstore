@@ -64,8 +64,8 @@ const Products = () => {
                 }
               </div>
 
-              <div className="flex items-center gap-2 mt-8">
-               
+              <div className="flex items-center gap-2 mt-8 scale-70 sm:scale-100">
+
                 <button
                   disabled={page === 1}
                   onClick={() => setPage(prev => prev - 1)}
@@ -74,7 +74,6 @@ const Products = () => {
                   Prev
                 </button>
 
-                {/* First Page (Optional, but helpful) */}
                 {page > 2 && (
                   <>
                     <button onClick={() => setPage(1)} className="w-10 h-10 border rounded-md">1</button>
@@ -83,7 +82,11 @@ const Products = () => {
                 )}
 
                 {Array.from({ length: totalPages }, (_, i) => i + 1)
-                  .filter(num => num >= page - 1 && num <= page + 1) // Only show current and neighbors
+                  .filter(num => {
+                    if (page <= 4) return num <= 5;
+                    if (page >= totalPages - 3) return num >= totalPages - 4;
+                    return num >= page - 1 && num <= page + 1;
+                  })
                   .map(num => (
                     <button
                       key={num}
