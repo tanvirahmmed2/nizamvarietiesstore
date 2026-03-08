@@ -23,105 +23,103 @@ const PurchaseDetailsPage = ({ params }) => {
         fetchPurchase()
     }, [id])
 
-    if (loading) return <div className="p-10 text-center font-sans">Loading Record...</div>
+    if (loading) return <div className="p-10 text-center animate-pulse text-gray-500 font-sans text-sm tracking-widest uppercase">Loading Record...</div>
     if (!purchase) return <div className="p-10 text-center text-red-500 font-bold">Purchase Record Not Found</div>
 
     return (
-        <div className="w-full min-h-screen p-1 sm:p-4">
-            <div className="w-full max-w-150 flex flex-col items-center gap-4 mx-auto shadow-2xl p-2">
+        <div className="w-full min-h-screen p-4 bg-gray-50/50 print:bg-white print:p-0">
+            <div className="w-full max-w-2xl flex flex-col items-center gap-6 mx-auto bg-white shadow-xl rounded-sm p-6 sm:p-8 border border-gray-100 print:shadow-none print:border-none">
                 
-                
-
-                <div className="w-full flex flex-col items-center gap-10" >
+                <div className="w-full flex flex-col gap-8">
                     
                     <div className="w-full flex flex-row items-start justify-between">
                         <div className="flex flex-col gap-1">
-                            <h1 className="text-2xl font-semibold">NIZAM VARIETIES STORE</h1>
-                            <p className="text-xs">Pakuritala Bazar, Tarakanda</p>
-                            <p className='text-xs'>Contact: 01645-172356</p>
+                            <h1 className="text-2xl font-black tracking-tight text-gray-900 leading-none">NIZAM VARIETIES STORE</h1>
+                            <p className="text-[10px] text-gray-400 uppercase tracking-[0.2em] font-medium">Pakuritala Bazar, Tarakanda</p>
+                            <p className='text-[11px] text-gray-500 font-medium'>Contact: 01645-172356</p>
                         </div>
                         <div className="flex flex-col text-right gap-1">
-                            <h2 className="text-2xl font-semibold">Purchase Record</h2>
-                            <p className="text-xs"><strong>ID:</strong> PR-{purchase.purchase_id}</p>
-                            <p className="text-xs"><strong>Invoice:</strong> {purchase.invoice_no || 'N/A'}</p>
-                            <p className="text-xs"><strong>Date:</strong> {new Date(purchase.created_at || purchase.date).toLocaleDateString()}</p>
+                            <h2 className="text-xl font-black text-blue-600 uppercase tracking-tighter">Purchase Record</h2>
+                            <p className="text-[11px] text-gray-500"><strong>ID:</strong> PR-{purchase.purchase_id}</p>
+                            <p className="text-[11px] text-gray-500"><strong>Invoice:</strong> {purchase.invoice_no || 'N/A'}</p>
+                            <p className="text-[11px] text-gray-500"><strong>Date:</strong> {new Date(purchase.created_at || purchase.date).toLocaleDateString('en-GB')}</p>
                         </div>
                     </div>
 
-                    <div className='w-full h-0.5 bg-black'/>
+                    <div className='w-full h-px bg-gray-200'/>
 
-                    <div className="w-full flex flex-row items-start justify-between">
+                    <div className="w-full flex flex-row items-start justify-between gap-4">
                         <div className='flex flex-col gap-1'>
-                            <h3 className=" font-semibold">Supplier Details</h3>
-                            <p className="font-bold text-xs">{purchase.supplier_name}</p>
-                            <p className=" text-xs">Phone: {purchase.supplier_phone || 'N/A'}</p>
-                            <p className=" text-xs whitespace-pre-wrap">{purchase.supplier_address || ''}</p>
+                            <h3 className="text-[10px] font-bold uppercase text-gray-400 tracking-widest mb-1">Supplier Details</h3>
+                            <p className="font-bold text-sm text-gray-800 uppercase leading-none">{purchase.supplier_name}</p>
+                            <p className="text-xs text-gray-600 font-medium">{purchase.supplier_phone || 'N/A'}</p>
+                            <p className="text-xs text-gray-500 whitespace-pre-wrap leading-relaxed max-w-[200px]">{purchase.supplier_address || ''}</p>
                         </div>
-                        {/* Payment Box */}
-                        <div className='flex flex-col gap-1'>
-                            <h3 className="font-semibold">Payment Info</h3>
-                            <p className="text-xs">
-                                Method: <span className="">{purchase.payment_method || 'Cash'}</span>
+                        <div className='flex flex-col gap-1 text-right'>
+                            <h3 className="text-[10px] font-bold uppercase text-gray-400 tracking-widest mb-1">Payment Info</h3>
+                            <p className="text-xs text-gray-700">
+                                Method: <span className="font-bold text-gray-900 uppercase">{purchase.payment_method || 'Cash'}</span>
                             </p>
-                            <p className="text-xs font-medium">Status: Verified Record</p>
-                            <p className="text-xs">Note: {purchase.note || 'No additional instructions'}</p>
+                            <p className="text-[10px] font-black text-emerald-600 uppercase italic tracking-wider">Verified Record</p>
+                            <p className="text-[11px] text-gray-400 italic max-w-[180px] leading-tight mt-1">{purchase.note || 'No additional instructions'}</p>
                         </div>
                     </div>
 
-                    <div className="w-full flex flex-col items-center gap-1 text-sm">
-                        <div className=" w-full grid grid-cols-7 gap-1 border-b justify-items-start p-1">
+                    <div className="w-full flex flex-col text-[13px]">
+                        <div className="w-full grid grid-cols-7 gap-2 border-b-2 border-gray-900 pb-2 font-bold text-gray-800 uppercase tracking-tighter">
                             <div className="col-span-1">SL</div>
                             <div className="col-span-3">Product Description</div>
-                            <div className="col-span-1">Price</div>
-                            <div className="col-span-1">Qty</div>
-                            <div className="col-span-1">Amount</div>
+                            <div className="col-span-1 text-right">Price</div>
+                            <div className="col-span-1 text-center">Qty</div>
+                            <div className="col-span-1 text-right">Amount</div>
                         </div>
 
                         {purchase.items?.map((item, index) => (
-                                <div key={index} className=" w-full grid grid-cols-7 gap-1 justify-items-start p-1 border-b border-black/10">
-                                    <div className="col-span-1">{index + 1}</div>
-                                    <div className="col-span-3">{item.name}</div>
-                                    <div className="col-span-1 ">৳{parseFloat(item.purchase_price).toFixed(2)}</div>
-                                    <div className="col-span-1 ">{item.quantity}</div>
-                                    <div className="col-span-1 ">৳{(parseFloat(item.purchase_price) * item.quantity).toFixed(2)}</div>
-                                </div>
-                            ))}
+                            <div key={index} className="w-full grid grid-cols-7 gap-2 py-3 border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
+                                <div className="col-span-1 text-gray-400 font-mono text-xs">{String(index + 1).padStart(2, '0')}</div>
+                                <div className="col-span-3 font-semibold text-gray-800 uppercase tracking-tight">{item.name}</div>
+                                <div className="col-span-1 text-right text-gray-600 font-medium">৳{parseFloat(item.purchase_price).toLocaleString()}</div>
+                                <div className="col-span-1 text-center text-gray-600 font-medium">{item.quantity}</div>
+                                <div className="col-span-1 text-right font-bold text-gray-900">৳{(parseFloat(item.purchase_price) * item.quantity).toLocaleString()}</div>
+                            </div>
+                        ))}
                     </div>
 
-                   <div className="w-auto min-w-70 ml-auto font-sans flex flex-col text-sm gap-2">
-                            <div className="flex justify-between ">
-                                <span>Subtotal</span>
-                                <span className="font-semibold">৳{parseFloat(purchase.subtotal_amount || 0).toFixed(2)}</span>
-                            </div>
-                            
-                            {purchase.extra_discount > 0 && (
-                                <div className="flex justify-between ">
-                                    <span>Discount</span>
-                                    <span className="font-semibold">-৳{parseFloat(purchase.extra_discount).toFixed(2)}</span>
-                                </div>
-                            )}
-
-                            <div className="flex justify-between font-bold text-blue-600 ">
-                                <span>NET AMOUNT</span>
-                                <span className="tracking-tighter">৳{parseFloat(purchase.total_amount).toFixed(2)}</span>
-                            </div>
+                    <div className="w-full sm:w-1/2 ml-auto flex flex-col gap-2 pt-2">
+                        <div className="flex justify-between text-gray-500 text-xs font-medium">
+                            <span>Subtotal</span>
+                            <span className="text-gray-900">৳{parseFloat(purchase.subtotal_amount || 0).toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
                         </div>
+                        
+                        {purchase.extra_discount > 0 && (
+                            <div className="flex justify-between text-red-500 text-xs font-bold">
+                                <span className="uppercase tracking-tighter">Discount</span>
+                                <span>-৳{parseFloat(purchase.extra_discount).toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                            </div>
+                        )}
 
-                    {/* .footer style */}
-                    <div className="mt-[50px] text-center text-[#94a3b8] text-[11px] border-t border-[#e2e8f0] pt-[20px]">
-                        <p className="m-0 italic">This is a computer-generated document. No signature is required.</p>
-                        <p className="m-0 mt-1 font-semibold uppercase tracking-widest text-[#cbd5e1]">© {new Date().getFullYear()} Disibin LTD</p>
+                        <div className="flex justify-between items-center border-t border-gray-900 pt-3 mt-1">
+                            <span className="font-black text-gray-900 text-sm uppercase tracking-tighter">Net Payable</span>
+                            <span className="text-xl font-black text-blue-700 tracking-tighter">
+                                ৳{parseFloat(purchase.total_amount).toLocaleString(undefined, {minimumFractionDigits: 2})}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="mt-12 text-center border-t border-gray-100 pt-8">
+                        <p className="text-[9px] font-bold italic text-gray-300 uppercase tracking-[0.3em]">Computer Generated Document • No Signature Required</p>
+                        <p className="mt-2 text-[10px] font-black text-gray-200 tracking-widest uppercase italic">© {new Date().getFullYear()} DISIBIN LTD</p>
                     </div>
                 </div>
 
-
-                <div className="w-full flex flex-row items-center justify-between gap-3">
-                    <Link href="/dashboard/purchase" className="w-full p-1 text-center bg-gray-100 cursor-pointer hover:shadow">
+                <div className="w-full flex flex-row items-center justify-between gap-4 mt-6 print:hidden">
+                    <Link href="/dashboard/purchase" 
+                        className="flex-1 py-3 text-xs font-bold text-gray-500 bg-gray-50 rounded border border-gray-200 text-center uppercase tracking-widest transition-all hover:bg-gray-100 hover:text-gray-900">
                         ← Back to List
                     </Link>
                     <button 
                         onClick={() => printPurchaseInvoice(purchase)}
-                        className="w-full p-1 text-center bg-black text-white cursor-pointer hover:shadow"
+                        className="flex-1 py-3 text-xs font-black text-white bg-gray-900 rounded shadow-sm uppercase tracking-[0.2em] transition-all hover:bg-black hover:shadow-lg active:scale-[0.98]"
                     >
                         Print Invoice
                     </button>

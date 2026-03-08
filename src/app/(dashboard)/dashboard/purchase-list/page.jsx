@@ -4,6 +4,8 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 import { FaBarcode, FaTrash, FaTriangleExclamation, FaCheck, FaXmark, FaPrint } from 'react-icons/fa6'
 import { printPurchaseInvoice } from '@/lib/database/printPurchaseInvoice'
+import Link from 'next/link'
+import { LuView } from 'react-icons/lu'
 
 const PurchaseList = () => {
     const [purchases, setPurchases] = useState([])
@@ -118,16 +120,16 @@ const PurchaseList = () => {
                                     </button>
                                 </div>
                             ) : (
-                                <div>
+                                <div className='w-full flex flex-col gap-1 text-center'>
                                     <button
                                         onClick={() => {
                                             if (confirm("Confirm: This will permanently remove stock. Proceed?")) {
                                                 setConfirmDelete(purchase.purchase_id)
                                             }
                                         }}
-                                        className='p-4 text-rose-400 hover:text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-2xl transition-all'
+                                        className='w-full bg-gray-200 text-red-600 p-2 rounded-lg flex items-center justify-center '
                                     >
-                                        <FaTrash size={20} />
+                                        <FaTrash  />
                                     </button>
                                     <button
                                         onClick={() => printPurchaseInvoice(purchase)}
@@ -135,6 +137,12 @@ const PurchaseList = () => {
                                     >
                                         <FaPrint />
                                     </button>
+                                    <Link
+                                        href={`/dashboard/purchase/${purchase.purchase_id}`}
+                                        className='w-full bg-gray-200 text-gray-600 p-2 rounded-lg flex items-center justify-center'
+                                    >
+                                        <LuView />
+                                    </Link>
                                 </div>
                             )}
                         </div>
