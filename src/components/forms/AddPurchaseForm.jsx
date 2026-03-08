@@ -5,6 +5,7 @@ import { FaPlus, FaMinus, FaTrash, FaFileInvoiceDollar, FaBarcode } from 'react-
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import BarScanner from '../helper/BarcodeScanner'
+import { useRouter } from 'next/navigation'
 
 const AddPurchaseForm = () => {
     const {
@@ -58,7 +59,7 @@ const AddPurchaseForm = () => {
                 setSearchTerm('') 
                 toast.success(`${foundItems[0].name} added`)
             } else {
-                setSearchTerm(code) // Fill search if multiple or none found
+                setSearchTerm(code) 
             }
         } catch (error) {
             console.error("Scanner error:", error)
@@ -85,6 +86,7 @@ const AddPurchaseForm = () => {
         const { name, value } = e.target
         setFormData((prev) => ({ ...prev, [name]: value }))
     }
+    const router=useRouter()
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -103,6 +105,8 @@ const AddPurchaseForm = () => {
             toast.success(response.data.message)
             setFormData({ supplier_id: '', invoice_no: '', extra_discount: 0, payment_method: 'cash', transaction_id: '', note: '' })
             setSearchTerm(''); setProducts([]); clearPurchase()
+            router.push(`/dashboard/purchase/${response.data.purchase_id}`)
+
         } catch (error) {
             toast.error(error.response?.data?.message || "Error saving purchase")
         }

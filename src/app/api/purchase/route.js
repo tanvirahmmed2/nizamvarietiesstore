@@ -63,7 +63,14 @@ export async function POST(req) {
         }
 
         await client.query('COMMIT');
-        return NextResponse.json({ success: true, message: 'Purchase processed successfully' }, { status: 201 });
+
+        // Updated this line to include the ID in the payload
+        return NextResponse.json({ 
+            success: true, 
+            message: 'Purchase processed successfully',
+            purchase_id: purchaseId 
+        }, { status: 201 });
+
     } catch (error) {
         await client.query('ROLLBACK');
         return NextResponse.json({ success: false, message: error.message }, { status: 500 });
