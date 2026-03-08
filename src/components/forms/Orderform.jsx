@@ -7,6 +7,7 @@ import { generateReceipt } from '@/lib/database/print'
 import { FaMinus, FaPlus } from 'react-icons/fa6'
 import BarScanner from '../helper/BarcodeScanner'
 import { FaBarcode } from 'react-icons/fa'
+import { useRouter } from 'next/navigation'
 
 const Orderform = ({ cartItems = [] }) => {
     const { decreaseQuantity, clearCart, addToCart, removeFromCart, setCart, customers, setIsCustomerBox } = useContext(Context)
@@ -126,13 +127,15 @@ const Orderform = ({ cartItems = [] }) => {
         e.preventDefault()
         if (cartItems.length === 0) return toast.error("Cart is empty")
         if (!data.customer_id) return toast.error("Please select a customer")
-        
-        setReceivedAmount(data.totalPrice) 
+
+        setReceivedAmount(data.totalPrice)
         setIsPaymentModal(true)
     }
 
-    // Calculation for display in modal
+    
     const changeAmount = (parseFloat(receivedAmount) || 0) - data.totalPrice
+    const router = useRouter()
+
 
     const finalConfirm = async () => {
         if (changeAmount < 0) {
@@ -140,7 +143,7 @@ const Orderform = ({ cartItems = [] }) => {
             return
         }
         const selectedCustomer = customers.find(c => String(c.customer_id) === String(data.customer_id))
-        
+
         const payload = {
             customer_id: data.customer_id,
             phone: selectedCustomer?.phone || '',
@@ -148,8 +151,8 @@ const Orderform = ({ cartItems = [] }) => {
             subtotal: data.subTotal,
             discount: data.totalDiscount + (parseFloat(data.extradiscount) || 0),
             total: data.totalPrice,
-            paid_amount: parseFloat(receivedAmount) || 0, 
-            change_amount: Math.max(0, changeAmount),                 
+            paid_amount: parseFloat(receivedAmount) || 0,
+            change_amount: Math.max(0, changeAmount),
             paymentMethod: data.paymentMethod,
             transactionId: data.transactionId,
             saleType: saleType,
@@ -166,7 +169,9 @@ const Orderform = ({ cartItems = [] }) => {
         try {
             const response = await axios.post('/api/order', payload, { withCredentials: true })
             toast.success(response.data.message)
-            if (generateReceipt) generateReceipt(response.data.payload)
+            // if (generateReceipt) generateReceipt(response.data.payload)
+            // console.log(response.data.payload)
+
 
             setIsPaymentModal(false)
             clearCart()
@@ -181,6 +186,7 @@ const Orderform = ({ cartItems = [] }) => {
                 createdAt: new Date().toISOString().split('T')[0]
             })
             setSaleType('retail')
+            router.push(`/dashboard/pos/${response.data.payload.order_id}`)
         } catch (error) {
             toast.error(error?.response?.data?.message || "Checkout failed")
         }
@@ -226,7 +232,7 @@ const Orderform = ({ cartItems = [] }) => {
                 <div className="w-full flex flex-col items-center gap-2 relative">
                     <BarScanner onScan={handleBarcodeScan} />
                     <div className="w-full px-2 flex flex-row border border-sky-400 items-center justify-between">
-                        <FaBarcode  className='text-2xl text-sky-600'/>
+                        <FaBarcode className='text-2xl text-sky-600' />
                         <input
                             type="text"
                             name='searchTerm'
@@ -243,14 +249,14 @@ const Orderform = ({ cartItems = [] }) => {
                         <div className="w-full flex flex-col gap-2 items-center justify-center absolute bg-white top-full border z-50 shadow-xl max-h-60 overflow-y-auto">
                             {products.map((product) => (
                                 <div key={product.product_id} onClick={() => {
-                                        if (Number(product.stock) > 0) {
-                                            const price = saleType === 'wholesale' ? product.wholesale_price : product.sale_price;
-                                            addToCart({ ...product, price: parseFloat(price) });
-                                            setSearchTerm('')
-                                        } else {
-                                            toast.error('Out of stock')
-                                        }
-                                    }} className="w-full cursor-pointer flex flex-row even:bg-gray-200 items-center justify-between p-2">
+                                    if (Number(product.stock) > 0) {
+                                        const price = saleType === 'wholesale' ? product.wholesale_price : product.sale_price;
+                                        addToCart({ ...product, price: parseFloat(price) });
+                                        setSearchTerm('')
+                                    } else {
+                                        toast.error('Out of stock')
+                                    }
+                                }} className="w-full cursor-pointer flex flex-row even:bg-gray-200 items-center justify-between p-2">
                                     <p className="flex-1">{product.name}</p>
                                     <p className="mx-2"> ৳ {saleType === 'retail' ? (product.sale_price - product.discount_price) : product.wholesale_price}</p>
                                 </div>
@@ -360,7 +366,7 @@ const Orderform = ({ cartItems = [] }) => {
                         <div className="bg-sky-600 p-4 text-white text-center">
                             <h2 className="text-lg font-bold uppercase">Confirm Payment</h2>
                         </div>
-                        
+
                         <div className="p-6 space-y-4">
                             <div className="flex justify-between text-sm border-b pb-1">
                                 <span className="text-gray-500">Sub Total:</span>
@@ -394,13 +400,13 @@ const Orderform = ({ cartItems = [] }) => {
                         </div>
 
                         <div className="flex gap-2 p-4 bg-gray-50">
-                            <button 
+                            <button
                                 onClick={() => setIsPaymentModal(false)}
                                 className="flex-1 py-3 font-bold text-gray-500 hover:bg-gray-200 rounded-xl transition-all"
                             >
                                 Back
                             </button>
-                            <button 
+                            <button
                                 onClick={finalConfirm}
                                 className="flex-2 py-3 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl shadow-lg active:scale-95 transition-all uppercase"
                             >

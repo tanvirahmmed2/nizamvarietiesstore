@@ -286,9 +286,9 @@ export const printOrder = (order) => {
       <body>
 
         <div class="header">
-          <p class="store-name">Nizam Varieties</p>
-          <p class="store-tagline">General Store</p>
-          <p class="store-contact">Pakuritala Bazar, Tarakanda &nbsp;·&nbsp; ${order.phone || '01645-172356'}</p>
+          <p class="store-name">Nizam Varieties Store</p>
+          <p class="store-contact">Pakuritala Bazar, Tarakanda &nbsp;·&nbsp;</p>
+          <p class="store-contact">COntact: 01645-172356</p>
           <p class="receipt-type">— Sales Receipt —</p>
         </div>
 
