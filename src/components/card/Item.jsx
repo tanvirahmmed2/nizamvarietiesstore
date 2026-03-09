@@ -10,12 +10,12 @@ const Item = ({ product }) => {
   const { addToCart } = useContext(Context)
 
   return (
-    <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.7 }} className='w-full border flex flex-col items-center justify-between cursor-pointer border-black/10 hover:shadow-lg shadow group overflow-hidden transition ease-in-out duration-500 relative'>
-      <div className='w-full flex items-center gap-1 flex-col p-2  relative '>
-        <div className='w-full overflow-hidden'>
+    <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.7 }} className='w-full border flex flex-col items-center justify-between border-black/10 hover:shadow-lg shadow group overflow-hidden transition ease-in-out duration-500 relative'>
+      <div className='w-full flex items-center gap-1 flex-col p-2  relative  '>
+        <Link href={`/products/${product.slug}`} className='w-full overflow-hidden  cursor-pointer'>
           <Image src={`${product?.image}`} alt='image' width={1000} height={1000} className='w-full group-hover:scale-105 transition ease-in-out duration-500 aspect-square object-cover overflow-hidden '  />
-        </div>
-        <Link href={`/products/${product.slug}`} className='text-xs w-full text-center md:text-sm'>{product?.name}</Link>
+        </Link>
+        <p className='text-xs w-full text-center md:text-sm'>{product?.name}</p>
         {
           product?.discount_price > 0 ? <div>
             <p className='text-red-400 line-through'>BDT {product.sale_price}</p>
