@@ -38,9 +38,14 @@ const PosPage = () => {
   
   return (
     <div className="w-full p-1 sm:p-4 flex flex-col md:flex-row relative">
-      <div className={`absolute ${isCustomerBox ? 'block' : 'hidden'} z-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white min-w-100 border p-4 rounded-xl shadow-lg`}>
-        <AddCutomerForm />
-      </div>
+      {
+        isCustomerBox === true && <div className='fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50'>
+          <div className='bg-white p-2 rounded-2xl'>
+            <AddCutomerForm />
+
+          </div>
+        </div>
+      }
       <SalesCart />
       <div className="flex-1 flex flex-col items-center gap-4">
         <select
