@@ -15,7 +15,7 @@ const Item = ({ product }) => {
         <Link href={`/products/${product.slug}`} className='w-full overflow-hidden  cursor-pointer'>
           <Image src={`${product?.image}`} alt='image' width={1000} height={1000} className='w-full group-hover:scale-105 transition ease-in-out duration-500 aspect-square object-cover overflow-hidden '  />
         </Link>
-        <p className='text-xs w-full text-center font-serif md:text-sm'>{product?.name}</p>
+        <p className='text-xs w-full text-center  uppercase'>{product?.name}</p>
         {
           product?.discount_price > 0 ? <div>
             <p className='text-red-400 line-through text-xs'>BDT {product.sale_price}</p>
