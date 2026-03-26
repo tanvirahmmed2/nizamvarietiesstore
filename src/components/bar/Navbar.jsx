@@ -54,7 +54,7 @@ const Navbar = () => {
           <Link className='px-2 h-14 w-auto flex items-center justify-center hover:bg-white/20' href={'/offers'}>Offers</Link>
           <Link className='px-2 h-14 w-auto flex items-center justify-center hover:bg-white/20' href={'/products'}>Products</Link>
           <Link className='px-2 h-14 w-auto flex items-center justify-center hover:bg-white/20' href={'/cart'}>Cart</Link>
-          <Link className='px-2 h-14 w-auto flex items-center justify-center hover:bg-white/20' href={'/login'}>Login</Link>
+          <Link className='px-4 h-10 bg-red-600 rounded-2xl w-auto flex items-center justify-center hover:bg-white/20' href={'/login'}>Login</Link>
         </div>
       </nav>
 

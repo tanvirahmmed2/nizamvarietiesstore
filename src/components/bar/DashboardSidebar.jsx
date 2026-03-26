@@ -36,7 +36,6 @@ const handleLogout = async () => {
 
 const downloadDB = async () => {
   try {
-    // 1. Fetch the data from your API
     const response = await fetch('/api/backup');
 
     if (!response.ok) {
@@ -45,16 +44,13 @@ const downloadDB = async () => {
 
     const blob = await response.blob();
 
-    // 3. Create a temporary download link in the browser memory
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
     
-    // Set the filename with today's date
     const date = new Date().toISOString().split('T')[0];
     link.setAttribute('download', `nizam_store_backup_${date}.json`);
 
-    // 4. Trigger the click and clean up
     document.body.appendChild(link);
     link.click();
     link.parentNode.removeChild(link);
@@ -131,9 +127,10 @@ const DashboardSidebar = () => {
         <MenuItem href="/dashboard/rolemanagement" icon={RiUserAddLine} label="Role Management" />
         <MenuItem href="/dashboard/support" icon={RiSuperscript} label="Support" />
         <MenuItem href="/dashboard/help" icon={TbReport} label="Help" />
-        <button onClick={downloadDB} className="font-semibold  text-xs hidden group-hover:flex items-center gap-2 mb-2 uppercase w-full bg-white text-black p-2  cursor-pointer">Download DB</button>
-        <button onClick={handleLogout} className="hidden group-hover:inline whitespace-nowrap w-full bg-orange-500 text-white py-5 mt-5 cursor-pointer">Logout</button>
+        <button onClick={downloadDB} className="font-semibold  text-xs hidden group-hover:flex items-center gap-2 mb-2 uppercase w-full bg-white text-black p-2  cursor-pointer">Backup</button>
         <MenuItem href="/" icon={TbReport} label="Website" />
+        <button onClick={handleLogout} className="hidden group-hover:inline whitespace-nowrap w-full bg-orange-500 text-white p-2 mt-5 cursor-pointer">Logout</button>
+        
       </div>
     </aside>
   )
