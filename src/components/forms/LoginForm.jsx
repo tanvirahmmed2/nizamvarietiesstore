@@ -30,7 +30,7 @@ const LoginForm = () => {
 
   }
   return (
-    <motion.form initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.4 }} onSubmit={loginHandle} className='flex-1 flex flex-col  gap-4'>
+    <motion.form initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.4 }} onSubmit={loginHandle} className='w-full sm:w-3/4 flex flex-col  gap-4'>
       <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: .6 }} className='w-full flex flex-col'>
         <label htmlFor="email">Email</label>
         <input type="email" id='email' name='email' required value={formData.email} onChange={handleChange} className='w-full px-3 p-1 rounded-lg outline-none border border-sky-400/10' />

@@ -35,8 +35,8 @@ const PendingOrdersPage = () => {
       const res = await axios.put('/api/order', { orderId, action: 'confirm' })
       if (res.data.success) {
         toast.success("Order Confirmed & Stock Updated")
-        fetchOrders() 
-        // Note: res.data.payload should contain the full order object for the receipt
+        fetchOrders()
+
         generateReceipt(res.data.payload)
       }
     } catch (error) {
@@ -50,7 +50,7 @@ const PendingOrdersPage = () => {
       const res = await axios.put('/api/order', { orderId, action: 'delete' })
       if (res.data.success) {
         toast.error("Order Deleted")
-        fetchOrders() 
+        fetchOrders()
       }
     } catch (error) {
       toast.error(error?.response?.data?.message || "Delete failed")
@@ -60,50 +60,49 @@ const PendingOrdersPage = () => {
   if (loading) return <p className='text-center text-gray-500 mt-10'>Loading pending orders...</p>
   if (orders.length === 0) return <p className='text-center text-gray-500 mt-10'>No pending orders found</p>
 
-  console.log(orders)
 
   return (
     <div className='w-full min-h-screen flex flex-col items-center p-1 sm:p-4 gap-6 '>
       <h1 className='text-center text-3xl font-bold text-gray-800 mb-4'>Pending Orders</h1>
 
       <div className='w-full flex flex-col gap-2 items-center justify-center'>
+        <div  className='w-full grid grid-cols-10 p-1 even:bg-slate-200 text-sm rounded-lg shadow'>
+          <p className='col-span-1'>Date</p>
+          <p className='col-span-1'>Name</p>
+          <p className='col-span-1'>Phone</p>
+          <p className='col-span-3'>Products</p>
+          <p className='col-span-1'>Total</p>
+          <p className='col-span-1'>Discount</p>
+          <p className='col-span-1'>Paid</p>
+          <p className='col-span-1'>Action</p>
+        </div>
         {orders.length > 0 && orders.map((order, idx) => (
           <div key={idx}
-            className='w-full grid grid-cols-12 p-2 border rounded-xl even:bg-gray-200'
+            className='w-full grid grid-cols-10 p-1 even:bg-slate-200 text-sm rounded-lg shadow'
           >
-            <div className='flex flex-col gap-1 w-full col-span-3'>
-              <p className='font-medium text-gray-700'>Name: <span className='font-semibold text-gray-900'>{order.name}</span></p>
-              <p className='font-medium text-gray-700'>Phone: <span className='font-semibold text-gray-900'>{order.phone}</span></p>
-              <p className='text-xs text-blue-600 font-bold uppercase'>{order.status}</p>
+            <p className='col-span-1'>{(order.created_at || order.date)?.slice(0, 10)}</p>
+            <p className='col-span-1'>{order.name}</p>
+            <p className='col-span-1'>{order.phone}</p>
+            <div className='w-full col-span-3'>
+              {order.product_list?.map((product, pIdx) => (
+                <div key={pIdx} className='w-full grid grid-cols-6'>
+                  <p className='col-span-4'>{product.name}</p>
+                  <p className='col-span-1'>{product.quantity}</p>
+                  <div className='col-span-1 flex flex-col'>
+                    <p >৳{Number(product.price) * Number(product.quantity)}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className=' w-full flex flex-col gap-1 col-span-5'>
-              <p className='font-medium text-gray-700 mb-1'>Products ({order.product_list?.length || 0} items):</p>
-              <ul className='w-full list-disc list-inside text-gray-800'>
-                {order.product_list?.map((product, pIdx) => (
-                  <li key={pIdx} className='w-full grid grid-cols-6'>
-                    <p className='col-span-4'>{product.name}</p>
-                    <p className='col-span-1'>Qty: {product.quantity}</p>
-                    <div className='col-span-1 flex flex-col'>
-                      <p >৳{Number(product.price) * Number(product.quantity)}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className='flex flex-col gap-1 col-span-3 text-xs'>
-              <p className='font-medium text-gray-700'>Total: <span className='font-semibold text-gray-900'>৳{order.total_amount}</span></p>
-              <p className='font-medium text-gray-700'>Discount: <span className='font-semibold text-gray-900'>৳{order.total_discount_amount || order.discount}</span></p>
-              <p className='font-medium text-gray-700'>Paid: <span className='font-semibold text-green-700'>৳{order.paid_amount || order.amount_received || 0}</span></p>
-              <p className='font-medium text-gray-700'>Change: <span className='font-semibold text-red-600'>৳{order.change_amount || 0}</span></p>
-              <p className='font-medium text-gray-700'>Date: <span className='font-semibold text-gray-900'>{(order.created_at || order.date)?.slice(0, 10)}</span></p>
-            </div>
-
-            <div className='w-full col-span-1 flex flex-col gap-1'>
+            <span  className='col-span-1'>৳{order.total_amount}</span>
+            <span  className='col-span-1'>৳{order.discount}</span>
+            <span  className='col-span-1'>৳{order.paid_amount || order.amount_received || 0}</span>
+            <div className='w-full col-span-1 flex flex-col gap-1 items-center'>
               {order.status === 'pending' && (
                 <button onClick={() => confirmOrder(order.order_id)} className='w-full bg-green-600 text-white cursor-pointer py-1 text-sm rounded'>Confirm</button>
               )}
               <button onClick={() => cancelOrder(order.order_id)} className='w-full bg-red-500 text-white cursor-pointer py-1 text-sm rounded'>Delete</button>
-              
+
               <button onClick={() => printOrder(order)} className='w-full bg-sky-600 text-white cursor-pointer py-1 text-sm rounded'>Print</button>
             </div>
           </div>
