@@ -19,7 +19,7 @@ const ContextProvider = ({ children }) => {
 
   const fetchCart = () => {
     if (typeof window === 'undefined') return
-    const storedCart = localStorage.getItem('cart')
+    const storedCart = localStorage.getItem('nvs')
 
     if (!storedCart || storedCart === 'undefined') {
       setCart({ items: [] })
@@ -35,7 +35,7 @@ const ContextProvider = ({ children }) => {
         setCart({ items: [] })
       }
     } catch (err) {
-      localStorage.removeItem('cart')
+      localStorage.removeItem('nvs')
       setCart({ items: [] })
     }
     setHydrated(true)
@@ -43,7 +43,7 @@ const ContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && hydrated) {
-      localStorage.setItem('cart', JSON.stringify(cart))
+      localStorage.setItem('nvs', JSON.stringify(cart))
     }
   }, [cart, hydrated])
 

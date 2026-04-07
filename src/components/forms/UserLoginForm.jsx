@@ -43,7 +43,7 @@ const UserLoginForm = () => {
       <motion.div className='text-right' initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.7 }}>
         <Link href="/recoverid">Forgot password?</Link>
       </motion.div>
-      <motion.button initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.7 }} type='submit' className='bg-black/80 hover:bg-black text-white rounded-lg cursor-pointer '>Next</motion.button>
+      <motion.button initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.7 }} type='submit' className='bg-sky-400/80 hover:bg-sky-400 text-white rounded-lg cursor-pointer '>Next</motion.button>
     </motion.form>
   )
 }
