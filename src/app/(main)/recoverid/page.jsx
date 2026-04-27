@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import axios from 'axios'
-import { toast } from 'react-toastify'
+import { toast } from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 
 const ForgetPasswordPage = () => {

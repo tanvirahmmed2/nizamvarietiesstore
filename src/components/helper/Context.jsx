@@ -1,7 +1,7 @@
 'use client'
 import axios from 'axios'
 import React, { createContext, useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
+import { toast } from 'react-hot-toast'
 
 export const Context = createContext()
 
@@ -16,6 +16,7 @@ const ContextProvider = ({ children }) => {
   const [hydrated, setHydrated] = useState(false)
   const [cart, setCart] = useState({ items: [] })
   const [userData, setUserData] = useState([])
+  const [isDashboardSidebar, setIsDashboardSidebar]=useState(false)
 
   const fetchCart = () => {
     if (typeof window === 'undefined') return
@@ -59,7 +60,7 @@ const ContextProvider = ({ children }) => {
 
     if (existingInCart) {
       if (existingInCart.quantity >= Number(product.stock)) {
-        toast.warning(`Only ${product.stock} items available in stock`);
+        toast.error(`Only ${product.stock} items available in stock`);
         return; 
       }
 
@@ -71,7 +72,7 @@ const ContextProvider = ({ children }) => {
             : item
         )
       }));
-      toast.info("Quantity increased");
+      toast("Quantity increased", { icon: '➕' });
     } else {
       const salePrice = parseFloat(product?.sale_price) || 0;
       const wholeSalePrice = parseFloat(product?.wholesale_price) || 0;
@@ -84,6 +85,7 @@ const ContextProvider = ({ children }) => {
           {
             product_id: product.product_id,
             name: product.name,
+            image: product.image,
             quantity: 1,
             sale_price: salePrice,
             wholesale_price: wholeSalePrice,
@@ -215,7 +217,7 @@ const ContextProvider = ({ children }) => {
     <Context.Provider value={{
       isBrandBox, setIsBrandBox, isCategoryBox, setIsCategoryBox, brands, setBrands, purchaseItems, addToPurchase, removeFromPurchase,
       isSupplierBox, setIsSupplierBox, fetchSupplier, suppliers, setSuppliers, setPurchaseItems,
-      isCustomerBox, setIsCustomerBox, customers, setCustomers,userData, setUserData,fetchBrand, fetchCustomer, fetchSupplier,
+      isCustomerBox, setIsCustomerBox, customers, setCustomers,userData, setUserData,fetchBrand, fetchCustomer, fetchSupplier,isDashboardSidebar, setIsDashboardSidebar,
       categories, fetchCategory, cart, setCart, fetchCart, addToCart, clearCart, removeFromCart, decreaseQuantity, clearPurchase
     }}>
       {children}

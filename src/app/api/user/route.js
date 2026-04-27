@@ -43,17 +43,34 @@ export async function POST(req) {
 
 export async function PUT(req) {
     try {
-        const { user_id, name, phone, email } = await req.json();
+        const { user_id, name, phone, email, password } = await req.json();
         const client = await pool.connect();
 
         try {
-            const query = `
-                UPDATE users 
-                SET name = $1, phone = $2, email = $3
-                WHERE user_id = $4
-                RETURNING user_id, name, email, phone;
-            `;
-            const result = await client.query(query, [name, phone, email, user_id]);
+            let query;
+            let values;
+
+            if (password) {
+                const salt = await bcrypt.genSalt(10);
+                const hashedPassword = await bcrypt.hash(password, salt);
+                query = `
+                    UPDATE users 
+                    SET name = $1, phone = $2, email = $3, password = $4
+                    WHERE user_id = $5
+                    RETURNING user_id, name, email, phone;
+                `;
+                values = [name, phone, email, hashedPassword, user_id];
+            } else {
+                query = `
+                    UPDATE users 
+                    SET name = $1, phone = $2, email = $3
+                    WHERE user_id = $4
+                    RETURNING user_id, name, email, phone;
+                `;
+                values = [name, phone, email, user_id];
+            }
+
+            const result = await client.query(query, values);
 
             if (result.rowCount === 0) {
                 return NextResponse.json({ message: "User not found" }, { status: 404 });

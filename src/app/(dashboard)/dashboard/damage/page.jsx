@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { toast } from 'react-toastify'
+import { toast } from 'react-hot-toast'
 
 const DamagePage = () => {
     const [searchTerm, setSearchTerm] = useState('')
@@ -24,7 +24,7 @@ const DamagePage = () => {
     }, [searchTerm])
 
     const handleDamage = async () => {
-        if (!selectedProduct || quantity < 1) return toast.warning("Selection invalid")
+        if (!selectedProduct || quantity < 1) return toast.error("Selection invalid")
         setLoading(true)
         try {
             const res = await axios.post('/api/product/damage', {

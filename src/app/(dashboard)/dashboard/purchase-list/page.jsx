@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState, useCallback } from 'react'
 import axios from 'axios'
-import { toast } from 'react-toastify'
+import { toast } from 'react-hot-toast'
 import { FaBarcode, FaTrash, FaTriangleExclamation, FaCheck, FaXmark, FaPrint } from 'react-icons/fa6'
 import { printPurchaseInvoice } from '@/lib/database/printPurchaseInvoice'
 import Link from 'next/link'

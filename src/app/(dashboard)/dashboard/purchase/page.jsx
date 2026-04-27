@@ -2,28 +2,25 @@
 import AddPurchaseForm from '@/components/forms/AddPurchaseForm'
 import AddSupplierForm from '@/components/forms/AddSupplierForm'
 import { Context } from '@/components/helper/Context'
-import React, { useContext, useEffect, useState } from 'react'
-import { LuDelete } from 'react-icons/lu'
+import React, { useContext } from 'react'
 
 const PurchasePage = () => {
-  const { isSupplierBox, setIsSupplierBox } = useContext(Context)
-
-
-
+  const { isSupplierBox } = useContext(Context)
 
   return (
-    <div className="w-full p-1 sm:p-4 flex flex-col md:flex-row relative ">
+    <div className="w-full max-w-7xl mx-auto p-4 md:p-6 relative">
       
-      {
-        isSupplierBox === true && <div className='fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50'>
-          <div className='bg-white p-2 rounded-2xl relative'>
-            <LuDelete className='  cursor-pointer text-2xl absolute top-2 right-2' onClick={() => setIsSupplierBox(false)} />
-          <AddSupplierForm />
+      {/* Supplier Modal */}
+      {isSupplierBox && (
+        <div className='fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4'>
+          <div className='bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200'>
+            <AddSupplierForm />
           </div>
         </div>
-      }
-      <AddPurchaseForm />
+      )}
 
+      {/* Main Form */}
+      <AddPurchaseForm />
     </div>
   )
 }

@@ -37,42 +37,48 @@ const PosPage = () => {
   },[categoryId])
   
   return (
-    <div className="w-full p-1 sm:p-4 flex flex-col md:flex-row relative">
+    <div className="w-full flex flex-col md:flex-row gap-6 relative">
       {
-        isCustomerBox === true && <div className='fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50'>
-          <div className='bg-white p-2 rounded-2xl'>
+        isCustomerBox === true && <div className='fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[200]'>
+          <div className='bg-white p-6 rounded-2xl shadow-xl'>
             <AddCutomerForm />
-
           </div>
         </div>
       }
-      <SalesCart />
-      <div className="flex-1 flex flex-col items-center gap-4">
-        <select
-          onChange={handleCategoryChange}
-          className='w-full border p-2 border-black/30 outline-none'
-        >
-          <option value="" className="text-black">Categories</option>
-          {categories.length > 0 && categories.map((cat) => (
-            <option value={cat.category_id} key={cat.category_id} className="text-black">
-              {cat?.name}
-            </option>
-          ))}
-        </select>
-        <div>
-          {
-            products.length < 1 ? <p className="">No product found</p> :
-
-              <div className='w-full grid grid-cols-2  md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-screen overflow-y-scroll'>
-                {
-                 products && products.map(product => (
-                    <Item product={product} key={product.product_id} />
-                  ))
-                }
-              </div>}
-        </div>
+      
+      <div className="flex-1 shrink-0">
+        <SalesCart />
       </div>
 
+      <div className="flex-1 flex flex-col gap-6">
+        <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+          <select
+            onChange={handleCategoryChange}
+            className='w-full bg-slate-50 border border-slate-200 px-4 py-2.5 rounded-xl outline-none focus:border-primary focus:bg-white transition-all text-sm font-bold text-slate-700'
+          >
+            <option value="">Filter by Category</option>
+            {categories.length > 0 && categories.map((cat) => (
+              <option value={cat.category_id} key={cat.category_id}>
+                {cat?.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex-1 min-h-[500px]">
+          {products.length < 1 ? (
+            <div className="w-full h-64 border-2 border-dashed border-slate-100 rounded-2xl flex flex-col items-center justify-center text-slate-300">
+              <p className="font-bold uppercase tracking-widest text-xs">Select a category to view products</p>
+            </div>
+          ) : (
+            <div className='w-full grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
+              {products.map(product => (
+                <Item product={product} key={product.product_id} />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   )
 }

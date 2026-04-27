@@ -129,7 +129,42 @@ export async function DELETE(req) {
         return NextResponse.json({
             success:false, message:error.message
         },{status:500})
-        
     }
-    
+}
+
+export async function PUT(req) {
+    try {
+        const { staff_id, name, email, password } = await req.json();
+        
+        if (!staff_id || !name || !email) {
+            return NextResponse.json({ success: false, message: 'Missing required fields' }, { status: 400 });
+        }
+
+        let query;
+        let values;
+
+        if (password) {
+            const hashPass = await bcrypt.hash(password, 10);
+            query = `UPDATE staffs SET name=$1, email=$2, password=$3 WHERE staff_id=$4 RETURNING staff_id, name, email, role`;
+            values = [name, email, hashPass, staff_id];
+        } else {
+            query = `UPDATE staffs SET name=$1, email=$2 WHERE staff_id=$3 RETURNING staff_id, name, email, role`;
+            values = [name, email, staff_id];
+        }
+
+        const result = await pool.query(query, values);
+
+        if (result.rowCount === 0) {
+            return NextResponse.json({ success: false, message: 'Staff not found' }, { status: 404 });
+        }
+
+        return NextResponse.json({
+            success: true, 
+            message: 'Staff updated successfully',
+            payload: result.rows[0]
+        }, { status: 200 });
+
+    } catch (error) {
+        return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+    }
 }

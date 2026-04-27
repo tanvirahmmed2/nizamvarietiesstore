@@ -2,8 +2,9 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import Link from 'next/link';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { MdDeleteOutline, MdEdit } from 'react-icons/md';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 const ProductListPage = () => {
     const [products, setProducts] = useState([])
@@ -55,65 +56,71 @@ const ProductListPage = () => {
     }
 
     return (
-        <div className="w-full text-[8px] sm:text-base mx-auto p-1 sm:p-4 bg-white min-h-screen">
+        <div className="w-full mx-auto p-3 sm:p-4 bg-white rounded-xl shadow-sm border border-slate-100">
 
-            <div className="mb-10 pl-6 flex justify-between items-center">
-                <h1 className="sm:text-xl font-black uppercase">Product List</h1>
-                <input
-                    type="text"
-                    placeholder="search..."
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    value={searchTerm}
-                    className='w-auto border border-sky-400 px-4 p-1 rounded-sm outline-none '
-                />
-
-                <div className="text-right">
-                    <span className="text-[10px] font-black uppercase bg-black text-white px-3 py-1">
-                        Page {pagination.currentPage} of {pagination.totalPages}
-                    </span>
+            <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <h1 className="text-xl font-bold text-slate-800 uppercase tracking-tight">Product List</h1>
+                <div className='w-full sm:w-auto flex flex-col xs:flex-row items-stretch xs:items-center gap-3'>
+                    <input
+                        type="text"
+                        placeholder="Search products..."
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        value={searchTerm}
+                        className='flex-1 sm:w-64 border border-slate-200 px-4 py-2 rounded-xl outline-none focus:border-primary transition-all text-sm'
+                    />
+                    <div className="text-right">
+                        <span className="text-[10px] font-bold uppercase bg-slate-100 text-slate-600 px-3 py-1.5 rounded-md whitespace-nowrap">
+                            Page {pagination.currentPage} / {pagination.totalPages}
+                        </span>
+                    </div>
                 </div>
             </div>
 
-            <div className="w-full grid grid-cols-8 border-b-2 px-4 py-2 text-[10px] font-black uppercase tracking-widest mb-1">
-                <div className="col-span-4">Product Name</div>
-                <div className="col-span-1 text-center">Price</div>
-                <div className="col-span-1 text-center">Stock</div>
-                <div className="col-span-2 text-right">Actions</div>
+            <div className="w-full grid grid-cols-4 sm:grid-cols-8 border-b border-slate-100 px-2 sm:px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">
+                <div className="col-span-2 sm:col-span-4">Product</div>
+                <div className="col-span-1 text-center">Rate</div>
+                <div className="hidden sm:block col-span-1 text-center">Stock</div>
+                <div className="col-span-1 text-right">Actions</div>
             </div>
 
             {loading ? (
-                <div className="space-y-2 animate-pulse">
+                <div className="space-y-2">
                     {[...Array(6)].map((_, i) => (
-                        <div key={i} className="h-12 bg-gray-100 rounded-none"></div>
+                        <div key={i} className="h-16 bg-slate-50/50 animate-pulse rounded-xl"></div>
                     ))}
                 </div>
             ) : (
-                <div className="w-full flex flex-col">
+                <div className="w-full flex flex-col gap-1">
                     {products.map((item) => (
-                        <div key={item.product_id} className="w-full grid grid-cols-8 border-b border-gray-100 px-4 py-3 items-center hover:bg-gray-300 transition-colors group   rounded-xl even:bg-gray-200">
-                            <div className="col-span-4 flex flex-col">
-                                <Link className='font-bold text-gray-800 hover:text-sky-600' href={`/products/${item.slug}`}>
+                        <div key={item.product_id} className="w-full grid grid-cols-4 sm:grid-cols-8 border border-transparent px-2 sm:px-4 py-3 items-center hover:bg-slate-50 transition-colors group rounded-xl">
+                            <div className="col-span-2 sm:col-span-4 flex flex-col pr-2">
+                                <Link className='font-bold text-slate-700 hover:text-primary transition-colors text-sm truncate' href={`/products/${item.slug}`}>
                                     {item.name}
                                 </Link>
-                                <span className='text-[9px] text-gray-400 font-mono'>ID: {item.product_id}</span>
+                                <div className='flex items-center gap-2 mt-0.5'>
+                                    <span className='hidden xs:inline text-[9px] text-slate-400 font-mono'>#{item.product_id}</span>
+                                    <span className={`sm:hidden px-1.5 py-0.5 text-[8px] font-bold rounded-md ${item.stock > 10 ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+                                        {item.stock} in stock
+                                    </span>
+                                </div>
                             </div>
 
-                            <p className="col-span-1 text-center font-black text-gray-700">
-                                ৳ {parseFloat(item.sale_price).toFixed(2)}
+                            <p className="col-span-1 text-center font-bold text-slate-900 text-sm">
+                                ৳{parseFloat(item.sale_price).toFixed(0)}
                             </p>
 
-                            <div className="col-span-1 text-center">
-                                <span className={`px-2 py-1 text-[10px] font-bold rounded ${item.stock > 10 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                                    {item.stock}
+                            <div className="hidden sm:block col-span-1 text-center">
+                                <span className={`px-2.5 py-1 text-[10px] font-bold rounded-md ${item.stock > 10 ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+                                    {item.stock} Qty
                                 </span>
                             </div>
 
-                            <div className="col-span-2 flex justify-end ">
-                                <Link href={`/dashboard/products/${item.slug}`} className='p-2 hover:bg-sky-100 text-sky-600 rounded-full transition-all'>
-                                    <MdEdit size={18} />
+                            <div className="col-span-1 flex justify-end items-center gap-0.5">
+                                <Link href={`/dashboard/products/${item.slug}`} className='p-2 text-slate-400 hover:text-primary hover:bg-sky-50 rounded-lg transition-all'>
+                                    <MdEdit size={16} />
                                 </Link>
-                                <button onClick={() => handleDelete(item.product_id)} className='p-2 hover:bg-red-100 text-red-500 rounded-full transition-all'>
-                                    <MdDeleteOutline size={18} />
+                                <button onClick={() => handleDelete(item.product_id)} className='p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all'>
+                                    <MdDeleteOutline size={16} />
                                 </button>
                             </div>
                         </div>
@@ -122,32 +129,31 @@ const ProductListPage = () => {
             )}
 
             {!loading && products.length === 0 && (
-                <div className="text-center py-20 border-2 border-dashed border-gray-200">
-                    <p className="font-black uppercase text-gray-300 text-2xl tracking-tighter">No items found</p>
+                <div className="text-center py-20 border border-dashed border-slate-100 rounded-2xl">
+                    <p className="font-bold uppercase text-slate-300 text-xl tracking-tight">No products found</p>
                 </div>
             )}
 
             {!searchTerm && pagination.totalPages > 1 && (
-                <div className="mt-16 flex items-center justify-center gap-2">
-                    {/* Previous Button */}
+                <div className="mt-12 flex items-center justify-center gap-2">
                     <button
                         disabled={pagination.currentPage === 1}
                         onClick={() => loadData(pagination.currentPage - 1)}
-                        className="px-4 py-2 border-2 border-black text-[10px] font-black uppercase hover:bg-black hover:text-white disabled:opacity-20 transition-all"
+                        className="p-2 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-30 transition-all"
                     >
-                        Prev
+                        <ArrowLeft size={18} />
                     </button>
 
-                    <div className="flex items-center gap-1 font-sans scale-70 sm:scale-100">
+                    <div className="flex items-center gap-1">
                         {pagination.currentPage > 4 && pagination.totalPages > 5 && (
                             <>
                                 <button
                                     onClick={() => loadData(1)}
-                                    className="w-10 h-10 border-2 border-black text-xs font-black hover:bg-gray-100 transition-all"
+                                    className="w-9 h-9 rounded-lg border border-slate-200 text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all"
                                 >
                                     1
                                 </button>
-                                <span className="px-1 font-bold text-gray-400">...</span>
+                                <span className="px-1 font-bold text-slate-300 text-xs">...</span>
                             </>
                         )}
 
@@ -166,9 +172,9 @@ const ProductListPage = () => {
                                 <button
                                     key={num}
                                     onClick={() => loadData(num)}
-                                    className={`w-10 h-10 border-2 border-black text-xs font-black transition-all ${pagination.currentPage === num
-                                            ? 'bg-black text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,0.1)]'
-                                            : 'hover:bg-gray-100'
+                                    className={`w-9 h-9 rounded-lg text-sm font-bold transition-all ${pagination.currentPage === num
+                                            ? 'bg-primary text-white shadow-sm'
+                                            : 'border border-slate-200 text-slate-600 hover:bg-slate-50'
                                         }`}
                                 >
                                     {num}
@@ -177,10 +183,10 @@ const ProductListPage = () => {
 
                         {pagination.currentPage < pagination.totalPages - 3 && pagination.totalPages > 5 && (
                             <>
-                                <span className="px-1 font-bold text-gray-400">...</span>
+                                <span className="px-1 font-bold text-slate-300 text-xs">...</span>
                                 <button
                                     onClick={() => loadData(pagination.totalPages)}
-                                    className="w-10 h-10 border-2 border-black text-xs font-black hover:bg-gray-100 transition-all"
+                                    className="w-9 h-9 rounded-lg border border-slate-200 text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all"
                                 >
                                     {pagination.totalPages}
                                 </button>
@@ -191,9 +197,9 @@ const ProductListPage = () => {
                     <button
                         disabled={pagination.currentPage === pagination.totalPages}
                         onClick={() => loadData(pagination.currentPage + 1)}
-                        className="px-4 py-2 border-2 border-black text-[10px] font-black uppercase hover:bg-black hover:text-white disabled:opacity-20 transition-all"
+                        className="p-2 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-30 transition-all"
                     >
-                        Next
+                        <ArrowRight size={18} />
                     </button>
                 </div>
             )}

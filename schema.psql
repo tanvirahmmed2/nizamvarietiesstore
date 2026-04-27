@@ -1,0 +1,175 @@
+
+CREATE TABLE `categories` (
+  `category_id` integer NOT NULL AUTO_INCREMENT,
+  `name` character varying(100) NOT NULL,
+  `created_at` timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+) 
+CREATE TABLE `products` (
+  `product_id` integer NOT NULL AUTO_INCREMENT,
+  `category_id` integer NOT NULL,
+  `name` character varying(150) NOT NULL,
+  `slug` character varying(150),
+  `description` text,
+  `purchase_price` numeric NOT NULL,
+  `sale_price` numeric NOT NULL,
+  `discount_price` numeric DEFAULT 0,
+  `wholesale_price` numeric NOT NULL,
+  `dealer_price` numeric DEFAULT 0,
+  `retail_price` numeric DEFAULT 0,
+  `image` text NOT NULL,
+  `image_id` character varying(255) NOT NULL,
+  `stock` integer DEFAULT 1,
+  `is_active` boolean DEFAULT true,
+  `created_at` timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+  `barcode` text,
+  `brand_id` integer,
+  `unit` character varying(255) NOT NULL
+) 
+CREATE TABLE `orders` (
+  `order_id` integer NOT NULL AUTO_INCREMENT,
+  `customer_id` integer,
+  `phone` character varying(20) NOT NULL,
+  `status` character varying(30) DEFAULT 'pending'::character varying,
+  `subtotal_amount` numeric NOT NULL,
+  `total_discount_amount` numeric DEFAULT 0,
+  `total_amount` numeric NOT NULL,
+  `created_at` timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+) 
+CREATE TABLE `payments` (
+  `payment_id` integer NOT NULL AUTO_INCREMENT,
+  `order_id` integer,
+  `payment_method` character varying(50),
+  `amount` numeric NOT NULL,
+  `payment_status` character varying(30) DEFAULT 'pending'::character varying,
+  `transaction_id` character varying(100),
+  `paid_at` timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+  `amount_received` numeric NOT NULL DEFAULT 0,
+  `change_amount` numeric NOT NULL DEFAULT 0
+) 
+CREATE TABLE `order_items` (
+  `order_item_id` integer NOT NULL AUTO_INCREMENT,
+  `order_id` integer,
+  `product_id` integer,
+  `quantity` integer NOT NULL,
+  `price` numeric NOT NULL
+) 
+CREATE TABLE `brands` (
+  `brand_id` integer NOT NULL AUTO_INCREMENT,
+  `name` character varying(100) NOT NULL,
+  `description` text,
+  `is_active` boolean DEFAULT true,
+  `created_at` timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+) 
+CREATE TABLE `purchase_payments` (
+  `payment_id` integer NOT NULL AUTO_INCREMENT,
+  `purchase_id` integer NOT NULL,
+  `payment_method` character varying(50) NOT NULL,
+  `amount_paid` numeric NOT NULL,
+  `transaction_id` character varying(100),
+  `payment_date` timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+) 
+CREATE TABLE `staffs` (
+  `staff_id` integer NOT NULL AUTO_INCREMENT,
+  `name` character varying(100) NOT NULL,
+  `email` character varying(100) NOT NULL,
+  `password` character varying(300) NOT NULL,
+  `password_otp` character varying(100) DEFAULT NULL::character varying,
+  `otp_expires_at` timestamp without time zone,
+  `role` text DEFAULT 'user'::text,
+  `is_active` boolean DEFAULT true,
+  `created_at` timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+) 
+CREATE TABLE `supports` (
+  `support_id` integer NOT NULL AUTO_INCREMENT,
+  `name` character varying(100) NOT NULL,
+  `email` character varying(100) NOT NULL,
+  `subject` character varying(200) NOT NULL,
+  `message` character varying(1000) NOT NULL,
+  `created_at` timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+) 
+CREATE TABLE `purchase_items` (
+  `purchase_id` integer NOT NULL,
+  `product_id` integer NOT NULL,
+  `quantity` integer NOT NULL,
+  `purchase_price` numeric NOT NULL,
+  `id` integer NOT NULL AUTO_INCREMENT
+)
+CREATE TABLE `customers` (
+  `customer_id` integer NOT NULL AUTO_INCREMENT,
+  `name` character varying(100) NOT NULL,
+  `phone` character varying(20) NOT NULL,
+  `created_at` timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+  `email` character varying(100),
+  `address` character varying(100)
+)
+CREATE TABLE `suppliers` (
+  `supplier_id` integer NOT NULL AUTO_INCREMENT,
+  `name` character varying(200) NOT NULL,
+  `company_name` character varying(200),
+  `phone` character varying(20) NOT NULL,
+  `email` character varying(150),
+  `address` text,
+  `is_active` boolean DEFAULT true,
+  `created_at` timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+) 
+CREATE TABLE `users` (
+  `instance_id` uuid,
+  `user_id` integer NOT NULL AUTO_INCREMENT,
+  `id` uuid NOT NULL,
+  `name` character varying(100) NOT NULL,
+  `aud` character varying(255),
+  `phone` character varying(11) NOT NULL,
+  `email` character varying(100) NOT NULL,
+  `role` character varying(255),
+  `email` character varying(255),
+  `password` character varying(255) NOT NULL,
+  `encrypted_password` character varying(255),
+  `created_at` timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+  `reset_token` character varying(255),
+  `email_confirmed_at` timestamp with time zone,
+  `reset_token_expires_at` timestamp without time zone,
+  `invited_at` timestamp with time zone,
+  `confirmation_token` character varying(255),
+  `confirmation_sent_at` timestamp with time zone,
+  `recovery_token` character varying(255),
+  `recovery_sent_at` timestamp with time zone,
+  `email_change_token_new` character varying(255),
+  `email_change` character varying(255),
+  `email_change_sent_at` timestamp with time zone,
+  `last_sign_in_at` timestamp with time zone,
+  `raw_app_meta_data` jsonb,
+  `raw_user_meta_data` jsonb,
+  `is_super_admin` boolean,
+  `created_at` timestamp with time zone,
+  `updated_at` timestamp with time zone,
+  `phone` text DEFAULT NULL::character varying,
+  `phone_confirmed_at` timestamp with time zone,
+  `phone_change` text DEFAULT ''::character varying,
+  `phone_change_token` character varying(255) DEFAULT ''::character varying,
+  `phone_change_sent_at` timestamp with time zone,
+  `confirmed_at` timestamp with time zone,
+  `email_change_token_current` character varying(255) DEFAULT ''::character varying,
+  `email_change_confirm_status` smallint DEFAULT 0,
+  `banned_until` timestamp with time zone,
+  `reauthentication_token` character varying(255) DEFAULT ''::character varying,
+  `reauthentication_sent_at` timestamp with time zone,
+  `is_sso_user` boolean NOT NULL DEFAULT false,
+  `deleted_at` timestamp with time zone,
+  `is_anonymous` boolean NOT NULL DEFAULT false
+)
+CREATE TABLE `purchases` (
+  `purchase_id` integer NOT NULL AUTO_INCREMENT,
+  `supplier_name` character varying(200) NOT NULL,
+  `supplier_phone` character varying(20),
+  `invoice_no` character varying(100),
+  `subtotal_amount` numeric NOT NULL DEFAULT 0.00,
+  `extra_discount` numeric DEFAULT 0.00,
+  `total_amount` numeric NOT NULL DEFAULT 0.00,
+  `payment_method` character varying(50) NOT NULL,
+  `transaction_id` character varying(100),
+  `note` text,
+  `created_at` timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+  `supplier_id` integer
+)

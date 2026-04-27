@@ -1,11 +1,12 @@
 'use client'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { Box, TrendingUp } from 'lucide-react'
 
 const StockReport = () => {
     const [data, setData] = useState(null)
     const [loading, setLoading] = useState(true)
-    const [viewMode, setViewMode] = useState('low') 
+    const [viewMode, setViewMode] = useState('low')
 
     useEffect(() => {
         const fetchStockData = async () => {
@@ -26,72 +27,81 @@ const StockReport = () => {
     const currentList = viewMode === 'low' ? data?.lowStock : data?.highStock
 
     return (
-        <div className=' mx-auto w-full p-1 sm:p-4 flex flex-col gap-10 bg-white min-h-screen'>
-            
-            <div className='text-center flex flex-col gap-2'>
-                <h1 className='text-4xl font-black text-sky-900 tracking-tight'>Inventory Analysis</h1>
-                <p className='text-sky-400 text-sm uppercase tracking-widest font-medium '>Stock Management</p>
+        <div className='w-full flex flex-col gap-10 bg-white'>
+
+            <div className='flex flex-col gap-2'>
+                <h1 className='text-3xl font-bold text-slate-800 tracking-tight'>Inventory Analysis</h1>
+                <p className='text-slate-400 text-sm font-medium uppercase tracking-widest'>Stock Management & Forecast</p>
             </div>
 
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-                <div className='p-8 bg-white border border-sky-100 rounded shadow-sm flex flex-col gap-2'>
-                    <span className='text-xs font-bold text-sky-400 uppercase tracking-widest'>Current Remaining Stock</span>
-                    <p className='text-5xl font-black text-sky-600'>
-                        {data?.stats?.total_remaining_stock ? Number(data.stats.total_remaining_stock).toLocaleString() : 0} <span className='text-lg font-medium text-sky-300'>Units</span>
-                    </p>
-                    <div className='w-12 h-1 bg-sky-100 rounded-full mt-2'></div>
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+                <div className='p-6 bg-white border border-slate-100 rounded-2xl shadow-sm flex flex-col gap-4'>
+                    <div className='w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary'>
+                        <Box size={24} />
+                    </div>
+                    <div>
+                        <span className='text-[10px] font-bold text-slate-400 uppercase tracking-widest'>Remaining Stock</span>
+                        <p className='text-3xl font-black text-slate-900 tracking-tighter mt-1'>
+                            {data?.stats?.total_remaining_stock ? Number(data.stats.total_remaining_stock).toLocaleString() : 0} <span className='text-sm font-bold text-slate-300 uppercase'>Units</span>
+                        </p>
+                    </div>
                 </div>
 
-                <div className='p-8 bg-white border border-sky-100 rounded shadow-sm flex flex-col gap-2'>
-                    <span className='text-xs font-bold text-sky-400 uppercase tracking-widest'>Lifetime Sold Stock</span>
-                    <p className='text-5xl font-black text-sky-800'>
-                        {data?.stats?.total_sold_stock ? Number(data.stats.total_sold_stock).toLocaleString() : 0} <span className='text-lg font-medium text-sky-300'>Units</span>
-                    </p>
-                    <div className='w-12 h-1 bg-sky-100 rounded-full mt-2'></div>
+                <div className='p-6 bg-white border border-slate-100 rounded-2xl shadow-sm flex flex-col gap-4'>
+                    <div className='w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600'>
+                        <TrendingUp size={24} />
+                    </div>
+                    <div>
+                        <span className='text-[10px] font-bold text-slate-400 uppercase tracking-widest'>Lifetime Sales Volume</span>
+                        <p className='text-3xl font-black text-slate-900 tracking-tighter mt-1'>
+                            {data?.stats?.total_sold_stock ? Number(data.stats.total_sold_stock).toLocaleString() : 0} <span className='text-sm font-bold text-slate-300 uppercase'>Units</span>
+                        </p>
+                    </div>
                 </div>
             </div>
 
             <div className='w-full flex flex-col gap-6'>
                 <div className='flex flex-col md:flex-row md:items-center justify-between gap-4'>
-                    <div className='flex items-center gap-4'>
-                        <h2 className='text-2xl font-bold text-sky-800 capitalize'>{viewMode} Stock Levels</h2>
-                        <div className='hidden md:block w-24 h-px bg-sky-100'></div>
+                    <div className='flex items-center gap-3'>
+                        <h2 className='text-xl font-bold text-slate-800 tracking-tight capitalize'>{viewMode} Stock Inventory</h2>
+                        <span className='bg-slate-100 text-slate-500 text-[10px] font-bold px-2 py-1 rounded uppercase'>{currentList?.length || 0} Items</span>
                     </div>
 
-                    <div className='flex bg-sky-100 p-1 rounded-xl w-fit'>
-                        <button 
+                    <div className='flex bg-slate-100 p-1 rounded-xl w-fit'>
+                        <button
                             onClick={() => setViewMode('low')}
-                            className={`px-6 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${viewMode === 'low' ? 'bg-white text-red-600 shadow-sm' : 'text-sky-400 hover:text-sky-600'}`}
+                            className={`px-6 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${viewMode === 'low' ? 'bg-white text-rose-500 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                         >
-                            Lowest
+                            Low Stock
                         </button>
-                        <button 
+                        <button
                             onClick={() => setViewMode('high')}
-                            className={`px-6 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${viewMode === 'high' ? 'bg-white text-orange-600 shadow-sm' : 'text-sky-400 hover:text-sky-600'}`}
+                            className={`px-6 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${viewMode === 'high' ? 'bg-white text-primary shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                         >
-                            Highest
+                            High Stock
                         </button>
                     </div>
                 </div>
 
-                <div className='overflow-hidden bg-white rounded border border-sky-100 shadow-sm'>
+                <div className='bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden'>
                     <table className='w-full text-left'>
                         <thead>
-                            <tr className='bg-sky-50/50 border-b border-sky-100'>
-                                <th className='px-8 py-5 text-xs font-bold uppercase tracking-wider text-sky-500'>Product</th>
-                                <th className='px-8 py-5 text-xs font-bold uppercase tracking-wider text-sky-500'>Sale Price</th>
-                                <th className='px-8 py-5 text-xs font-bold uppercase tracking-wider text-sky-500 text-right'>In Stock</th>
+                            <tr className='bg-slate-50/50 border-b border-slate-100'>
+                                <th className='px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400'>Product Details</th>
+                                <th className='px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400'>Unit Price</th>
+                                <th className='px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400 text-right'>Current Qty</th>
                             </tr>
                         </thead>
-                        <tbody className='divide-y divide-sky-50 font-medium'>
+                        <tbody className='divide-y divide-slate-50'>
                             {currentList?.map((item, idx) => (
-                                <tr key={idx} className='hover:bg-sky-50/50 transition-colors group'>
-                                    <td className='px-8 py-4'>
-                                        <p className='text-sky-800'>{item.name}</p>
+                                <tr key={idx} className='hover:bg-slate-50/50 transition-colors group'>
+                                    <td className='px-6 py-4'>
+                                        <p className='text-sm font-bold text-slate-700'>{item.name}</p>
+                                        <p className='text-[10px] text-slate-400 uppercase font-bold'>{item.category_name || 'General'}</p>
                                     </td>
-                                    <td className='px-8 py-4 text-sky-500'>৳{item.sale_price}</td>
-                                    <td className='px-8 py-4 text-right'>
-                                        <span className={`px-4 py-1 rounded-full text-sm font-black ${viewMode === 'low' && item.stock < 10 ? 'bg-red-100 text-red-600' : 'bg-sky-100 text-sky-700'}`}>
+                                    <td className='px-6 py-4 text-sm font-bold text-slate-900'>৳{item.sale_price}</td>
+                                    <td className='px-6 py-4 text-right'>
+                                        <span className={`px-3 py-1 rounded-lg text-xs font-bold ${viewMode === 'low' && item.stock < 10 ? 'bg-rose-50 text-rose-600' : 'bg-slate-100 text-slate-600'}`}>
                                             {item.stock}
                                         </span>
                                     </td>
