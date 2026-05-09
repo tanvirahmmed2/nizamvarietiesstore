@@ -13,6 +13,7 @@ const Products = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
     const fetchOffers = async () => {
       setLoading(true)
       try {
