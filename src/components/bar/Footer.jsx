@@ -40,9 +40,9 @@ const Footer = () => {
         </FooterColumn>
 
         <FooterColumn title='Contact Us'>
-          <ContactItem icon={<Mail size={16} />} text='support@nizamvarieties.com' />
-          <ContactItem icon={<Phone size={16} />} text='+880 1234-567890' />
-          <ContactItem icon={<MapPin size={16} />} text='Dhaka, Bangladesh' />
+          <ContactItem icon={<Mail size={16} />} text='nizamvarietiesstore@gmail.com' />
+          <ContactItem icon={<Phone size={16} />} text='+880 1645-172356' />
+          <ContactItem icon={<MapPin size={16} />} text='Pakuritala, Tarakanda' />
         </FooterColumn>
       </div>
       

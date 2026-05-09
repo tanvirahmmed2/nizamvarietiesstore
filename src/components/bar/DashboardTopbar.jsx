@@ -2,6 +2,7 @@
 import React, { useContext } from 'react'
 import { Context } from '../helper/Context'
 import { RiMenuLine, RiMenuFoldLine, RiNotification3Line, RiSearchLine, RiSettings3Line } from 'react-icons/ri'
+import { CgMenuMotion } from 'react-icons/cg'
 
 const DashboardTopbar = () => {
     const { isDashboardSidebar, setIsDashboardSidebar, userData } = useContext(Context)
@@ -14,7 +15,7 @@ const DashboardTopbar = () => {
                     className="p-2 rounded-xl hover:bg-slate-100 text-slate-600 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-100"
                     title={isDashboardSidebar ? "Close Sidebar" : "Open Sidebar"}
                 >
-                    {isDashboardSidebar ? <RiMenuFoldLine size={22} /> : <RiMenuLine size={22} />}
+                    {isDashboardSidebar ? <CgMenuMotion size={22} /> : <RiMenuLine size={22} />}
                 </button>
                 
             </div>

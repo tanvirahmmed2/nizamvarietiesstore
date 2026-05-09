@@ -61,7 +61,7 @@ const Support = () => {
             <ContactCard 
               icon={<Mail size={18} />} 
               title='Email Us' 
-              content='support@nizamvarieties.com' 
+              content='nizamvarietiesstore@gmail.com' 
             />
             <ContactCard 
               icon={<MessageSquare size={18} />} 

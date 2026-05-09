@@ -196,7 +196,7 @@ const CartPage = () => {
                   <label className='text-[9px] font-black text-slate-600 uppercase tracking-widest ml-1'>Payment Method</label>
                   <div className='flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-xl text-slate-300'>
                     <CreditCard size={16} className='text-primary' />
-                    <span className='font-bold uppercase tracking-wider text-[11px]'>{formData.paymentMethod} on Delivery</span>
+                    <span className='font-bold uppercase tracking-wider text-[11px]'>Pay at counter</span>
                   </div>
                 </div>
               </div>
