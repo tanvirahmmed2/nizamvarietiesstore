@@ -39,7 +39,7 @@ const PosPage = () => {
   return (
     <div className="w-full flex flex-col md:flex-row gap-6 relative">
       {
-        isCustomerBox === true && <div className='fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[200]'>
+        isCustomerBox === true && <div className='fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-200'>
           <div className='bg-white p-6 rounded-2xl shadow-xl'>
             <AddCutomerForm />
           </div>
@@ -65,7 +65,7 @@ const PosPage = () => {
           </select>
         </div>
 
-        <div className="flex-1 min-h-[500px]">
+        <div className="flex-1 min-h-125">
           {products.length < 1 ? (
             <div className="w-full h-64 border-2 border-dashed border-slate-100 rounded-2xl flex flex-col items-center justify-center text-slate-300">
               <p className="font-bold uppercase tracking-widest text-xs">Select a category to view products</p>

@@ -37,7 +37,7 @@ const MenuItem = ({ href, icon: Icon, label, isOpen }) => {
 }
 
 const DashboardSidebar = () => {
-  const { isDashboardSidebar: isOpen } = useContext(Context)
+  const { isDashboardSidebar: isOpen, setIsDashboardSidebar } = useContext(Context)
   
   // Local states for submenus
   const [saleMenuOpen, setSaleMenuOpen] = useState(false)
