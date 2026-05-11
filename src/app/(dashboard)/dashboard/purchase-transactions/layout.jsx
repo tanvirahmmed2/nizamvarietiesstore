@@ -1,9 +1,10 @@
 import React from 'react'
 
 export const metadata={
-    title:'Sales | Dashboard',
-    description:'Sales Page'
+    title:'Purchase Transactions',
+    description:'Purchase Transactions page'
 }
+
 
 const layout = ({children}) => {
   return (

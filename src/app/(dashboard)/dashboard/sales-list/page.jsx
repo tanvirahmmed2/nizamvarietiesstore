@@ -97,7 +97,7 @@ const SalesListPage = () => {
         </div>
       </div>
 
-      {/* Orders List */}
+     
       <div className='w-full flex flex-col gap-4'>
         {loading ? (
            <p className='text-center text-sky-400 animate-pulse font-bold py-20'>Fetching Sales Data...</p>
@@ -201,7 +201,7 @@ const SalesListPage = () => {
                             <GiBackwardTime size={18} />
                           </button>
                         )}
-                        <button onClick={() => setConfirmDelete(order.order_id)} className='bg-rose-50 text-rose-500 hover:bg-rose-100 p-2.5 rounded-xl flex items-center justify-center transition-colors col-span-2 md:col-span-1' title="Delete Order">
+                        <button onClick={() => setConfirmDelete(order.order_id)} className='bg-rose-50 text-rose-500 hover:bg-rose-100 p-2.5 rounded-xl flex items-center justify-center transition-colors col-span-1' title="Delete Order">
                           <MdDelete size={18} />
                         </button>
                     </div>

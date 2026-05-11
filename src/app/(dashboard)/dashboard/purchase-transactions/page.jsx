@@ -45,6 +45,16 @@ const PurchasePaymentsPage = () => {
                 />
             </div>
 
+            <div className='w-full grid grid-cols-6 gap-2 bg-sky-500 text-white p-2'>
+                <p>Date</p>
+                <p>Name</p>
+                <p>Invoice No</p>
+                <p>Product Number</p>
+                <p>Paid Amount</p>
+                <p>Method</p>
+
+            </div>
+
             <div className='w-full  flex flex-col gap-3'>
                 {loading ? (
                     <p className='text-center py-10 text-gray-400 font-bold animate-pulse'>Loading Records...</p>
@@ -52,32 +62,16 @@ const PurchasePaymentsPage = () => {
                     payments.map((p) => (
                         <div
                             key={p.payment_id}
-                            className='w-full flex flex-col md:flex-row justify-between p-5 rounded-2xl border border-white shadow-sm bg-white hover:shadow-md transition-all'
+                            className='w-full grid grid-cols-6 gap-2 even:bg-slate-200 p-2 '
                         >
-                            <div className='flex flex-col gap-1'>
-                                <p className='text-[10px] font-black text-sky-500 uppercase tracking-widest'>Supplier</p>
-                                <p className='font-black text-gray-900 text-lg leading-tight'>{p.supplier_name}</p>
-                                <div className='flex gap-4 mt-2'>
-                                    <span className='text-xs font-bold text-gray-500 flex items-center gap-1'>
-                                        <FaBoxOpen className='text-sky-400' /> {p.total_products} Products
-                                    </span>
-                                    <span className='text-xs font-bold text-gray-400'>INV: {p.invoice_no || 'N/A'}</span>
-                                </div>
-                            </div>
+                            <p>{p.date.slice(0, 10)}</p>
+                            
+                            <p>{p.supplier_name}</p>
 
-                            <div className='flex flex-col md:items-end gap-1 mt-4 md:mt-0 border-t md:border-t-0 pt-3 md:pt-0'>
-                                <p className='text-[10px] font-black text-gray-400 uppercase tracking-widest'>Financials</p>
-                                <div className='flex items-center gap-2'>
-                                    <span className='text-xs text-gray-400'>Paid:</span>
-                                    <span className='text-xl font-black text-emerald-600 tracking-tighter'>৳{Number(p.paid_amount).toLocaleString()}</span>
-                                </div>
-                                <p className='text-xs text-gray-400 font-medium'>
-                                    via <span className='font-bold text-gray-600 uppercase'>{p.payment_method}</span>
-                                </p>
-                                <p className='text-[10px] text-gray-400 mt-1 font-bold flex items-center gap-1'>
-                                    <FaCalendarAlt /> {new Date(p.date).toLocaleString().slice(0, 17)}
-                                </p>
-                            </div>
+                            <p> {p.invoice_no || 'N/A'}</p>
+                            <p> {p.total_products} </p>
+                            <p>৳{Number(p.paid_amount).toLocaleString()}</p>
+                            <p>{p.payment_method}</p>
                         </div>
                     ))
                 ) : (

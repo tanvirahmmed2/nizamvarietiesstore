@@ -246,14 +246,11 @@ export const generateReceipt = (order) => {
 
           /* BARCODE */
           .barcode-area { margin: 12px auto 0; text-align: center; }
-          .barcode-lines {
-            display: inline-flex;
-            align-items: flex-end;
-            gap: 1px;
-            height: 26px;
+          #barcode-svg {
+            height: 35px;
+            max-width: 100%;
             margin-bottom: 3px;
           }
-          .bar { background: #1a1a2e; display: inline-block; }
           .barcode-number {
             font-family: 'DM Mono', monospace;
             font-size: 7.5px;
@@ -362,13 +359,7 @@ export const generateReceipt = (order) => {
         </div>
 
         <div class="barcode-area">
-          <div class="barcode-lines">
-            ${Array.from({ length: 44 }, (_, i) => {
-              const h = [18,24,16,28,20,14,26,22,18,28,12,24,20,16,28,18,22,14,26,20,18,28,16,24,20,18,12,26,22,28,14,20,18,24,16,28,22,18,26,14,20,24,16,22][i];
-              const w = [1,2,1,3,1,2,1,1,2,3,1,2,1,1,3,1,2,1,3,1,2,3,1,2,1,2,1,3,2,3,1,2,1,2,1,3,2,1,3,1,2,2,1,2][i];
-              return `<span class="bar" style="height:${h}px;width:${w}px;"></span>`;
-            }).join('')}
-          </div>
+          <svg id="barcode-svg"></svg>
           <div class="barcode-number">${String(order.order_id).padStart(12, '0')}</div>
         </div>
 
@@ -378,6 +369,23 @@ export const generateReceipt = (order) => {
           <p class="footer-brand">© ${new Date().getFullYear()} &nbsp; Powered by Disibin</p>
         </div>
 
+        <!-- Injecting JsBarcode to generate a true, scannable SVG barcode -->
+        <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"><\/script>
+        <script>
+          try {
+            JsBarcode("#barcode-svg", "${order.order_id || '000000000000'}", {
+              format: "CODE128",
+              width: 1.5,
+              height: 40,
+              displayValue: false,
+              margin: 0,
+              lineColor: "#1a1a2e",
+              background: "transparent"
+            });
+          } catch(e) { 
+            console.error("Barcode generation failed", e); 
+          }
+        <\/script>
       </body>
     </html>
   `;
@@ -391,5 +399,5 @@ export const generateReceipt = (order) => {
     pri.focus();
     pri.print();
     if (iframe.parentNode) document.body.removeChild(iframe);
-  }, 700);
+  }, 800);
 };

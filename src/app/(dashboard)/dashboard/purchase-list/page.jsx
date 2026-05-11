@@ -6,12 +6,14 @@ import { FaBarcode, FaTrash, FaTriangleExclamation, FaCheck, FaXmark, FaPrint } 
 import { printPurchaseInvoice } from '@/lib/database/printPurchaseInvoice'
 import Link from 'next/link'
 import { LuView } from 'react-icons/lu'
+import { GoEye } from 'react-icons/go'
+import { IoPrintOutline } from 'react-icons/io5'
 
 const PurchaseList = () => {
     const [purchases, setPurchases] = useState([])
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
-    const [confirmDelete, setConfirmDelete] = useState(null) // Stores ID of item to delete
+    const [confirmDelete, setConfirmDelete] = useState(null) 
 
     const fetchPurchases = useCallback(async () => {
         try {
@@ -135,13 +137,13 @@ const PurchaseList = () => {
                                         onClick={() => printPurchaseInvoice(purchase)}
                                         className='w-full bg-gray-200 text-gray-600 p-2 rounded-lg flex items-center justify-center'
                                     >
-                                        <FaPrint />
+                                        <IoPrintOutline />
                                     </button>
                                     <Link
                                         href={`/dashboard/purchase/${purchase.purchase_id}`}
                                         className='w-full bg-gray-200 text-gray-600 p-2 rounded-lg flex items-center justify-center'
                                     >
-                                        <LuView />
+                                        <GoEye />
                                     </Link>
                                 </div>
                             )}

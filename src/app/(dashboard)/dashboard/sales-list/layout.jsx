@@ -1,8 +1,8 @@
 import React from 'react'
 
 export const metadata={
-    title:'New Product | Dashboard',
-    description:'New Product Page'
+    title:'Sales List | Dashboard',
+    description:'Sales List Page'
 }
 
 const layout = ({children}) => {
