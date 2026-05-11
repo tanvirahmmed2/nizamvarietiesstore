@@ -7,6 +7,9 @@ import { printOrder } from '@/lib/database/orderPrint'
 import { FaPrint, FaCheck, FaXmark } from 'react-icons/fa6'
 import { GiConfirmed } from 'react-icons/gi'
 import { MdDelete } from 'react-icons/md'
+import { IoPrintOutline } from 'react-icons/io5'
+import Link from 'next/link'
+import { GoEye } from 'react-icons/go'
 
 const PendingOrdersPage = () => {
   const [orders, setOrders] = useState([])
@@ -160,12 +163,15 @@ const PendingOrdersPage = () => {
                     </div>
                 ) : (
                     <div className='w-full grid grid-cols-2 md:grid-cols-1 gap-2'>
-                        <button onClick={() => confirmOrder(order.order_id)} className='bg-emerald-500 hover:bg-emerald-600 text-white p-2.5 rounded-xl flex items-center justify-center transition-colors col-span-2' title="Confirm Order">
+                        <button onClick={() => confirmOrder(order.order_id)} className='bg-sky-500 hover:bg-sky-600 text-white p-2.5 rounded-xl flex items-center justify-center transition-colors ' title="Confirm Order">
                           <GiConfirmed size={20} className="mr-2" />
                           <span className="md:hidden font-bold">Confirm</span>
                         </button>
+                        <Link href={`/dashboard/pos/${order.order_id}`} className='bg-sky-50 text-sky-600 hover:bg-sky-100 p-2.5 rounded-xl flex items-center justify-center transition-colors' title="View Invoice">
+                          <GoEye size={18} />
+                        </Link>
                         <button onClick={() => printOrder(order)} className='bg-slate-50 text-slate-600 hover:bg-slate-100 p-2.5 rounded-xl flex items-center justify-center transition-colors' title="Print Order">
-                          <FaPrint size={18} />
+                          <IoPrintOutline size={18} />
                         </button>
                         <button onClick={() => setConfirmDelete(order.order_id)} className='bg-rose-50 text-rose-500 hover:bg-rose-100 p-2.5 rounded-xl flex items-center justify-center transition-colors' title="Delete Order">
                           <MdDelete size={18} />

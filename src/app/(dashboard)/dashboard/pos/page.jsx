@@ -46,11 +46,11 @@ const PosPage = () => {
         </div>
       }
       
-      <div className="flex-1 shrink-0">
+      <div className="w-full ">
         <SalesCart />
       </div>
 
-      <div className="flex-1 flex flex-col gap-6">
+      <div className="w-full md:w-1/2 flex flex-col gap-6">
         <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
           <select
             onChange={handleCategoryChange}
@@ -71,7 +71,7 @@ const PosPage = () => {
               <p className="font-bold uppercase tracking-widest text-xs">Select a category to view products</p>
             </div>
           ) : (
-            <div className='w-full grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
+            <div className='w-full grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4'>
               {products.map(product => (
                 <Item product={product} key={product.product_id} />
               ))}

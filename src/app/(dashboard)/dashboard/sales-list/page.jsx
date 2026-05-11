@@ -5,11 +5,12 @@ import axios from 'axios'
 import Link from 'next/link'
 import React, { useEffect, useState, useCallback } from 'react'
 import { FaBarcode } from 'react-icons/fa'
-import { FaPrint, FaCheck, FaXmark } from 'react-icons/fa6'
-import { GiConfirmed, GiReturnArrow } from 'react-icons/gi'
-import { LuView } from 'react-icons/lu'
+import {  FaCheck, FaXmark } from 'react-icons/fa6'
+import { GiBackwardTime, GiConfirmed } from 'react-icons/gi'
 import { MdDelete } from 'react-icons/md'
 import { toast } from 'react-hot-toast'
+import { GoEye } from 'react-icons/go'
+import { IoPrintOutline } from 'react-icons/io5'
 
 const SalesListPage = () => {
   const [orders, setOrders] = useState([])
@@ -108,7 +109,6 @@ const SalesListPage = () => {
         ) : orders.map((order) => (
           <div key={order.order_id} className='w-full grid grid-cols-1 md:grid-cols-12 gap-4 p-5 border border-slate-100 rounded-2xl bg-white shadow-sm hover:shadow-md transition-shadow'>
             
-            {/* Customer & Date Info */}
             <div className='md:col-span-3 border-b md:border-b-0 md:border-r border-slate-100 pb-4 md:pb-0 md:pr-4 flex flex-col justify-center'>
                 <div className='flex items-center gap-2 mb-2'>
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${
@@ -127,7 +127,6 @@ const SalesListPage = () => {
                 <p className='text-[10px] font-mono text-slate-400 mt-2'>ID: {order.order_id}</p>
             </div>
 
-            {/* Products Info */}
             <div className='md:col-span-5 border-b md:border-b-0 md:border-r border-slate-100 pb-4 md:pb-0 md:px-4 flex flex-col justify-center'>
                 <p className='text-[10px] font-black text-slate-400 uppercase mb-2 tracking-widest'>Order Items</p>
                 <div className='flex flex-col gap-2 max-h-32 overflow-y-auto pr-2 custom-scrollbar'>
@@ -192,14 +191,14 @@ const SalesListPage = () => {
                           </button>
                         )}
                         <Link href={`/dashboard/pos/${order.order_id}`} className='bg-sky-50 text-sky-600 hover:bg-sky-100 p-2.5 rounded-xl flex items-center justify-center transition-colors' title="View Invoice">
-                          <LuView size={18} />
+                          <GoEye size={18} />
                         </Link>
                         <button onClick={() => generateReceipt(order)} className='bg-slate-50 text-slate-600 hover:bg-slate-100 p-2.5 rounded-xl flex items-center justify-center transition-colors' title="Print Receipt">
-                          <FaPrint size={18} />
+                          <IoPrintOutline size={18} />
                         </button>
                         {order.status !== 'returned' && (
                           <button onClick={() => returnOrder(order.order_id)} className='bg-amber-50 text-amber-600 hover:bg-amber-100 p-2.5 rounded-xl flex items-center justify-center transition-colors' title="Return Order">
-                            <GiReturnArrow size={18} />
+                            <GiBackwardTime size={18} />
                           </button>
                         )}
                         <button onClick={() => setConfirmDelete(order.order_id)} className='bg-rose-50 text-rose-500 hover:bg-rose-100 p-2.5 rounded-xl flex items-center justify-center transition-colors col-span-2 md:col-span-1' title="Delete Order">

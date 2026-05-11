@@ -271,12 +271,13 @@ const Orderform = ({ cartItems = [] }) => {
                     )}
                 </div>
 
-                <div className='w-full flex flex-col gap-2 max-h-[400px] overflow-y-auto border-y border-slate-100 py-3 custom-scrollbar'>
-                    <div className='w-full grid grid-cols-6 sm:grid-cols-12 gap-2 px-2 text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1'>
+                <div className='w-full flex flex-col gap-2 max-h-100 overflow-y-auto border-y border-slate-100 py-3 custom-scrollbar'>
+                    <div className='w-full grid grid-cols-7 sm:grid-cols-13 gap-2 px-2 text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1'>
                         <p className='col-span-3 sm:col-span-5'>Product</p>
                         <p className='col-span-2 sm:col-span-3 text-center'>Qty</p>
                         <p className='hidden sm:block col-span-2 text-center'>Rate</p>
                         <p className='col-span-1 sm:col-span-2 text-right'>Total</p>
+                        <p className='col-span-1  text-right'>Action</p>
                     </div>
 
                     {cartItems.length === 0 ? (
@@ -296,19 +297,19 @@ const Orderform = ({ cartItems = [] }) => {
                         const rowTotal = (itemRate - itemDiscount) * (item.quantity || 0);
 
                         return (
-                            <div key={item.product_id} className='w-full grid grid-cols-6 sm:grid-cols-12 gap-2 p-2 rounded-xl hover:bg-slate-50 transition-all items-center'>
+                            <div key={item.product_id} className='w-full grid grid-cols-7 sm:grid-cols-13 gap-2 p-2 rounded-xl hover:bg-slate-50 transition-all items-center'>
                                 <div className='col-span-3 sm:col-span-5 flex flex-col pr-1'>
                                     <p className='text-xs font-bold text-slate-700 truncate' title={item.name}>{item.name}</p>
                                     <div className='flex items-center gap-2'>
-                                        <button onClick={() => removeFromCart(item?.product_id)} className='text-[9px] text-rose-500 font-bold uppercase'>Remove</button>
+                                        
                                         <span className='sm:hidden text-[9px] text-slate-400'>@ ৳{itemRate}</span>
                                     </div>
                                 </div>
 
                                 <div className='col-span-2 sm:col-span-3 flex items-center justify-between bg-slate-100 px-1.5 py-1 rounded-lg'>
-                                    <button type='button' onClick={() => decreaseQuantity(item?.product_id)} className='p-1 text-slate-400 hover:text-rose-500'><FaMinus size={8} /></button>
+                                    <button type='button' onClick={() => decreaseQuantity(item?.product_id)} className='p-1 text-slate-400  hover:text-rose-500'><FaMinus size={12} /></button>
                                     <span className='text-xs font-bold text-slate-700'>{item?.quantity}</span>
-                                    <button type='button' onClick={() => addToCart(item)} className='p-1 text-slate-400 hover:text-primary'><FaPlus size={8} /></button>
+                                    <button type='button' onClick={() => addToCart(item)} className='p-1 text-slate-400 hover:text-primary'><FaPlus size={12} /></button>
                                 </div>
 
                                 <div className='hidden sm:block col-span-2 text-center'>
@@ -322,6 +323,7 @@ const Orderform = ({ cartItems = [] }) => {
                                 </div>
 
                                 <p className='col-span-1 sm:col-span-2 text-right font-black text-slate-900 text-xs'>৳{rowTotal.toFixed(0)}</p>
+                                <button onClick={() => removeFromCart(item?.product_id)} className=' text-rose-500 text-center justify-center col-span-1  w-full items-center flex'><MdDeleteOutline/></button>
                             </div>
                         )
                     })}

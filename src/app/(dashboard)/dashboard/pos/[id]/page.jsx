@@ -2,9 +2,11 @@
 import { generateReceipt } from '@/lib/database/print'
 import axios from 'axios'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import React, { use, useEffect, useState } from 'react'
 
 const POSSLIPPAGE = ({ params }) => {
+    const router=useRouter()
     const { id } = use(params)
     const [order, setOrder] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -44,7 +46,7 @@ const POSSLIPPAGE = ({ params }) => {
     const formattedTime = orderDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
 
     return (
-        <div className="min-h-screen w-full flex flex-col items-center py-6 sm:py-12 px-4 print:p-0 print:bg-white overflow-x-hidden">
+        <div className="min-h-screen w-full flex flex-col items-center py-6 px-4 print:p-0 print:bg-white overflow-x-hidden">
             
             
             <div className="w-full max-w-150 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] p-5 sm:p-7 border border-gray-100 flex flex-col gap-4 print:shadow-none print:border-none print:w-full">
@@ -159,12 +161,12 @@ const POSSLIPPAGE = ({ params }) => {
                     >
                         Print Receipt
                     </button>
-                    <Link 
+                    <button onClick={()=>router.back()} 
                         href="/dashboard/pos" 
                         className="w-full text-center py-3 text-[10px] font-bold uppercase tracking-widest border border-gray-200 rounded text-gray-500 hover:bg-gray-50"
                     >
-                        Return to POS
-                    </Link>
+                        Back
+                    </button>
                 </div>
             </div>
         </div>

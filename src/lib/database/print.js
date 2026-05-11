@@ -374,7 +374,7 @@ export const generateReceipt = (order) => {
 
         <div class="footer">
           <p class="footer-thanks">Thank you for your purchase</p>
-          <p class="footer-note">Goods once sold are not returnable &nbsp;·&nbsp; Keep receipt for reference</p>
+          <p class="footer-note">Enjoy Shopping &nbsp;·&nbsp; Keep receipt for reference</p>
           <p class="footer-brand">© ${new Date().getFullYear()} &nbsp; Powered by Disibin</p>
         </div>
 
