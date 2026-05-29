@@ -13,8 +13,8 @@ const SingleProduct = async ({ params }) => {
   const product = data.payload?.[0]
   if (!product) return <p>No data found</p>
   return (
-    <div className='w-full min-h-screen flex flex-col gap-20 items-center justify-center  rounded-2xl'>
-      <div className='w-full md:w-5/6 lg:w-3/4 mx-auto flex flex-col lg:flex-row gap-8 bg-white m-6 p-4 md:p-6 rounded-2xl shadow-sm border border-slate-100'>
+    <div className='w-full max-w-6xl mx-auto min-h-screen flex flex-col gap-20 items-center justify-center  rounded-2xl'>
+      <div className='w-full flex flex-col lg:flex-row gap-8 bg-white m-6 p-2 md:p-4 rounded-2xl shadow-sm border border-slate-100'>
 
         <div className='relative w-full overflow-hidden rounded-xl bg-slate-50 border border-slate-100'>
           <div className='absolute right-3 top-3 z-10'>
@@ -38,7 +38,7 @@ const SingleProduct = async ({ params }) => {
         </div>
 
 
-        <div className=' w-full flex flex-col justify-center py-2'>
+        <div className=' w-full flex flex-col py-2'>
           <div className="space-y-4">
             <h1 className='text-base md:text-xl  font-bold text-slate-900 leading-tight'>
               {product.name}
