@@ -37,21 +37,7 @@ const Item = ({ product }) => {
           />
         </Link>
 
-        {/* Hover Actions */}
-        <div className='absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2'>
-          <Link 
-            href={`/products/${product.slug}`}
-            className='w-8 h-8 bg-white rounded-full flex items-center justify-center text-slate-800 hover:bg-primary hover:text-white transition-all shadow-sm'
-          >
-            <Eye size={16} />
-          </Link>
-          <button 
-            onClick={() => addToCart(product)}
-            className='w-8 h-8 bg-white rounded-full flex items-center justify-center text-slate-800 hover:bg-primary hover:text-white transition-all shadow-sm'
-          >
-            <ShoppingCart size={16} />
-          </button>
-        </div>
+        
       </div>
 
       {/* Content */}
