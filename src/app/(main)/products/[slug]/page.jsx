@@ -14,7 +14,7 @@ const SingleProduct = async ({ params }) => {
   if (!product) return <p>No data found</p>
   return (
     <div className='w-full min-h-screen flex flex-col gap-20 items-center justify-center  rounded-2xl'>
-      <div className='w-full md:w-5/6 lg:w-3/4 mx-auto flex flex-col lg:flex-row gap-8 bg-white m-6 p-4 md:p-6 rounded-2xl shadow-sm border border-slate-100'>
+      <div className='w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-8 bg-white m-6 p-4 md:p-6 rounded-2xl shadow-sm border border-slate-100'>
 
         <div className='relative w-full overflow-hidden rounded-xl bg-slate-50 border border-slate-100'>
           <div className='absolute right-3 top-3 z-10'>
@@ -43,23 +43,23 @@ const SingleProduct = async ({ params }) => {
             <h1 className='text-base md:text-xl  font-bold text-slate-900 leading-tight'>
               {product.name}
             </h1>
-
-            <div className='w-full flex flex-row items-center justify-between font-semibold'>
-              <p>Category: {product.category_name}</p>
-              {product.stock > 0 && <p>Stock: {product.stock}</p>}
-
+            <div className="pt-4 border-t border-slate-100">
+              <AddtoCart product={product} />
             </div>
+
+
             {
               product?.discount_price > 0 ? <div>
                 <p className='text-red-400 line-through'>BDT {product.sale_price}</p>
                 <p className='font-semibold text-xl'>BDT {product?.sale_price - product?.discount_price}</p>
               </div> : <p className='font-semibold text-xl'>BDT {product.sale_price}</p>
             }
+            <div className='w-full flex flex-row items-center justify-between font-semibold'>
+              <p>Category: {product.category_name}</p>
+              {product.stock > 0 && <p>Stock: {product.stock}</p>}
 
-
-            <div className="pt-4 border-t border-slate-100">
-              <AddtoCart product={product} />
             </div>
+
 
             <p className='text-slate-600 leading-relaxed'>
               {product.description}
@@ -67,7 +67,7 @@ const SingleProduct = async ({ params }) => {
           </div>
         </div>
       </div>
-      <SameCategory category={product?.category_id}/>
+      <SameCategory category={product?.category_id} />
     </div>
   )
 }

@@ -41,15 +41,15 @@ const Intro = () => {
     }, [next])
 
     const slideVariants = {
-        enter: (dir) => ({ opacity: 0, x: dir > 0 ? 80 : -80, scale: 1.04 }),
-        center: { opacity: 1, x: 0, scale: 1 },
+        enter: (dir) => ({  x: dir > 0 ? 80 : -80, scale: 1.04 }),
+        center: {  x: 0, scale: 1 },
         exit: (dir) => ({ opacity: 0, x: dir > 0 ? -80 : 80, scale: 0.96 }),
     }
 
     return (
         <section className='relative w-full min-h-[85vh] flex items-center justify-center overflow-hidden bg-slate-900'>
 
-            {/* ─── Sliding Background Images ─── */}
+     
             <AnimatePresence custom={direction} initial={false}>
                 <motion.div
                     key={current}
@@ -74,10 +74,6 @@ const Intro = () => {
 
 
 
-            {/* Simple overlay with blur */}
-            <div className='absolute inset-0 z-10 bg-black/40 backdrop-blur-1px' />
-
-            {/* ─── Hero Content ─── */}
             <div className='relative z-20 max-w-7xl mx-auto px-4 text-center flex flex-col items-center gap-6'>
                 <motion.div
                     initial={{ opacity: 0, y: 24 }}
@@ -85,9 +81,7 @@ const Intro = () => {
                     transition={{ duration: 0.7 }}
                     className='flex flex-col items-center gap-3'
                 >
-                    <span className='px-3 py-1 rounded-full bg-primary/20 text-primary text-[11px] font-bold tracking-widest uppercase border border-primary/20'>
-                        New Season Arrivals
-                    </span>
+                 
                     <h1 className='text-5xl sm:text-7xl font-black text-white leading-none tracking-tighter uppercase'>
                         Nizam <span className='text-primary'>Varieties Store</span>
                     </h1>

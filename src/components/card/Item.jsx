@@ -17,10 +17,10 @@ const Item = ({ product }) => {
       initial={{ opacity: 0, y: 10 }} 
       whileInView={{ opacity: 1, y: 0 }} 
       transition={{ duration: 0.4 }} 
-      className='group relative bg-white rounded-2xl p-2 border border-slate-100 hover:border-primary/20 hover:shadow-lg transition-all duration-300 flex flex-col gap-3'
+      className='group relative bg-white rounded-lg p-2 border border-slate-100 hover:border-primary/20 hover:shadow-lg transition-all duration-300 flex flex-col gap-3'
     >
       {/* Image Container */}
-      <div className='relative w-full aspect-square overflow-hidden rounded-xl bg-slate-50'>
+      <div className='relative w-full aspect-square overflow-hidden rounded-lg bg-slate-50'>
         {product?.discount_price > 0 && (
           <div className='absolute top-2 left-2 z-10 px-2 py-0.5 bg-red-500 text-white text-[9px] font-bold rounded-full'>
             -{Math.round((product.discount_price / product.sale_price) * 100)}%

@@ -50,7 +50,7 @@ const RegisterForm = () => {
           <input 
             type="text" id='name' name='name' required 
             value={formData.name} onChange={handleChange} 
-            placeholder="John Doe"
+            placeholder=""
             className='w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:border-primary transition-all font-medium text-slate-700 text-sm' 
           />
         </div>
