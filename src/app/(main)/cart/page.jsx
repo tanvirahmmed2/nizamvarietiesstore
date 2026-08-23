@@ -6,6 +6,7 @@ import { toast } from 'react-hot-toast';
 import axios from 'axios';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 
 const CartPage = () => {
   const { cart, removeFromCart, addToCart, decreaseQuantity, clearCart, userData } = useContext(Context)
@@ -92,7 +93,7 @@ const CartPage = () => {
   )
 
   return (
-    <div className='w-full max-w-7xl mx-auto px-4 py-16'>
+    <div className='w-full max-w-7xl mx-auto px-4 py-6'>
       <div className='flex flex-col lg:flex-row gap-8'>
         
         {/* Cart Items */}
@@ -116,11 +117,11 @@ const CartPage = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, x: -10 }}
-                  className='group bg-white rounded-2xl border border-slate-100 p-3 md:p-4 flex flex-col md:flex-row items-center gap-4 hover:shadow-md transition-all duration-300'
+                  className='group bg-white rounded-2xl border border-slate-100 p-2 flex flex-col md:flex-row items-center gap-4 hover:shadow-md transition-all duration-300'
                 >
-                  <div className='w-20 h-20 rounded-xl bg-slate-50 flex-shrink-0 overflow-hidden border border-slate-100 flex items-center justify-center'>
+                  <div className='w-20 h-20 rounded-xl bg-slate-50 shrink-0 overflow-hidden border border-slate-100 flex items-center justify-center'>
                     {item?.image ? (
-                      <img src={item?.image} alt={item?.name} className='w-full h-full object-cover group-hover:scale-105 transition-transform' />
+                      <Image width={500} height={500} src={item?.image} alt={item?.name} className='w-full h-full object-cover group-hover:scale-105 transition-transform' />
                     ) : (
                       <ShoppingBag size={24} className='text-slate-200' />
                     )}
