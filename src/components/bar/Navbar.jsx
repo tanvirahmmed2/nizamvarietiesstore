@@ -8,6 +8,7 @@ import { Context } from '../helper/Context';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { usePathname } from 'next/navigation';
+import { SHOPNAME } from '@/lib/database/secret';
 
 const Navbar = () => {
   const { userData, setUserData, cart } = useContext(Context)
@@ -35,17 +36,16 @@ const Navbar = () => {
       className='w-full fixed top-0 left-0 right-0 z-50'
     >
       <nav className='w-full flex flex-row items-center justify-between h-14 px-4 bg-white border-b-2 border-slate-100 shadow-sm'>
-        {/* Logo */}
+     
         <Link href={'/'} className='flex items-center gap-2 group'>
           <div className='w-8 h-8 relative flex items-center justify-center transition-transform group-hover:scale-110'>
             <Image src="/icon.png" alt="Nizam Varieties Store" width={32} height={32} className="object-contain" />
           </div>
-          <span className='text-base font-black tracking-tight text-slate-900 uppercase hidden xs:block'>
-            Nizam Varieties Store
+          <span className='text-lg text-primary font-semibold tracking-tight '>
+            {SHOPNAME}
           </span>
         </Link>
 
-        {/* Center Nav Links */}
         <div className='flex flex-row items-center gap-1 sm:gap-3'>
           <div className='hidden md:flex items-center gap-0.5'>
             <NavLink href='/offers' icon={<Tag size={16} />} label='Offers' active={pathname === '/offers'} />

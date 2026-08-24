@@ -35,9 +35,9 @@ const Support = () => {
   }
 
   return (
-    <section className='w-full py-12 px-4 bg-white'>
-      <div className='max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-10'>
-        {/* Left Side: Info */}
+    <section className='w-full py-12 px-4 md:px-8 bg-white'>
+      <div className='w-full flex flex-col lg:flex-row items-center justify-between gap-10'>
+        
         <div className='w-full lg:w-1/2 flex flex-col gap-6'>
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
@@ -45,9 +45,6 @@ const Support = () => {
             transition={{ duration: 0.5 }}
             className='flex flex-col gap-3'
           >
-            <div className='w-12 h-12 rounded-xl bg-sky-50 flex items-center justify-center text-primary'>
-              <HelpCircle size={24} />
-            </div>
             <h2 className='text-3xl md:text-5xl font-black text-slate-900 tracking-tight leading-none'>
               Need <span className='text-primary'>Help?</span> <br />
               We're Here for You.
@@ -71,7 +68,6 @@ const Support = () => {
           </div>
         </div>
 
-        {/* Right Side: Form */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

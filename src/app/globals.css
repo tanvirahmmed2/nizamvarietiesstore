@@ -21,10 +21,10 @@
 
 @layer utilities {
   .glass {
-    @apply bg-white/70 backdrop-blur-md border border-white/20;
+    @apply bg-primary/70 backdrop-blur-md border border-white/20;
   }
   
   .glass-dark {
-    @apply bg-black/50 backdrop-blur-md border border-white/10;
+    @apply bg-primary/50 backdrop-blur-md border border-white/10;
   }
 }

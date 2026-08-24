@@ -23,38 +23,39 @@ export async function POST(req) {
             );
         }
 
-        const staffCheck = await pool.query(
-            `SELECT staff_id, name, email FROM staffs 
+        const userCheck = await pool.query(
+            `SELECT user_id, name, email FROM users 
              WHERE LOWER(email) = LOWER($1) 
-               AND password_otp = $2 
-               AND otp_expires_at > CURRENT_TIMESTAMP`,
+               AND reset_token = $2 
+               AND reset_token_expires_at > CURRENT_TIMESTAMP`,
             [email, otp]
         );
 
-        if (staffCheck.rowCount === 0) {
+        if (userCheck.rowCount === 0) {
             return NextResponse.json(
-                { success: false, message: "Invalid or expired OTP code" },
+                { success: false, message: "Invalid or expired verification code" },
                 { status: 400 }
             );
         }
 
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
 
         await pool.query(
-            `UPDATE staffs 
-             SET password = $1, password_otp = NULL, otp_expires_at = NULL 
+            `UPDATE users 
+             SET password = $1, reset_token = NULL, reset_token_expires_at = NULL 
              WHERE LOWER(email) = LOWER($2)`,
             [hashedPassword, email]
         );
 
         return NextResponse.json({
             success: true,
-            message: "Staff password updated successfully. You may now sign in."
+            message: "Your password has been updated successfully. You can now log in."
         });
     } catch (error) {
-        console.error("Staff Reset Password Error:", error);
+        console.error("User Password Reset Error:", error);
         return NextResponse.json(
-            { success: false, message: error.message || "Failed to reset staff password" },
+            { success: false, message: error.message || "Failed to reset password" },
             { status: 500 }
         );
     }

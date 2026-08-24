@@ -39,7 +39,7 @@ const UserLoginForm = () => {
       animate={{ opacity: 1, y: 0 }} 
       transition={{ duration: 0.4 }} 
       onSubmit={loginHandle} 
-      className='w-full flex flex-col gap-4 min-w-[300px]'
+      className='w-full flex flex-col gap-4 min-w-75'
     >
       <div className='flex flex-col gap-1.5'>
         <label htmlFor="email" className='text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1'>Email Address</label>
@@ -68,7 +68,7 @@ const UserLoginForm = () => {
       </div>
 
       <div className='flex items-center justify-between px-1'>
-        <Link href="/recoverid" className='text-[11px] font-bold text-slate-400 hover:text-primary transition-colors'>
+        <Link href="/recover-id" className='text-[11px] font-bold text-slate-400 hover:text-primary transition-colors'>
           Forgot password?
         </Link>
         <Link href="/register" className='text-[11px] font-bold text-primary hover:underline'>
@@ -79,13 +79,13 @@ const UserLoginForm = () => {
       <button 
         type='submit' 
         disabled={isSubmitting}
-        className='group flex items-center justify-center gap-2.5 w-full py-3.5 bg-slate-900 text-white rounded-xl font-bold text-base hover:bg-primary transition-all active:scale-[0.98] disabled:opacity-50 shadow-md'
+        className='group flex items-center justify-center gap-2.5 w-full py-2 cursor-pointer bg-slate-900 text-white rounded-xl font-bold text-base hover:bg-primary transition-all active:scale-[0.98] disabled:opacity-50 shadow-md'
       >
         {isSubmitting ? (
           <Loader2 size={20} className='animate-spin' />
         ) : (
           <>
-            Sign In
+            Login
             <ArrowRight size={18} className='group-hover:translate-x-1 transition-transform' />
           </>
         )}

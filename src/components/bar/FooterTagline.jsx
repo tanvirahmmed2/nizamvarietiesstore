@@ -1,10 +1,16 @@
 'use client'
+import { SHOPNAME } from '@/lib/database/secret'
 import Link from 'next/link'
 import React from 'react'
 
 const FooterTagline = () => {
   return (
-     <p className='w-full text-center italic'>Copyright reserved by <Link className='font-semibold not-italic' href={'https://disibin.com'}>Disibin | 2023</Link></p>
+    <div className='w-full flex flex-col md:flex-row items-center justify-between gap-4'>
+          <p className='text-center'>Copyright reserved by {SHOPNAME} | 2026</p>
+          <p>Developed by <Link className='font-semibold' href={'https://disibin.com'}>Disibin </Link></p>
+          
+ 
+    </div>
   )
 }
 

@@ -3,16 +3,17 @@ import React from 'react'
 import FooterTagline from './FooterTagline'
 import Image from 'next/image';
 import { Facebook, Twitter, Instagram, Mail, Phone, MapPin } from 'lucide-react'
+import { SHOPNAME } from '@/lib/database/secret';
 
 const Footer = () => {
   return (
-    <footer className='w-full bg-slate-900 text-slate-300 pt-12 px-4 border-t border-slate-800 pb-24'>
-      <div className='max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-12'>
+    <footer className='w-full bg-slate-900 text-slate-300 pt-12 px-4 md:px-8 border-t border-slate-800 pb-28 md:pb-10'>
+      <div className='w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-12'>
         <div className='flex flex-col gap-4'>
           <div className='flex items-center gap-2 mb-2'>
             <Image src="/icon.png" alt="Logo" width={32} height={32} />
-            <h2 className='text-xl font-bold text-white uppercase tracking-tighter'>
-              Nizam <span className='text-primary'>Varieties Store</span>
+            <h2 className='text-xl font-bold text-primary uppercase tracking-tighter'>
+              {SHOPNAME}
             </h2>
           </div>
           <p className='text-sm leading-relaxed text-slate-400'>
@@ -46,7 +47,7 @@ const Footer = () => {
         </FooterColumn>
       </div>
       
-      <div className='max-w-7xl mx-auto border-t border-slate-800 pt-8 flex flex-col items-center gap-4'>
+      <div className='w-full border-t border-slate-800 pt-8 flex flex-col items-center gap-4'>
         <FooterTagline />
       </div>
     </footer>

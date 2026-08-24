@@ -33,9 +33,9 @@ const CategoryProducts = async ({ params }) => {
   }
 
   return (
-    <div className='w-full flex flex-col items-center p-4 gap-4 py-6 min-h-screen '>
-      <p className='text-center text-lg font-semibold'>Collect the best product </p>
-      <div className='w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4'>
+    <div className='w-full flex flex-col items-center gap-4 min-h-screen '>
+      <p className='text-center text-3xl bg-slate-900 text-white w-full p-4 font-semibold'>Collect the best product </p>
+      <div className='w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 p-4 md:p-8 gap-4'>
         {products.map(product => (
           <Item product={product} key={product.product_id} />
         ))}

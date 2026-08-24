@@ -34,7 +34,6 @@ const Intro = () => {
         setCurrent(prev => (prev - 1 + images.length) % images.length)
     }, [])
 
-    // Auto-advance
     useEffect(() => {
         const timer = setInterval(next, SLIDE_INTERVAL)
         return () => clearInterval(timer)
@@ -113,7 +112,6 @@ const Intro = () => {
                 </motion.div>
             </div>
 
-            {/* ─── Prev / Next Buttons ─── */}
             <button
                 onClick={prev}
                 aria-label="Previous slide"

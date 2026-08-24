@@ -41,7 +41,7 @@ const RegisterForm = () => {
       animate={{ opacity: 1, y: 0 }} 
       transition={{ duration: 0.4 }} 
       onSubmit={registerHandle} 
-      className='w-full flex flex-col gap-4 min-w-[300px]'
+      className='w-full flex flex-col gap-4 min-w-75'
     >
       <div className='flex flex-col gap-1.5'>
         <label htmlFor="name" className='text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1'>Full Name</label>
@@ -51,7 +51,7 @@ const RegisterForm = () => {
             type="text" id='name' name='name' required 
             value={formData.name} onChange={handleChange} 
             placeholder=""
-            className='w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:border-primary transition-all font-medium text-slate-700 text-sm' 
+            className='w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-xl outline-none  transition-all font-medium text-slate-700 text-sm' 
           />
         </div>
       </div>
@@ -64,7 +64,7 @@ const RegisterForm = () => {
             type="email" id='email' name='email' required 
             value={formData.email} onChange={handleChange} 
             placeholder="name@example.com"
-            className='w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:border-primary transition-all font-medium text-slate-700 text-sm' 
+            className='w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-xl outline-none  transition-all font-medium text-slate-700 text-sm' 
           />
         </div>
       </div>
@@ -76,8 +76,8 @@ const RegisterForm = () => {
           <input 
             type="text" id='phone' name='phone' required 
             value={formData.phone} onChange={handleChange} 
-            placeholder="+880 1XXX XXXXXX"
-            className='w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:border-primary transition-all font-medium text-slate-700 text-sm' 
+            placeholder="01900000"
+            className='w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-xl outline-none  transition-all font-medium text-slate-700 text-sm' 
           />
         </div>
       </div>
@@ -90,7 +90,7 @@ const RegisterForm = () => {
             type="password" id='password' name='password' required 
             value={formData.password} onChange={handleChange} 
             placeholder="••••••••"
-            className='w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:border-primary transition-all font-medium text-slate-700 text-sm' 
+            className='w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-xl outline-none  transition-all font-medium text-slate-700 text-sm' 
           />
         </div>
       </div>
@@ -104,7 +104,7 @@ const RegisterForm = () => {
       <button 
         type='submit' 
         disabled={isSubmitting}
-        className='group flex items-center justify-center gap-2.5 w-full py-3.5 bg-slate-900 text-white rounded-xl font-bold text-base hover:bg-primary transition-all active:scale-[0.98] disabled:opacity-50 shadow-md'
+        className='group flex items-center justify-center gap-2.5 w-full py-2 cursor-pointer bg-slate-900 text-white rounded-xl font-bold text-base hover:bg-primary transition-all active:scale-[0.98] disabled:opacity-50 shadow-md'
       >
         {isSubmitting ? (
           <Loader2 size={20} className='animate-spin' />

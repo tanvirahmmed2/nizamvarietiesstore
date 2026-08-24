@@ -37,44 +37,22 @@ const Offers = () => {
   return (
     <div className="w-full min-h-screen bg-slate-50/50">
 
-      {/* ── Location / Hero Bar ── */}
-      <div className="w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-12 px-4">
-        <div className="max-w-7xl mx-auto flex flex-col items-center gap-3 text-center">
+      <div className="w-full p-3 flex flex-col items-center gap-3 text-center bg-slate-900">
 
-          {/* Breadcrumb */}
-          <nav className="flex items-center gap-1.5 text-slate-400 text-xs font-medium">
-            <Link href="/" className="flex items-center gap-1 hover:text-white transition-colors">
-              <Home size={13} />
-              Home
-            </Link>
-            <ChevronRight size={13} className="text-slate-600" />
-            <span className="text-white font-semibold">Offers</span>
-          </nav>
 
-          {/* Badge */}
-          <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/20 text-primary text-[11px] font-bold tracking-widest uppercase border border-primary/20">
-            <Tag size={11} />
-            Limited Time Deals
-          </span>
+        <h1 className="text-4xl sm:text-5xl font-black text-white leading-none tracking-tighter">
+          Exclusive <span className="text-primary">Offers</span>
+        </h1>
 
-          {/* Heading */}
-          <h1 className="text-4xl sm:text-5xl font-black text-white leading-none tracking-tighter">
-            Exclusive <span className="text-primary">Offers</span>
-          </h1>
+        <div className="w-16 h-1 bg-primary rounded-full" />
 
-          {/* Accent line */}
-          <div className="w-16 h-1 bg-primary rounded-full" />
+        <p className="text-slate-400 text-sm font-medium max-w-md">
+          Handpicked deals with the best discounts — grab them before they&apos;re gone!
+        </p>
 
-          {/* Subtitle */}
-          <p className="text-slate-400 text-sm font-medium max-w-md">
-            Handpicked deals with the best discounts — grab them before they&apos;re gone!
-          </p>
-
-        </div>
       </div>
 
-      {/* ── Products Grid ── */}
-      <div className="max-w-7xl mx-auto px-4 py-10 flex flex-col items-center gap-8">
+      <div className="w-full px-4 md:px-8 py-10 flex flex-col items-center gap-8">
 
         {loading ? (
           <div className="w-full flex flex-col items-center justify-center py-20 gap-3">
@@ -124,11 +102,10 @@ const Offers = () => {
                     <button
                       key={num}
                       onClick={() => setPage(num)}
-                      className={`w-9 h-9 rounded-lg font-bold text-xs transition-all ${
-                        page === num
+                      className={`w-9 h-9 rounded-lg font-bold text-xs transition-all ${page === num
                           ? 'bg-primary text-white shadow-sm'
                           : 'text-slate-400 hover:bg-sky-50 hover:text-primary'
-                      }`}
+                        }`}
                     >
                       {num}
                     </button>

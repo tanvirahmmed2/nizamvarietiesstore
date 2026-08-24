@@ -65,24 +65,22 @@ const ProductsPage = () => {
   }
 
   return (
-    <div className="w-full min-h-screen bg-slate-50/50 pt-20 pb-12 px-4">
-      <div className="max-w-7xl mx-auto flex flex-col gap-6">
+    <div className="w-full min-h-screen bg-slate-50/50 pb-12 p-4 md:p-8">
+      <div className="w-full flex flex-col gap-6">
         
-        {/* Top Header & Filter Options Bar */}
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-4 bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-4 bg-white p-1 rounded-2xl shadow-sm border border-slate-100">
           <div className="flex items-center gap-3 shrink-0">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
               <LayoutGrid size={20} />
             </div>
             <div>
-              <h1 className="text-xl font-black text-slate-800 tracking-tight">Our Collection</h1>
+              <h1 className="text-xl text-slate-800 tracking-tight">Our Collection</h1>
               <p className="text-slate-400 text-xs font-medium">Browse through our premium items</p>
             </div>
           </div>
 
-          {/* Separate Select Controls in One Row */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 w-full lg:w-auto">
-            {/* Category Select */}
+            
             <div className="relative">
               <Filter className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={15} />
               <select 
@@ -99,7 +97,6 @@ const ProductsPage = () => {
               </select>
             </div>
 
-            {/* Price Select */}
             <div className="relative">
               <ArrowUpDown className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={15} />
               <select 
@@ -131,7 +128,6 @@ const ProductsPage = () => {
               </select>
             </div>
 
-            {/* Order Filter Select */}
             <div className="relative">
               <SortAsc className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={15} />
               <select 
@@ -150,7 +146,6 @@ const ProductsPage = () => {
           </div>
         </div>
 
-        {/* Content */}
         {loading ? (
           <div className="w-full flex flex-col items-center justify-center py-20 gap-3">
             <Loader2 className="animate-spin text-primary" size={32} />
@@ -177,7 +172,6 @@ const ProductsPage = () => {
               </AnimatePresence>
             </motion.div>
 
-            {/* Pagination */}
             <div className="flex items-center justify-center gap-2">
               <div className="flex items-center gap-1 bg-white p-1.5 rounded-xl shadow-sm border border-slate-100">
                 <button

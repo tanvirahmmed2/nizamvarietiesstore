@@ -6,15 +6,14 @@ import { motion } from 'framer-motion'
 
 const StoreVisit = () => {
   return (
-    <section className='w-full py-10 px-4'>
+    <section className='w-full py-10 px-4 md:px-8'>
       <motion.div 
         initial={{ opacity: 0, scale: 0.98 }}
         whileInView={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4 }}
-        className='max-w-7xl mx-auto rounded-3xl overflow-hidden relative bg-slate-900 shadow-xl shadow-slate-900/10'
+        className='w-full rounded-3xl overflow-hidden relative bg-slate-900 shadow-xl shadow-slate-900/10'
       >
-        {/* Background Pattern/Gradients */}
-        <div className='absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none'></div>
+        <div className='absolute inset-0 bg-linear-to-r from-primary/10 to-transparent pointer-events-none'></div>
         <div className='absolute -right-12 -top-12 w-48 h-48 bg-primary/10 rounded-full blur-3xl'></div>
         
         <div className='relative z-10 p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8'>

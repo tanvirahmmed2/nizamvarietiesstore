@@ -15,7 +15,7 @@ const BottomBar = () => {
         <BottomNavItem href='/offers' icon={<Tag size={22} />} label='Offers' />
         <BottomNavItem href='/products' icon={<Package size={22} />} label='Products' />
         
-        <Link href='/cart' className='relative flex flex-col items-center justify-center text-white/70 hover:text-primary transition-colors'>
+        <Link href='/cart' className='relative flex flex-col items-center justify-center text-white/70 hover:text-primary-dark transition-colors'>
           {cart?.items?.length > 0 && (
             <motion.span 
               initial={{ scale: 0 }}
@@ -34,7 +34,7 @@ const BottomBar = () => {
 }
 
 const BottomNavItem = ({ href, icon, label }) => (
-  <Link href={href} className='flex flex-col items-center justify-center text-white/70 hover:text-primary transition-colors'>
+  <Link href={href} className='flex flex-col items-center justify-center text-white hover:text-black transition-colors'>
     {icon}
     <span className='text-[10px] mt-1 font-medium'>{label}</span>
   </Link>

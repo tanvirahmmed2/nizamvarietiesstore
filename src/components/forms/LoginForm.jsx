@@ -38,7 +38,6 @@ const LoginForm = () => {
       onSubmit={loginHandle}
       className='w-full flex flex-col gap-5'
     >
-      {/* Email Field */}
       <div className='flex flex-col gap-1.5'>
         <label htmlFor='email' className='text-sm font-semibold text-slate-700'>
           Email Address
@@ -71,7 +70,7 @@ const LoginForm = () => {
             Password
           </label>
           <Link
-            href='/recoverid'
+            href='/recover-staff'
             className='text-xs font-semibold text-sky-600 hover:text-sky-700 transition-colors hover:underline'
           >
             Forgot password?
@@ -107,12 +106,11 @@ const LoginForm = () => {
         </div>
       </div>
 
-      {/* Submit Button */}
       <motion.button
         type='submit'
         disabled={loading}
         whileTap={{ scale: 0.98 }}
-        className='mt-2 w-full flex items-center justify-center gap-2.5 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white py-3.5 rounded-xl font-bold text-sm shadow-lg shadow-sky-200 transition-all disabled:opacity-70 disabled:cursor-not-allowed active:scale-[0.98]'
+        className='mt-2 w-full flex items-center justify-center gap-2.5 bg-primary/90 hover:bg-primary text-white py-2 cursor-pointer rounded-xl font-bold text-sm shadow-lg shadow-sky-200 transition-all disabled:opacity-70 disabled:cursor-not-allowed active:scale-[0.98]'
       >
         {loading ? (
           <>
@@ -127,21 +125,6 @@ const LoginForm = () => {
         )}
       </motion.button>
 
-      {/* Divider */}
-      <div className='relative flex items-center gap-3 my-1'>
-        <div className='flex-1 h-px bg-slate-200' />
-        <span className='text-xs text-slate-400 font-medium'>Staff access only</span>
-        <div className='flex-1 h-px bg-slate-200' />
-      </div>
-
-      {/* Footer note */}
-      <p className='text-center text-xs text-slate-400 leading-relaxed'>
-        Having trouble? Contact your administrator or{' '}
-        <Link href='/recoverid' className='text-sky-600 font-semibold hover:underline'>
-          reset your password
-        </Link>
-        .
-      </p>
     </motion.form>
   )
 }

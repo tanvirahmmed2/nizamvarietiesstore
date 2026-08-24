@@ -38,8 +38,8 @@ const Products = () => {
   }, [page])
 
   return (
-    <section className="w-full py-12 px-4 bg-slate-50/50">
-      <div className="max-w-7xl mx-auto flex flex-col items-center gap-8">
+    <section className="w-full py-12 px-4 md:px-8 bg-slate-50/50">
+      <div className="w-full  flex flex-col items-center gap-8">
         <div className="flex flex-col items-center gap-2 text-center">
           <h2 className='text-3xl sm:text-4xl font-black text-slate-900 tracking-tight'>
             Exclusive <span className="text-primary">Offers</span>

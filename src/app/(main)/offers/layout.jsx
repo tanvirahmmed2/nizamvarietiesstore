@@ -1,8 +1,8 @@
 import React from 'react'
 
 export const metadata={
-    title:'Products | NVS',
-    description:'Products site'
+    title:'Offers | NVS',
+    description:'Offer page'
 }
 
 

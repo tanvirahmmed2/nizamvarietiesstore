@@ -22,3 +22,7 @@ export const NODE_ENV = process.env.NODE_ENV || "production"
 export const BREVO_SENDER_EMAIL=process.env.BREVO_SENDER_EMAIL
 export const BREVO_SENDER_NAME=process.env.BREVO_SENDER_NAME
 export const BREVO_API_KEY=process.env.BREVO_API_KEY
+
+
+export const SHOPNAME="Nizam Varieties Store"
+export const SHOPSHORTNAME="NVS"
