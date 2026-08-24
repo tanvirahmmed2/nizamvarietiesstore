@@ -18,7 +18,7 @@ const PosLayout = async ({ children, }) => {
       <DashboardSidebar />
       <MainContentWrapper>
         <DashboardTopbar />
-        <div className="flex-1 p-4 md:p-8">
+        <div className="flex-1 p-4 ">
           {children}
         </div>
         <div className="py-6 border-t border-slate-200 px-4 md:px-8">

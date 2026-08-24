@@ -18,9 +18,9 @@ const POSItem = ({ product }) => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
             onClick={() => addToCart(product)}
-            className='group relative bg-white rounded-lg p-2 border border-slate-100 hover:border-primary/20 hover:shadow-lg transition-all duration-300 flex flex-col gap-3'
+            className='group relative bg-white  p-1 cursor-pointer border border-slate-100 hover:border-primary/20 hover:shadow-lg transition-all duration-300 flex flex-col gap-3'
         >
-            <div className='relative w-full aspect-square overflow-hidden rounded-lg bg-slate-50'>
+            <div className='relative w-full aspect-square overflow-hidden  bg-slate-50'>
                 {product?.discount_price > 0 && (
                     <div className='absolute top-2 left-2 z-10 px-2 py-0.5 bg-red-500 text-white text-[9px] font-bold rounded-full'>
                         -{Math.round((product.discount_price / product.sale_price) * 100)}%

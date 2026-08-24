@@ -196,13 +196,13 @@ const Orderform = ({ cartItems = [] }) => {
     return (
         <>
             <form onSubmit={handleSubmit} className='w-full flex flex-col gap-4 bg-white'>
-                <div className='flex flex-col gap-3'>
+                <div className='flex flex-col gap-2'>
                     <input
                         type="date"
                         name="createdAt"
                         value={data.createdAt}
                         onChange={handleChange}
-                        className='px-4 py-2 border border-slate-200 rounded-xl outline-none w-full bg-slate-50 focus:bg-white focus:border-primary transition-all text-sm font-medium'
+                        className='px-4 py-2 border border-slate-200 rounded-lg outline-none w-full bg-slate-50 focus:bg-white focus:border-primary transition-all text-sm font-medium'
                     />
 
                     <div className='flex items-center gap-2'>
@@ -212,7 +212,7 @@ const Orderform = ({ cartItems = [] }) => {
                             value={data.customer_id}
                             onChange={handleChange}
                             required
-                            className='flex-1 px-4 py-2 border border-slate-200 rounded-xl outline-none bg-slate-50 focus:bg-white focus:border-primary transition-all text-sm font-medium'
+                            className='flex-1 px-4 py-2 border border-slate-200 rounded-lg outline-none bg-slate-50 focus:bg-white focus:border-primary transition-all text-sm font-medium'
                         >
                             <option value="">-- select customer --</option>
                             {customers.map((customer) => (
@@ -221,11 +221,11 @@ const Orderform = ({ cartItems = [] }) => {
                                 </option>
                             ))}
                         </select>
-                        <button type='button' onClick={() => setIsCustomerBox(true)} className='w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 text-slate-600 font-bold hover:bg-primary hover:text-white transition-all'>+</button>
+                        <button type='button' onClick={() => setIsCustomerBox(true)} className='w-10 h-10 flex items-center justify-center rounded-lg bg-slate-100 text-slate-600 font-bold hover:bg-primary hover:text-white transition-all'>+</button>
                     </div>
                 </div>
 
-                <div className='grid grid-cols-2 p-1 bg-slate-100 rounded-xl w-full'>
+                <div className='grid grid-cols-2 p-1 bg-slate-100 rounded-lg w-full'>
                     <button type="button" onClick={() => handleSaleTypeChange('retail')}
                         className={`py-2 rounded-lg text-xs font-bold transition-all ${saleType === 'retail' ? 'bg-white text-primary shadow-sm' : 'text-slate-500'}`}>Retail Sale</button>
                     <button type="button" onClick={() => handleSaleTypeChange('wholesale')}
@@ -234,7 +234,7 @@ const Orderform = ({ cartItems = [] }) => {
 
                 <div className="w-full flex flex-col gap-2 relative">
                     <BarScanner onScan={handleBarcodeScan} />
-                    <div className="w-full flex items-center gap-3 bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl focus-within:border-primary focus-within:bg-white transition-all">
+                    <div className="w-full flex items-center gap-3 bg-slate-50 border border-slate-200 px-4 py-2 rounded-lg focus-within:border-primary focus-within:bg-white transition-all">
                         <FaBarcode className='text-slate-400' size={18} />
                         <input
                             type="text"
@@ -249,7 +249,7 @@ const Orderform = ({ cartItems = [] }) => {
                     </div>
 
                     {searchTerm.length > 0 && products && products.length > 0 && (
-                        <div className="absolute top-full left-0 w-full mt-2 bg-white border border-slate-100 rounded-xl shadow-xl z-50 max-h-64 overflow-y-auto overflow-x-hidden">
+                        <div className="absolute top-full left-0 w-full mt-2 bg-white border border-slate-100 rounded-lg shadow-xl z-50 max-h-64 overflow-y-auto overflow-x-hidden">
                             {products.map((product) => (
                                 <div key={product.product_id} onClick={() => {
                                     if (Number(product.stock) > 0) {
@@ -297,7 +297,7 @@ const Orderform = ({ cartItems = [] }) => {
                         const rowTotal = (itemRate - itemDiscount) * (item.quantity || 0);
 
                         return (
-                            <div key={item.product_id} className='w-full grid grid-cols-7 sm:grid-cols-13 gap-2 p-2 rounded-xl hover:bg-slate-50 transition-all items-center'>
+                            <div key={item.product_id} className='w-full grid grid-cols-7 sm:grid-cols-13 gap-2 p-2 rounded-lg hover:bg-slate-50 transition-all items-center'>
                                 <div className='col-span-3 sm:col-span-5 flex flex-col pr-1'>
                                     <p className='text-xs font-bold text-slate-700 truncate' title={item.name}>{item.name}</p>
                                     <div className='flex items-center gap-2'>
@@ -347,7 +347,7 @@ const Orderform = ({ cartItems = [] }) => {
                     </div>
                 </div>
 
-                <button className='w-full py-4 rounded-xl bg-primary text-white hover:bg-primary-dark font-bold shadow-lg shadow-primary/20 transition-all active:scale-[0.98] uppercase tracking-widest text-xs mt-2' type='submit'>
+                <button className='w-full py-4 rounded-lg bg-primary text-white hover:bg-primary-dark font-bold shadow-lg shadow-primary/20 transition-all active:scale-[0.98] uppercase tracking-widest text-xs mt-2' type='submit'>
                     Complete Order
                 </button>
             </form>

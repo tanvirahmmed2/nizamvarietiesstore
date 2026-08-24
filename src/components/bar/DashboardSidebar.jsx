@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { 
   RiHome5Line, RiProductHuntLine, RiShoppingCart2Line, 
   RiRefund2Line, RiAlertLine, RiUser3Line, RiTruckLine, 
@@ -26,7 +26,7 @@ const MenuItem = ({ href, icon: Icon, label, isOpen }) => {
       href={href} 
       className={`group flex flex-row gap-4 items-center px-3 py-2.5 transition-all rounded-xl mx-2 ${
         isActive 
-          ? 'bg-linear-to-r from-sky-500 to-indigo-500 text-white shadow-md shadow-sky-500/20 font-medium' 
+          ? 'bg-gradient-to-r from-sky-500 to-indigo-500 text-white shadow-md shadow-sky-500/20 font-medium' 
           : 'text-slate-300 hover:bg-white/10 hover:text-white font-medium'
       }`}
     >
@@ -38,12 +38,29 @@ const MenuItem = ({ href, icon: Icon, label, isOpen }) => {
 
 const DashboardSidebar = () => {
   const { isDashboardSidebar: isOpen, setIsDashboardSidebar } = useContext(Context)
+  const pathname = usePathname()
   
   // Local states for submenus
   const [saleMenuOpen, setSaleMenuOpen] = useState(false)
   const [purchaseMenuOpen, setPurchaseMenuOpen] = useState(false)
   const [productsMenuOpen, setProductsMenuOpen] = useState(false)
   const [reportMenuOpen, setReportMenuOpen] = useState(false)
+
+  // Auto expand submenus based on active route
+  useEffect(() => {
+    if (['/dashboard/sales-list', '/dashboard/sales-transactions'].includes(pathname)) {
+      setSaleMenuOpen(true)
+    }
+    if (['/dashboard/purchase-list', '/dashboard/purchase-transactions'].includes(pathname)) {
+      setPurchaseMenuOpen(true)
+    }
+    if (['/dashboard/newproduct', '/dashboard/products'].includes(pathname)) {
+      setProductsMenuOpen(true)
+    }
+    if (['/dashboard/sales', '/dashboard/stock', '/dashboard/analytics'].includes(pathname)) {
+      setReportMenuOpen(true)
+    }
+  }, [pathname])
 
   const handleLogout = async () => {
     try {
@@ -88,9 +105,18 @@ const DashboardSidebar = () => {
       )}
       
       <aside className={`select-none fixed top-0 left-0 z-[100] text-slate-300 bg-slate-900 h-screen transition-transform duration-300 flex flex-col py-4 overflow-y-auto custom-scrollbar border-r border-slate-800 w-64 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="flex items-center justify-center h-12 mb-6 px-2">
-        <Image src={'/icon.png'} width={80} height={80} alt='icon'/>
-      </div>
+        <div className="flex items-center justify-between h-12 mb-6 px-4 relative">
+          <div className="flex items-center justify-center w-full">
+            <Image src={'/icon.png'} width={80} height={80} alt='icon' className="h-auto w-auto max-h-12 object-contain" />
+          </div>
+          <button 
+            onClick={() => setIsDashboardSidebar(false)}
+            className="md:hidden text-slate-400 hover:text-white p-1 absolute right-3 cursor-pointer"
+            title="Close Sidebar"
+          >
+            <RiCloseLine size={24} />
+          </button>
+        </div>
 
       <div className="pb-4 border-b border-slate-800 mb-2">
         <MenuItem href="/dashboard" icon={RiHome5Line} label="Management" isOpen={isOpen} />
@@ -112,7 +138,7 @@ const DashboardSidebar = () => {
               <FaChevronDown size={10} className={`ml-auto transition-transform ${saleMenuOpen ? 'rotate-180' : ''}`} />
             </div>
           )}
-          <div className={`${(isOpen && saleMenuOpen) ? 'block' : 'hidden'} pl-4 flex flex-col gap-1 border-l-2 border-slate-800 ml-6 my-1`}>
+          <div className={`${(isOpen && saleMenuOpen) ? 'flex' : 'hidden'} pl-4 flex-col gap-1 border-l-2 border-slate-800 ml-6 my-1`}>
             <MenuItem href="/dashboard/sales-list" icon={RiShoppingBag3Line} label="Sales List" isOpen={isOpen} />
             <MenuItem href="/dashboard/sales-transactions" icon={TbReport} label="Transaction" isOpen={isOpen} />
           </div>
@@ -127,7 +153,7 @@ const DashboardSidebar = () => {
               <FaChevronDown size={10} className={`ml-auto transition-transform ${purchaseMenuOpen ? 'rotate-180' : ''}`} />
             </div>
           )}
-          <div className={`${(isOpen && purchaseMenuOpen) ? 'block' : 'hidden'} pl-4 flex flex-col gap-1 border-l-2 border-slate-800 ml-6 my-1`}>
+          <div className={`${(isOpen && purchaseMenuOpen) ? 'flex' : 'hidden'} pl-4 flex-col gap-1 border-l-2 border-slate-800 ml-6 my-1`}>
             <MenuItem href="/dashboard/purchase-list" icon={RiShoppingBag3Line} label="Purchase List" isOpen={isOpen} />
             <MenuItem href="/dashboard/purchase-transactions" icon={TbReport} label="Transaction" isOpen={isOpen} />
           </div>
@@ -151,7 +177,7 @@ const DashboardSidebar = () => {
               <FaChevronDown size={10} className={`ml-auto transition-transform ${productsMenuOpen ? 'rotate-180' : ''}`} />
             </div>
           )}
-          <div className={`${(isOpen && productsMenuOpen) ? 'block' : 'hidden'} pl-4 flex flex-col gap-1 border-l-2 border-slate-800 ml-6 my-1`}>
+          <div className={`${(isOpen && productsMenuOpen) ? 'flex' : 'hidden'} pl-4 flex-col gap-1 border-l-2 border-slate-800 ml-6 my-1`}>
             <MenuItem href="/dashboard/newproduct" icon={RiPriceTag3Line} label="New Product" isOpen={isOpen} />
             <MenuItem href="/dashboard/products" icon={RiShoppingBag3Line} label="Product List" isOpen={isOpen} />
           </div>
@@ -183,7 +209,7 @@ const DashboardSidebar = () => {
               <FaChevronDown size={10} className={`ml-auto transition-transform ${reportMenuOpen ? 'rotate-180' : ''}`} />
             </div>
           )}
-          <div className={`${(isOpen && reportMenuOpen) ? 'block' : 'hidden'} pl-4 flex flex-col gap-1 border-l-2 border-slate-800 ml-6 my-1`}>
+          <div className={`${(isOpen && reportMenuOpen) ? 'flex' : 'hidden'} pl-4 flex-col gap-1 border-l-2 border-slate-800 ml-6 my-1`}>
             <MenuItem href="/dashboard/sales" icon={TbReport} label="Sales" isOpen={isOpen} />
             <MenuItem href="/dashboard/stock" icon={RiFileChartLine} label="Stock" isOpen={isOpen} />
             <MenuItem href="/dashboard/analytics" icon={TbReportAnalytics} label="Analytics" isOpen={isOpen} />
@@ -204,7 +230,7 @@ const DashboardSidebar = () => {
         {(isOpen) && (
           <button 
             onClick={downloadDB} 
-            className="flex items-center justify-center gap-2 px-2 py-2.5 text-sm font-semibold bg-slate-800 text-sky-400 rounded-xl hover:bg-slate-700 transition-colors mx-4 my-2 border border-slate-700"
+            className="flex items-center justify-center gap-2 px-2 py-2.5 text-sm font-semibold bg-slate-800 text-sky-400 rounded-xl hover:bg-slate-700 transition-colors mx-4 my-2 border border-slate-700 cursor-pointer"
           >
             <BsFillHouseGearFill size={16} />
             <span>Backup Data</span>
