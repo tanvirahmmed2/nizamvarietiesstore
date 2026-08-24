@@ -1,6 +1,5 @@
 'use client'
-
-import Item from "@/components/card/Item"
+import POSItem from "@/components/card/PosItem"
 import AddCutomerForm from "@/components/forms/AddCustomerForm"
 import { Context } from "@/components/helper/Context"
 import SalesCart from "@/components/page/SalesCart"
@@ -73,7 +72,7 @@ const PosPage = () => {
           ) : (
             <div className='w-full grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4'>
               {products.map(product => (
-                <Item product={product} key={product.product_id} />
+                <POSItem product={product} key={product.product_id} />
               ))}
             </div>
           )}

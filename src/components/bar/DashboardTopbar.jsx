@@ -3,6 +3,7 @@ import React, { useContext } from 'react'
 import { Context } from '../helper/Context'
 import { RiMenuLine, RiMenuFoldLine, RiNotification3Line, RiSearchLine, RiSettings3Line } from 'react-icons/ri'
 import { CgMenuMotion } from 'react-icons/cg'
+import { SHOPSHORTNAME } from '@/lib/database/secret'
 
 const DashboardTopbar = () => {
     const { isDashboardSidebar, setIsDashboardSidebar, userData } = useContext(Context)
@@ -12,12 +13,12 @@ const DashboardTopbar = () => {
             <div className="flex items-center gap-4">
                 <button
                     onClick={() => setIsDashboardSidebar(!isDashboardSidebar)}
-                    className="p-2 rounded-xl hover:bg-slate-100 text-slate-600 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-100"
+                    className="p-2 cursor-pointer "
                     title={isDashboardSidebar ? "Close Sidebar" : "Open Sidebar"}
                 >
                     {isDashboardSidebar ? <CgMenuMotion size={22} /> : <RiMenuLine size={22} />}
                 </button>
-                
+                <h1>{SHOPSHORTNAME}</h1>
             </div>
 
             <div className="flex items-center gap-2 sm:gap-4">
