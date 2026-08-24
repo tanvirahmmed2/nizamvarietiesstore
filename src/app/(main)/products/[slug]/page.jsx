@@ -13,17 +13,17 @@ const SingleProduct = async ({ params }) => {
   const product = data.payload?.[0]
   if (!product) return <p>No data found</p>
   return (
-    <div className='w-full min-h-screen flex flex-col gap-20 items-center justify-center rounded-2xl'>
-      <div className='w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-8 bg-white m-6 p-4 md:p-6 rounded-2xl shadow-sm border border-slate-100'>
+    <div className='w-full min-h-screen flex flex-col gap-20 items-center justify-center'>
+      <div className='w-full flex flex-col lg:flex-row gap-8  m-6 p-4 md:p-6 '>
 
-        <div className='relative w-full overflow-hidden rounded-xl bg-slate-50 border border-slate-100'>
+        <div className='relative w-full overflow-hidden rounded-lg '>
           <div className='absolute right-3 top-3 z-10'>
             {product.stock > 0 ? (
-              <span className='text-[12px] font-bold uppercase tracking-wider text-white py-1.5 px-3 rounded-full bg-emerald-500'>
+              <span className='text-[12px] font-semibold uppercase tracking-wider text-white py-1.5 px-3 rounded-full bg-emerald-500'>
                 Available
               </span>
             ) : (
-              <span className='text-[12px] font-bold uppercase tracking-wider text-white py-1.5 px-3 rounded-full bg-orange-500 '>
+              <span className='text-[12px] font-semibold uppercase tracking-wider text-white py-1.5 px-3 rounded-full bg-orange-500 '>
                 Out of Stock
               </span>
             )}
@@ -33,14 +33,14 @@ const SingleProduct = async ({ params }) => {
             alt={product?.name}
             width={1000}
             height={1000}
-            className="object-cover w-full   transition-transform duration-500 group-hover:scale-105"
+            className="object-cover w-full transition-transform duration-500 group-hover:scale-105"
           />
         </div>
 
 
         <div className=' w-full flex flex-col py-2'>
           <div className="space-y-4">
-            <h1 className='text-base md:text-xl  font-bold text-slate-900 leading-tight'>
+            <h1 className='text-base md:text-xl  font-semibold text-slate-900 leading-tight'>
               {product.name}
             </h1>
             <div className="pt-4 border-t border-slate-100">

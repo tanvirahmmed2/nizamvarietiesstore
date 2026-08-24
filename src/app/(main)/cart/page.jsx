@@ -85,7 +85,7 @@ const CartPage = () => {
         <h2 className='text-xl font-black text-slate-800'>Your cart is empty</h2>
         <p className='text-slate-500 text-sm font-medium mt-1'>Looks like you haven't added anything yet.</p>
       </div>
-      <Link href="/products" className='group flex items-center gap-2.5 bg-primary text-white px-6 py-3 rounded-xl font-bold hover:bg-primary-dark transition-all shadow-sm active:scale-95'>
+      <Link href="/products" className='group flex items-center gap-2.5 bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-dark transition-all shadow-sm active:scale-95'>
         Start Shopping
         <ArrowRight size={18} className='group-hover:translate-x-1 transition-transform' />
       </Link>
@@ -93,16 +93,15 @@ const CartPage = () => {
   )
 
   return (
-    <div className='w-full max-w-7xl mx-auto px-4 py-6'>
+    <div className='w-full md:px-8 px-4 py-6'>
       <div className='flex flex-col lg:flex-row gap-8'>
         
-        {/* Cart Items */}
         <div className='flex-1'>
           <div className='flex items-center justify-between mb-6'>
             <h1 className='text-3xl font-black text-slate-900 tracking-tight'>Shopping <span className='text-primary'>Cart</span></h1>
             <button 
               onClick={clearCart}
-              className='flex items-center gap-2 text-xs font-bold text-red-400 hover:text-red-500 transition-colors uppercase tracking-widest'
+              className='flex items-center gap-2 text-xs font-semibold text-red-400 hover:text-red-500 transition-colors uppercase tracking-widest'
             >
               <Trash2 size={14} />
               Clear Cart
@@ -117,9 +116,9 @@ const CartPage = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, x: -10 }}
-                  className='group bg-white rounded-2xl border border-slate-100 p-2 flex flex-col md:flex-row items-center gap-4 hover:shadow-md transition-all duration-300'
+                  className='group bg-white rounded-lg border border-slate-100 p-2 flex flex-col md:flex-row items-center gap-4 hover:shadow-md transition-all duration-300'
                 >
-                  <div className='w-20 h-20 rounded-xl bg-slate-50 shrink-0 overflow-hidden border border-slate-100 flex items-center justify-center'>
+                  <div className='w-20 h-20 rounded-lg bg-slate-50 shrink-0 overflow-hidden border border-slate-100 flex items-center justify-center'>
                     {item?.image ? (
                       <Image width={500} height={500} src={item?.image} alt={item?.name} className='w-full h-full object-cover group-hover:scale-105 transition-transform' />
                     ) : (
@@ -128,19 +127,19 @@ const CartPage = () => {
                   </div>
 
                   <div className='flex-1 text-center md:text-left'>
-                    <h3 className='text-base font-bold text-slate-800 line-clamp-1'>{item?.name}</h3>
+                    <h3 className='text-base font-semibold text-slate-800 line-clamp-1'>{item?.name}</h3>
                     <p className='text-xs font-medium text-slate-400 mt-1'>৳{parseFloat(item?.sale_price).toFixed(2)} / unit</p>
                   </div>
 
                   <div className='flex flex-wrap items-center justify-center gap-4'>
-                    <div className='flex items-center gap-3 bg-slate-50 p-1 rounded-xl border border-slate-100'>
+                    <div className='flex items-center gap-3 bg-slate-50 p-1 rounded-lg border border-slate-100'>
                       <button
                         onClick={() => decreaseQuantity(item?.product_id)}
                         className='w-7 h-7 rounded-lg bg-white flex items-center justify-center text-slate-600 hover:text-primary transition-all active:scale-90'
                       >
                         <Minus size={14} />
                       </button>
-                      <span className='font-bold text-slate-800 min-w-[16px] text-center text-sm'>{item?.quantity}</span>
+                      <span className='font-semibold text-slate-800 min-w-4 text-center text-sm'>{item?.quantity}</span>
                       <button
                         onClick={() => addToCart(item)}
                         className='w-7 h-7 rounded-lg bg-white flex items-center justify-center text-slate-600 hover:text-primary transition-all active:scale-90'
@@ -149,13 +148,13 @@ const CartPage = () => {
                       </button>
                     </div>
 
-                    <div className='text-right min-w-[80px]'>
+                    <div className='text-right min-w-20'>
                       <p className='text-base font-black text-slate-900'>৳{(parseFloat(item.sale_price) * item.quantity).toFixed(2)}</p>
                     </div>
 
                     <button
                       onClick={() => removeFromCart(item?.product_id)}
-                      className='p-2.5 rounded-xl text-slate-300 hover:text-red-500 hover:bg-red-50 transition-all active:scale-90'
+                      className='p-2.5 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 transition-all active:scale-90'
                     >
                       <Trash2 size={18} />
                     </button>
@@ -166,10 +165,9 @@ const CartPage = () => {
           </div>
         </div>
 
-        {/* Checkout Sidebar */}
-        <div className='w-full lg:w-[360px]'>
-          <div className='bg-slate-900 rounded-3xl p-6 md:p-8 sticky top-20 shadow-xl shadow-slate-900/10'>
-            <h2 className='text-xl font-bold text-white mb-6 flex items-center gap-3'>
+        <div className='w-full lg:w-90'>
+          <div className='bg-slate-900 rounded-lg p-6 md:p-8 sticky top-20 shadow-xl shadow-slate-900/10'>
+            <h2 className='text-xl font-semibold text-white mb-6 flex items-center gap-3'>
               Checkout
               <div className='h-1 w-10 bg-primary rounded-full'></div>
             </h2>
@@ -181,7 +179,7 @@ const CartPage = () => {
                   <input
                     type="text" name='name' required placeholder="Full Name"
                     onChange={handleChange} value={formData.name}
-                    className='w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-primary transition-all text-white font-medium placeholder:text-slate-600 text-sm'
+                    className='w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg outline-none focus:border-primary transition-all text-white font-medium placeholder:text-slate-600 text-sm'
                   />
                 </div>
                 <div className='relative'>
@@ -189,15 +187,15 @@ const CartPage = () => {
                   <input
                     type="text" name='phone' required placeholder="Phone Number"
                     onChange={handleChange} value={formData.phone}
-                    className='w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-primary transition-all text-white font-medium placeholder:text-slate-600 text-sm'
+                    className='w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg outline-none focus:border-primary transition-all text-white font-medium placeholder:text-slate-600 text-sm'
                   />
                 </div>
 
                 <div className='flex flex-col gap-1.5 pt-1'>
                   <label className='text-[9px] font-black text-slate-600 uppercase tracking-widest ml-1'>Payment Method</label>
-                  <div className='flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-xl text-slate-300'>
+                  <div className='flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-lg text-slate-300'>
                     <CreditCard size={16} className='text-primary' />
-                    <span className='font-bold uppercase tracking-wider text-[11px]'>Pay at counter</span>
+                    <span className='font-semibold uppercase tracking-wider text-[11px]'>Pay at counter</span>
                   </div>
                 </div>
               </div>
@@ -207,7 +205,7 @@ const CartPage = () => {
                   <span>Subtotal</span>
                   <span>৳{formData.subTotal.toFixed(2)}</span>
                 </div>
-                <div className='flex justify-between text-green-500 font-bold text-sm'>
+                <div className='flex justify-between text-green-500 font-semibold text-sm'>
                   <span>Discount</span>
                   <span>-৳{formData.discount.toFixed(2)}</span>
                 </div>
@@ -220,7 +218,7 @@ const CartPage = () => {
               <button
                 type='submit'
                 disabled={isSubmitting}
-                className='group flex items-center justify-center gap-2.5 w-full py-3.5 bg-primary text-white rounded-xl font-bold text-base hover:bg-primary-dark transition-all active:scale-[0.98] disabled:opacity-50 shadow-md'
+                className='group flex items-center justify-center gap-2.5 w-full py-3.5 bg-primary text-white rounded-lg font-semibold text-base hover:bg-primary-dark transition-all active:scale-[0.98] disabled:opacity-50 shadow-md'
               >
                 {isSubmitting ? (
                   <Loader2 size={20} className='animate-spin' />

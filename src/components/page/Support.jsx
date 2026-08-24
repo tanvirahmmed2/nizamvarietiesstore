@@ -131,7 +131,7 @@ const Support = () => {
               <button 
                 type='submit' 
                 disabled={isSubmitting}
-                className='group flex items-center justify-center gap-2.5 w-full py-4 bg-slate-900 text-white rounded-xl font-bold text-base hover:bg-primary transition-all active:scale-[0.98] disabled:opacity-50 shadow-md'
+                className='group flex items-center justify-center gap-2.5 w-full py-2 cursor-pointer bg-slate-900 text-white rounded-xl font-bold text-base hover:bg-primary transition-all active:scale-[0.98] disabled:opacity-50 shadow-md'
               >
                 {isSubmitting ? 'Sending...' : 'Send Message'}
                 <Send size={18} className={isSubmitting ? 'animate-pulse' : 'group-hover:translate-x-1 transition-transform'} />

@@ -23,10 +23,10 @@ const SameCategory = ({ category }) => {
 
   if (products.length < 1) return console.log('No data found')
   return (
-    <div className='w-full flex flex-col items-center justify-center p-4 gap-4 max-w-7xl '>
-      <h1 className='text-3xl text-center '>You May Also Love</h1>
+    <div className='w-full flex flex-col items-center justify-center p-4 md:p-8 gap-4  '>
+      <h1 className='text-3xl text-center font-semibold'>You May Also Love</h1>
       {
-        products && <div className='w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4  gap-4'>
+        products && <div className='w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4'>
           {
             products.map((item) => (
               <Item product={item} key={item.product_id}/>

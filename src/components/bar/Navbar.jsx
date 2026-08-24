@@ -41,7 +41,7 @@ const Navbar = () => {
           <div className='w-8 h-8 relative flex items-center justify-center transition-transform group-hover:scale-110'>
             <Image src="/icon.png" alt="Nizam Varieties Store" width={32} height={32} className="object-contain" />
           </div>
-          <span className='text-lg text-primary font-semibold tracking-tight '>
+          <span className='text-lg font-semibold tracking-tight '>
             {SHOPNAME}
           </span>
         </Link>
