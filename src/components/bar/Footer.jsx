@@ -3,7 +3,7 @@ import React from 'react'
 import FooterTagline from './FooterTagline'
 import Image from 'next/image';
 import { Facebook, Twitter, Instagram, Mail, Phone, MapPin } from 'lucide-react'
-import { SHOPNAME } from '@/lib/database/secret';
+import { SHOPADDRESS, SHOPMAIL, SHOPNAME, SHOPPHONE } from '@/lib/database/secret';
 
 const Footer = () => {
   return (
@@ -41,9 +41,9 @@ const Footer = () => {
         </FooterColumn>
 
         <FooterColumn title='Contact Us'>
-          <ContactItem icon={<Mail size={16} />} text='nizamvarietiesstore@gmail.com' />
-          <ContactItem icon={<Phone size={16} />} text='+880 1645-172356' />
-          <ContactItem icon={<MapPin size={16} />} text='Pakuritala, Tarakanda' />
+          <ContactItem icon={<Mail size={16} />} text={`${SHOPMAIL}`} />
+          <ContactItem icon={<Phone size={16} />} text={`${SHOPPHONE}`} />
+          <ContactItem icon={<MapPin size={16} />} text={`${SHOPADDRESS}`} />
         </FooterColumn>
       </div>
       

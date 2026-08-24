@@ -65,7 +65,7 @@ const Intro = () => {
                         alt={`Slide ${current + 1}`}
                         fill
                         sizes="100vw"
-                        className='object-cover'
+                        className='object-cover blur-[2px] scale-105'
                         priority={current === 0}
                     />
                 </motion.div>
@@ -84,7 +84,7 @@ const Intro = () => {
                     <h1 className='text-5xl sm:text-7xl font-black text-white leading-none tracking-tighter uppercase'>
                         Nizam <span className='text-primary'>Varieties Store</span>
                     </h1>
-                    <p className='max-w-lg text-base sm:text-lg text-slate-300 font-medium leading-relaxed'>
+                    <p className='max-w-lg text-base sm:text-lg text-white font-medium leading-relaxed'>
                         Discover an exclusive collection of premium products curated just for you. Quality meets variety at Nizam Varieties Store.
                     </p>
                 </motion.div>
@@ -143,8 +143,6 @@ const Intro = () => {
                 ))}
             </div>
 
-            {/* Bottom fade */}
-            <div className='absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white to-transparent z-20' />
         </section>
     )
 }

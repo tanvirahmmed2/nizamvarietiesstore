@@ -26,3 +26,6 @@ export const BREVO_API_KEY=process.env.BREVO_API_KEY
 
 export const SHOPNAME="Nizam Varieties Store"
 export const SHOPSHORTNAME="NVS"
+export const SHOPMAIL="nizamvarietiesstore@gmail.com"
+export const SHOPPHONE="+880 1645-172356"
+export const SHOPADDRESS="Pakuritala, Tarakanda"

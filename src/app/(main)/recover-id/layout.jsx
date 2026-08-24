@@ -1,4 +1,5 @@
-import { isLogin } from '@/lib/middleware'
+
+import { isUserLogin } from '@/lib/usermiddleware'
 import { redirect } from 'next/navigation'
 import React from 'react'
 
@@ -8,7 +9,7 @@ export const metadata = {
 }
 
 const RecoverCustomerLayout = async ({ children }) => {
-    const auth = await isLogin()
+    const auth = await isUserLogin()
     if (auth.success) {
         return redirect('/profile')
     }

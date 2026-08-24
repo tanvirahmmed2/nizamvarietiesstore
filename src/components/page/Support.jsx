@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { motion } from 'framer-motion'
 import { Send, Mail, User, MessageSquare, HelpCircle } from 'lucide-react'
+import { SHOPMAIL } from '@/lib/database/secret'
 
 const Support = () => {
   const [formData, setFormData] = useState({
@@ -58,7 +59,7 @@ const Support = () => {
             <ContactCard 
               icon={<Mail size={18} />} 
               title='Email Us' 
-              content='nizamvarietiesstore@gmail.com' 
+              content={`${SHOPMAIL}`} 
             />
             <ContactCard 
               icon={<MessageSquare size={18} />} 
