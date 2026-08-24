@@ -27,11 +27,14 @@ const StockReport = () => {
     const currentList = viewMode === 'low' ? data?.lowStock : data?.highStock
 
     return (
-        <div className='w-full flex flex-col gap-10 bg-white'>
+        <div className='w-full flex flex-col gap-6 bg-slate-50 min-h-screen relative'>
 
-            <div className='flex flex-col gap-2'>
-                <h1 className='text-3xl font-bold text-slate-800 tracking-tight'>Inventory Analysis</h1>
-                <p className='text-slate-400 text-sm font-medium uppercase tracking-widest'>Stock Management & Forecast</p>
+            {/* Header */}
+            <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100'>
+                <div>
+                    <h1 className='text-2xl font-bold text-slate-800 tracking-tight'>Inventory Analysis</h1>
+                    <p className='text-sm text-slate-500 mt-1'>Stock management, monitoring & forecast</p>
+                </div>
             </div>
 
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>

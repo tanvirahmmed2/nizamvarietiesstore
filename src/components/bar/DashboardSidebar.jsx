@@ -40,7 +40,6 @@ const DashboardSidebar = () => {
   const { isDashboardSidebar: isOpen, setIsDashboardSidebar } = useContext(Context)
   const pathname = usePathname()
   
-  // Local states for submenus
   const [saleMenuOpen, setSaleMenuOpen] = useState(false)
   const [purchaseMenuOpen, setPurchaseMenuOpen] = useState(false)
   const [productsMenuOpen, setProductsMenuOpen] = useState(false)
@@ -128,7 +127,7 @@ const DashboardSidebar = () => {
             <TbMoneybag size={14} /> Purchase & Transaction
           </p>
         )}
-        <MenuItem href="/dashboard/pos" icon={RiShoppingCart2Line} label="POS System" isOpen={isOpen} />
+        <MenuItem href="/dashboard/pos" icon={RiShoppingCart2Line} label="POS" isOpen={isOpen} />
         <MenuItem href="/dashboard/pendingorders" icon={RiShoppingCart2Line} label="Pending Orders" isOpen={isOpen} />
         
         <div className="flex flex-col gap-1">

@@ -70,14 +70,16 @@ const AnalyticsPage = () => {
     const formatNum = (val) => Number(val || 0).toLocaleString();
 
     return (
-        <div className='mx-auto w-full p-1 sm:p-4 flex flex-col gap-8 bg-white min-h-screen'>
-            <div className='flex justify-between items-end'>
-                <div className='flex flex-col gap-1'>
-                    <h1 className='text-3xl font-black text-sky-900 tracking-tighter'>Business Analytics</h1>
-                    <p className='text-sky-400 text-sm font-medium tracking-widest uppercase'>Intelligence & Capital Flow</p>
+        <div className='w-full flex flex-col gap-6 bg-slate-50 min-h-screen relative'>
+            
+            {/* Header */}
+            <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100'>
+                <div>
+                    <h1 className='text-2xl font-bold text-slate-800 tracking-tight'>Business Analytics</h1>
+                    <p className='text-sm text-slate-500 mt-1'>Real-time analytical insights, revenue & capital flow</p>
                 </div>
-                <div className='text-right'>
-                    <span className='text-[10px] font-bold text-gray-400 uppercase'>Data Refresh</span>
+                <div className='text-left sm:text-right bg-slate-50 px-4 py-2 rounded-xs border border-slate-200'>
+                    <span className='text-[10px] font-bold text-slate-400 uppercase tracking-wider block'>Last Refresh</span>
                     <p className='text-xs font-bold text-sky-600'>{new Date().toLocaleTimeString()}</p>
                 </div>
             </div>

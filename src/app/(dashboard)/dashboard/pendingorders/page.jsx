@@ -4,24 +4,28 @@ import axios from 'axios'
 import { toast } from 'react-hot-toast'
 import { generateReceipt } from '@/lib/database/print'
 import { printOrder } from '@/lib/database/orderPrint'
-import { FaPrint, FaCheck, FaXmark } from 'react-icons/fa6'
+import { FaBarcode } from 'react-icons/fa'
+import { FaCheck, FaXmark } from 'react-icons/fa6'
 import { GiConfirmed } from 'react-icons/gi'
 import { MdDelete } from 'react-icons/md'
 import { IoPrintOutline } from 'react-icons/io5'
 import Link from 'next/link'
 import { GoEye } from 'react-icons/go'
+import { BsThreeDotsVertical } from 'react-icons/bs'
 
 const PendingOrdersPage = () => {
   const [orders, setOrders] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(true)
   const [confirmDelete, setConfirmDelete] = useState(null)
+  const [openMenuId, setOpenMenuId] = useState(null)
 
   const fetchOrders = useCallback(async () => {
     try {
       setLoading(true)
       const res = await axios.get(`/api/order/status?q=pending`)
       if (res.data.success) {
-        setOrders(res.data.payload)
+        setOrders(res.data.payload || [])
       } else {
         setOrders([])
       }
@@ -38,12 +42,15 @@ const PendingOrdersPage = () => {
   }, [fetchOrders])
 
   const confirmOrder = async (orderId) => {
+    setOpenMenuId(null)
     try {
       const res = await axios.put('/api/order', { orderId, action: 'confirm' })
       if (res.data.success) {
         toast.success("Order Confirmed & Stock Updated")
         fetchOrders()
-        generateReceipt(res.data.payload)
+        if (res.data.payload) {
+          generateReceipt(res.data.payload)
+        }
       }
     } catch (error) {
       toast.error(error?.response?.data?.message || "Confirmation failed")
@@ -56,6 +63,7 @@ const PendingOrdersPage = () => {
       if (res.data.success) {
         toast.success("Order Deleted")
         setConfirmDelete(null)
+        setOpenMenuId(null)
         fetchOrders()
       }
     } catch (error) {
@@ -63,124 +71,241 @@ const PendingOrdersPage = () => {
     }
   }
 
+  const formatDate = (dateStr) => {
+    if (!dateStr) return 'N/A'
+    const dateObj = new Date(dateStr)
+    return dateObj.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    })
+  }
+
+  const filteredOrders = orders.filter(order => {
+    if (!searchTerm.trim()) return true
+    const term = searchTerm.toLowerCase()
+    return (
+      order.order_id?.toString().toLowerCase().includes(term) ||
+      order.name?.toLowerCase().includes(term) ||
+      order.phone?.toLowerCase().includes(term)
+    )
+  })
+
   return (
-    <div className='w-full max-w-7xl mx-auto p-4 md:p-6 flex flex-col gap-6 bg-slate-50 min-h-screen'>
+    <div className='w-full flex flex-col gap-4 bg-slate-50 min-h-screen relative'>
+      {openMenuId !== null && (
+        <div 
+          className="fixed inset-0 z-30 bg-transparent cursor-default" 
+          onClick={() => setOpenMenuId(null)} 
+        />
+      )}
+
       {/* Header */}
-      <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100'>
+      <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100'>
         <div>
           <h1 className='text-2xl font-bold text-slate-800 tracking-tight'>Pending Orders</h1>
           <p className='text-sm text-slate-500 mt-1'>Review and confirm incoming orders</p>
         </div>
-        <div className='bg-amber-50 px-4 py-2 rounded-xl border border-amber-100'>
-          <span className='text-amber-700 font-bold'>{orders.length}</span>
-          <span className='text-amber-600 text-xs uppercase tracking-wider ml-2 font-bold'>Awaiting Confirmation</span>
+        <div className='w-full sm:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-3'>
+          {orders.length > 0 && (
+            <span className="text-[10px] font-bold uppercase bg-amber-100 text-amber-700 px-3 py-2.5 rounded-xs text-center whitespace-nowrap border border-amber-200">
+              Awaiting: {orders.length} Orders
+            </span>
+          )}
+          <div className='flex items-center gap-2 bg-slate-50 px-4 py-2.5 rounded-xs border border-slate-200 focus-within:border-sky-400 focus-within:ring-4 focus-within:ring-sky-100/50 transition-all sm:w-72'>
+            <FaBarcode className='text-slate-400 text-lg' />
+            <input 
+              type="text" 
+              placeholder="Search pending orders..." 
+              value={searchTerm} 
+              onChange={(e) => setSearchTerm(e.target.value)}  
+              className='bg-transparent border-none outline-none text-sm text-slate-700 w-full placeholder:text-slate-400'
+            />
+          </div>
         </div>
       </div>
 
+      {/* Table Header */}
+      <div className="grid grid-cols-12 gap-2 sm:gap-3 px-4 sm:px-5 py-3 bg-white border border-slate-200 rounded-xs font-bold text-slate-500 text-[11px] sm:text-xs uppercase tracking-wider shadow-xs items-center">
+        <div className="col-span-3 sm:col-span-2 lg:col-span-1">Order ID</div>
+        <div className="col-span-3 sm:col-span-2 lg:col-span-1">Date</div>
+        <div className="col-span-3 sm:col-span-3 lg:col-span-2">Customer</div>
+        <div className="hidden lg:block lg:col-span-3">Products</div>
+        <div className="col-span-2 sm:col-span-2 lg:col-span-1 text-right">Total</div>
+        <div className="hidden lg:block lg:col-span-1 text-right">Paid</div>
+        <div className="hidden lg:block lg:col-span-1 text-right">Discount</div>
+        <div className="hidden sm:block sm:col-span-2 lg:col-span-1 text-center">Status</div>
+        <div className="col-span-1 text-right lg:text-center">Action</div>
+      </div>
+
       {/* Orders List */}
-      <div className='w-full flex flex-col gap-4'>
+      <div className='w-full flex flex-col gap-2.5'>
         {loading ? (
-           <p className='text-center text-sky-400 animate-pulse font-bold py-20'>Fetching Pending Orders...</p>
-        ) : orders.length === 0 ? (
+          <div className="flex flex-col gap-3">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-16 bg-white animate-pulse rounded-xs border border-slate-200"></div>
+            ))}
+          </div>
+        ) : filteredOrders.length === 0 ? (
           <div className='w-full h-64 flex flex-col items-center justify-center text-center gap-3 p-6 bg-white rounded-2xl shadow-sm border border-slate-100'>
-             <p className='text-slate-600 font-semibold'>No Pending Orders</p>
+             <p className='text-slate-600 font-semibold'>No Pending Orders Found</p>
              <p className='text-slate-400 text-sm mt-1'>You're all caught up!</p>
           </div>
-        ) : orders.map((order) => (
-          <div key={order.order_id} className='w-full grid grid-cols-1 md:grid-cols-12 gap-4 p-5 border border-slate-100 rounded-2xl bg-white shadow-sm hover:shadow-md transition-shadow'>
-            
-            {/* Customer & Date Info */}
-            <div className='md:col-span-3 border-b md:border-b-0 md:border-r border-slate-100 pb-4 md:pb-0 md:pr-4 flex flex-col justify-center'>
-                <div className='flex items-center gap-2 mb-2'>
-                  <span className='text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider bg-amber-100 text-amber-700'>
-                    Pending
-                  </span>
-                  <span className='text-[10px] text-slate-400 font-bold uppercase'>
-                    {(order.created_at || order.date)?.slice(0, 10)}
+        ) : filteredOrders.map((order) => {
+          const isMenuOpen = openMenuId === order.order_id
+          const isDeleting = confirmDelete === order.order_id
+          const productList = order.product_list || order.items || []
+
+          return (
+            <div 
+              key={order.order_id} 
+              className={`w-full border border-slate-200 rounded-xs shadow-xs hover:border-slate-300 hover:shadow-sm transition-all p-3 sm:p-4 lg:py-3 lg:px-5 relative ${
+                isMenuOpen ? 'z-50' : 'z-1'
+              }`}
+            >
+              <div className='grid grid-cols-12 gap-2 sm:gap-3 items-center'>
+                
+                {/* 1. Order ID */}
+                <div className='col-span-3 sm:col-span-2 lg:col-span-1 flex items-center justify-start gap-1 sm:gap-2'>
+                  <span className='text-xs font-mono font-bold text-slate-900 bg-slate-100 px-1.5 sm:px-2 py-1 rounded-md truncate'>
+                    #{order.order_id}
                   </span>
                 </div>
-                <p className='font-bold text-slate-800 text-lg leading-tight'>{order.name || 'Walk-in Customer'}</p>
-                <p className='text-sm text-slate-500 font-medium'>{order.phone || 'No Phone'}</p>
-                <p className='text-[10px] font-mono text-slate-400 mt-2'>ID: {order.order_id}</p>
-            </div>
 
-            {/* Products Info */}
-            <div className='md:col-span-5 border-b md:border-b-0 md:border-r border-slate-100 pb-4 md:pb-0 md:px-4 flex flex-col justify-center'>
-                <p className='text-[10px] font-black text-slate-400 uppercase mb-2 tracking-widest'>Order Items</p>
-                <div className='flex flex-col gap-2 max-h-32 overflow-y-auto pr-2 custom-scrollbar'>
-                    {order.product_list?.length > 0 ? (
-                        order.product_list.map((product, pIdx) => (
-                            <div key={pIdx} className='flex justify-between items-center text-sm'>
-                                <p className='font-bold text-slate-700 truncate pr-2 flex-1'>
-                                  <span className='text-sky-500 font-black mr-2'>x{product.quantity}</span>
-                                  {product.name}
-                                </p>
-                                <p className='font-black text-slate-900'>
-                                  ৳{(Number(product.price) * Number(product.quantity)).toLocaleString()}
-                                </p>
-                            </div>
-                        ))
+                {/* 2. Date */}
+                <div className='col-span-3 sm:col-span-2 lg:col-span-1 text-[11px] sm:text-xs text-slate-600 font-medium truncate'>
+                  {formatDate(order.created_at || order.date)}
+                </div>
+
+                {/* 3. Customer */}
+                <div className='col-span-3 sm:col-span-3 lg:col-span-2 flex flex-col justify-center min-w-0'>
+                  <p className='font-bold text-slate-800 text-xs truncate' title={order.name || 'Walk-in Customer'}>
+                    {order.name || 'Walk-in Customer'}
+                  </p>
+                  <p className='text-[10px] sm:text-[11px] text-slate-500 font-mono truncate'>
+                    {order.phone || 'N/A'}
+                  </p>
+                </div>
+
+                {/* 4. Products */}
+                <div className='hidden lg:flex lg:col-span-3 flex-col justify-center'>
+                  <div className='flex flex-col gap-1 py-0.5'>
+                    {productList.length > 0 ? (
+                      productList.map((prod, idx) => (
+                        <div key={idx} className="text-[11px] font-medium text-slate-700 flex items-center gap-1.5 leading-snug">
+                          <span className="text-sky-600 font-bold bg-sky-50 border border-sky-100 px-1.5 py-0.5 rounded text-[10px] shrink-0">
+                            x{prod.quantity}
+                          </span>
+                          <span className="truncate" title={prod.name}>
+                            {prod.name}
+                          </span>
+                        </div>
+                      ))
                     ) : (
-                        <p className='text-xs text-slate-400 italic'>No product data found</p>
+                      <span className="text-[11px] text-slate-400 italic">No products</span>
                     )}
+                  </div>
                 </div>
-            </div>
 
-            {/* Financials Info */}
-            <div className='md:col-span-3 pb-4 md:pb-0 md:px-4 flex flex-col justify-center gap-1 bg-slate-50 md:bg-transparent rounded-xl p-3 md:p-0'>
-                <div className='flex justify-between text-xs text-slate-500 font-medium'>
-                    <span>Gross Total</span>
-                    <span>৳{order.total_amount}</span>
+                {/* 5. Total */}
+                <div className='col-span-2 sm:col-span-2 lg:col-span-1 text-right text-xs font-bold text-slate-900'>
+                  ৳{Number(order.total_amount || 0).toLocaleString()}
                 </div>
-                <div className='flex justify-between text-xs text-rose-500 font-medium'>
-                    <span>Discount</span>
-                    <span>- ৳{order.discount || 0}</span>
-                </div>
-                <div className='flex justify-between items-center border-t border-slate-200 pt-2 mt-1'>
-                    <span className='text-[10px] font-black text-amber-600 uppercase tracking-wider'>Expected Paid</span>
-                    <span className='text-xl font-black text-amber-600'>৳{Number(order.paid_amount || order.amount_received || 0).toLocaleString()}</span>
-                </div>
-            </div>
 
-            {/* Actions */}
-            <div className='md:col-span-1 flex md:flex-col items-center justify-center gap-2'>
-                {confirmDelete === order.order_id ? (
-                    <div className='flex flex-col gap-2 w-full animate-in fade-in zoom-in duration-200'>
-                        <button
-                            onClick={() => cancelOrder(order.order_id)}
-                            className='w-full bg-rose-500 hover:bg-rose-600 text-white p-2.5 rounded-xl flex items-center justify-center transition-colors'
-                            title="Confirm Delete"
-                        >
-                            <FaCheck />
-                        </button>
-                        <button
-                            onClick={() => setConfirmDelete(null)}
-                            className='w-full bg-slate-200 hover:bg-slate-300 text-slate-600 p-2.5 rounded-xl flex items-center justify-center transition-colors'
-                            title="Cancel Delete"
-                        >
-                            <FaXmark />
-                        </button>
-                    </div>
-                ) : (
-                    <div className='w-full grid grid-cols-2 md:grid-cols-1 gap-2'>
-                        <button onClick={() => confirmOrder(order.order_id)} className='bg-sky-500 hover:bg-sky-600 text-white p-2.5 rounded-xl flex items-center justify-center transition-colors ' title="Confirm Order">
-                          <GiConfirmed size={20} className="mr-2" />
-                          <span className="md:hidden font-bold">Confirm</span>
-                        </button>
-                        <Link href={`/dashboard/pos/${order.order_id}`} className='bg-sky-50 text-sky-600 hover:bg-sky-100 p-2.5 rounded-xl flex items-center justify-center transition-colors' title="View Invoice">
-                          <GoEye size={18} />
-                        </Link>
-                        <button onClick={() => printOrder(order)} className='bg-slate-50 text-slate-600 hover:bg-slate-100 p-2.5 rounded-xl flex items-center justify-center transition-colors' title="Print Order">
-                          <IoPrintOutline size={18} />
-                        </button>
-                        <button onClick={() => setConfirmDelete(order.order_id)} className='bg-rose-50 text-rose-500 hover:bg-rose-100 p-2.5 rounded-xl flex items-center justify-center transition-colors' title="Delete Order">
-                          <MdDelete size={18} />
-                        </button>
-                    </div>
-                )}
+                {/* 6. Paid */}
+                <div className='hidden lg:block lg:col-span-1 text-right font-bold text-emerald-600 text-xs'>
+                  ৳{Number(order.paid_amount || order.amount_received || 0).toLocaleString()}
+                </div>
+
+                {/* 7. Discount */}
+                <div className='hidden lg:block lg:col-span-1 text-right font-bold text-rose-500 text-xs'>
+                  ৳{Number(order.discount || order.total_discount_amount || 0).toLocaleString()}
+                </div>
+
+                {/* 8. Status */}
+                <div className='hidden sm:flex sm:col-span-2 lg:col-span-1 items-center justify-center'>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider bg-amber-100 text-amber-700 border border-amber-200">
+                    {order.status || 'Pending'}
+                  </span>
+                </div>
+
+                {/* 9. Action */}
+                <div className='col-span-1 flex items-center justify-end lg:justify-center relative'>
+                  <div className="relative">
+                    <button
+                      onClick={() => {
+                        setConfirmDelete(null)
+                        setOpenMenuId(isMenuOpen ? null : order.order_id)
+                      }}
+                      className="p-1.5 sm:p-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer"
+                      title="Actions"
+                    >
+                      <BsThreeDotsVertical size={16} />
+                    </button>
+
+                    {isMenuOpen && (
+                      <div className="absolute right-0 top-full mt-1 z-40 bg-white border border-slate-200 shadow-xl rounded-xs p-1.5 w-44 flex flex-col gap-1 animate-in fade-in zoom-in-95 duration-150">
+                        {isDeleting ? (
+                          <div className="p-2 flex flex-col gap-2 bg-rose-50 rounded-lg text-center">
+                            <span className="text-[10px] font-bold text-rose-600 uppercase tracking-wider">Confirm Delete?</span>
+                            <div className="flex gap-1">
+                              <button
+                                onClick={() => cancelOrder(order.order_id)}
+                                className="flex-1 bg-rose-500 text-white text-xs font-bold py-1.5 rounded-md hover:bg-rose-600 flex items-center justify-center gap-1 cursor-pointer"
+                              >
+                                <FaCheck size={12} /> Yes
+                              </button>
+                              <button
+                                onClick={() => setConfirmDelete(null)}
+                                className="flex-1 bg-slate-200 text-slate-700 text-xs font-bold py-1.5 rounded-md hover:bg-slate-300 flex items-center justify-center gap-1 cursor-pointer"
+                              >
+                                <FaXmark size={12} /> No
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <button
+                              onClick={() => confirmOrder(order.order_id)}
+                              className="w-full text-left px-3 py-2 text-xs font-semibold text-emerald-600 hover:bg-emerald-50 rounded-lg flex items-center gap-2 transition-colors cursor-pointer"
+                            >
+                              <GiConfirmed size={16} /> Confirm Order
+                            </button>
+
+                            <Link
+                              href={`/dashboard/pos/${order.order_id}`}
+                              className="w-full text-left px-3 py-2 text-xs font-semibold text-sky-600 hover:bg-sky-50 rounded-lg flex items-center gap-2 transition-colors cursor-pointer"
+                            >
+                              <GoEye size={16} /> View Invoice
+                            </Link>
+
+                            <button
+                              onClick={() => {
+                                setOpenMenuId(null)
+                                printOrder(order)
+                              }}
+                              className="w-full text-left px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 rounded-lg flex items-center gap-2 transition-colors cursor-pointer"
+                            >
+                              <IoPrintOutline size={16} /> Print Receipt
+                            </button>
+
+                            <button
+                              onClick={() => setConfirmDelete(order.order_id)}
+                              className="w-full text-left px-3 py-2 text-xs font-semibold text-rose-500 hover:bg-rose-50 rounded-lg flex items-center gap-2 transition-colors cursor-pointer border-t border-slate-100 mt-0.5 pt-2"
+                            >
+                              <MdDelete size={16} /> Delete Order
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

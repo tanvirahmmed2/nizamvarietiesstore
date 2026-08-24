@@ -45,15 +45,13 @@ const DamagePage = () => {
     }
 
     return (
-        <div className='max-w-6xl mx-auto w-full p-1 sm:p-4 bg-white min-h-screen'>
+        <div className='w-full flex flex-col gap-6 bg-slate-50 min-h-screen relative'>
             {/* Header Area */}
-            <div className='flex flex-col gap-1 mb-12 border-l-4 border-red-500 pl-6'>
-                <h1 className='text-3xl  text-gray-900 tracking-tight uppercase'>
-                    Damage & Loss Entry
-                </h1>
-                <p className='text-gray-400 text-xs font-bold tracking-[0.2em] uppercase'>
-                    Inventory Write-off & Withdrawal
-                </p>
+            <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100'>
+                <div>
+                    <h1 className='text-2xl font-bold text-slate-800 tracking-tight'>Damage & Loss Entry</h1>
+                    <p className='text-sm text-slate-500 mt-1'>Inventory write-off and stock loss records</p>
+                </div>
             </div>
 
             <div className='grid grid-cols-1 lg:grid-cols-12 gap-12'>
