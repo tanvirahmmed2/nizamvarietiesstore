@@ -33,8 +33,8 @@ export async function POST(req) {
         const purchaseQuery = `
             INSERT INTO purchases (
                 supplier_id, supplier_name, supplier_phone, invoice_no, subtotal_amount, 
-                extra_discount, total_amount, payment_method, transaction_id, note
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING purchase_id`;
+                extra_discount, total_amount, payment_method, transaction_id, note, status
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'completed') RETURNING purchase_id`;
 
         const purchaseRes = await client.query(purchaseQuery, [
             supplier_id, s_name, s_phone, invoice_no, 
@@ -83,13 +83,15 @@ export async function GET(req) {
     try {
         const { searchParams } = new URL(req.url);
         const q = searchParams.get('q') || '';
+        const statusFilter = searchParams.get('status') || '';
         const searchTerm = `%${q}%`;
 
-        const query = `
+        let query = `
             SELECT 
                 p.*,
                 COALESCE(
                     (SELECT json_agg(json_build_object(
+                        'product_id', pi.product_id,
                         'name', pr.name,
                         'quantity', pi.quantity,
                         'purchase_price', pi.purchase_price
@@ -100,19 +102,28 @@ export async function GET(req) {
                 ), '[]') as items
             FROM purchases p
             WHERE 
-                p.supplier_name ILIKE $1 
-                OR p.supplier_phone ILIKE $1 
-                OR p.invoice_no ILIKE $1
-                OR p.created_at::text ILIKE $1
-                OR EXISTS (
-                    SELECT 1 FROM purchase_items pi
-                    JOIN products pr ON pi.product_id = pr.product_id
-                    WHERE pi.purchase_id = p.purchase_id
-                    AND (pr.name ILIKE $1 OR pr.barcode ILIKE $1)
-                )
-            ORDER BY p.created_at DESC`;
+                (
+                    p.supplier_name ILIKE $1 
+                    OR p.supplier_phone ILIKE $1 
+                    OR p.invoice_no ILIKE $1
+                    OR p.created_at::text ILIKE $1
+                    OR EXISTS (
+                        SELECT 1 FROM purchase_items pi
+                        JOIN products pr ON pi.product_id = pr.product_id
+                        WHERE pi.purchase_id = p.purchase_id
+                        AND (pr.name ILIKE $1 OR pr.barcode ILIKE $1)
+                    )
+                )`;
 
-        const res = await pool.query(query, [searchTerm]);
+        const queryParams = [searchTerm];
+        if (statusFilter) {
+            queryParams.push(statusFilter);
+            query += ` AND p.status = $2`;
+        }
+
+        query += ` ORDER BY p.created_at DESC`;
+
+        const res = await pool.query(query, queryParams);
         return NextResponse.json({ success: true, payload: res.rows });
     } catch (error) {
         return NextResponse.json({ success: false, message: error.message }, { status: 500 });

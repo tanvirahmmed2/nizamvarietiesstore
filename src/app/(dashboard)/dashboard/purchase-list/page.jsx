@@ -9,6 +9,7 @@ import { GoEye } from 'react-icons/go'
 import { IoPrintOutline } from 'react-icons/io5'
 import { MdDelete } from 'react-icons/md'
 import { BsThreeDotsVertical } from 'react-icons/bs'
+import { RiCornerUpLeftLine } from 'react-icons/ri'
 
 const PurchaseList = () => {
     const [purchases, setPurchases] = useState([])
@@ -16,6 +17,7 @@ const PurchaseList = () => {
     const [searchTerm, setSearchTerm] = useState('')
     const [confirmDelete, setConfirmDelete] = useState(null)
     const [openMenuId, setOpenMenuId] = useState(null)
+    const [returningId, setReturningId] = useState(null)
 
     const fetchPurchases = useCallback(async () => {
         try {
@@ -45,6 +47,24 @@ const PurchaseList = () => {
             }
         } catch (error) {
             toast.error(error.response?.data?.message || "Delete failed")
+        }
+    }
+
+    const handleReturnPurchase = async (id) => {
+        setReturningId(id)
+        try {
+            const res = await axios.post(`/api/purchase/${id}/return`)
+            if (res.data.success) {
+                toast.success(res.data.message || `Purchase #${id} marked as returned`)
+                setOpenMenuId(null)
+                fetchPurchases()
+            } else {
+                toast.error(res.data.message || "Failed to return purchase")
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Return action failed")
+        } finally {
+            setReturningId(null)
         }
     }
 
@@ -121,6 +141,7 @@ const PurchaseList = () => {
                     const isMenuOpen = openMenuId === purchase.purchase_id
                     const isDeleting = confirmDelete === purchase.purchase_id
                     const itemsList = purchase.items || []
+                    const pStatus = purchase.status || 'completed'
 
                     return (
                         <div 
@@ -185,9 +206,19 @@ const PurchaseList = () => {
 
                                 {/* 7. Status */}
                                 <div className='hidden sm:flex sm:col-span-2 lg:col-span-1 items-center justify-center'>
-                                    <span className="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider bg-emerald-100 text-emerald-700 border border-emerald-200">
-                                        Received
-                                    </span>
+                                    {pStatus === 'returned' ? (
+                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider bg-amber-100 text-amber-700 border border-amber-200">
+                                            Returned
+                                        </span>
+                                    ) : pStatus === 'pending' ? (
+                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider bg-sky-100 text-sky-700 border border-sky-200">
+                                            Pending
+                                        </span>
+                                    ) : (
+                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider bg-emerald-100 text-emerald-700 border border-emerald-200">
+                                            Completed
+                                        </span>
+                                    )}
                                 </div>
 
                                 {/* 8. Action */}
@@ -233,6 +264,16 @@ const PurchaseList = () => {
                                                             <GoEye size={16} /> View Details
                                                         </Link>
 
+                                                        {pStatus === 'completed' && (
+                                                            <button
+                                                                disabled={returningId === purchase.purchase_id}
+                                                                onClick={() => handleReturnPurchase(purchase.purchase_id)}
+                                                                className="w-full text-left px-3 py-2 text-xs font-semibold text-amber-600 hover:bg-amber-50 rounded-lg flex items-center gap-2 transition-colors cursor-pointer"
+                                                            >
+                                                                <RiCornerUpLeftLine size={16} /> Return Purchase
+                                                            </button>
+                                                        )}
+
                                                         <button
                                                             onClick={() => {
                                                                 setOpenMenuId(null)
@@ -266,4 +307,3 @@ const PurchaseList = () => {
 }
 
 export default PurchaseList
-
