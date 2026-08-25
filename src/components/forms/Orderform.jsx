@@ -271,7 +271,7 @@ const Orderform = ({ cartItems = [] }) => {
                     )}
                 </div>
 
-                <div className='w-full flex flex-col gap-2 max-h-100 overflow-y-auto border-y border-slate-100 py-3 custom-scrollbar'>
+                <div className='w-full flex flex-col gap-1 max-h-100 overflow-y-auto border-y border-slate-100 py-3 custom-scrollbar'>
                     <div className='w-full grid grid-cols-7 sm:grid-cols-13 gap-2 px-2 text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1'>
                         <p className='col-span-3 sm:col-span-5'>Product</p>
                         <p className='col-span-2 sm:col-span-3 text-center'>Qty</p>
@@ -297,7 +297,7 @@ const Orderform = ({ cartItems = [] }) => {
                         const rowTotal = (itemRate - itemDiscount) * (item.quantity || 0);
 
                         return (
-                            <div key={item.product_id} className='w-full grid grid-cols-7 sm:grid-cols-13 gap-2 p-2 rounded-lg hover:bg-slate-50 transition-all items-center'>
+                            <div key={item.product_id} className='w-full grid grid-cols-7 even:bg-slate-100 sm:grid-cols-13 gap-2 p-2 rounded-lg hover:bg-slate-200 transition-all items-center'>
                                 <div className='col-span-3 sm:col-span-5 flex flex-col pr-1'>
                                     <p className='text-xs font-bold text-slate-700 truncate' title={item.name}>{item.name}</p>
                                     <div className='flex items-center gap-2'>

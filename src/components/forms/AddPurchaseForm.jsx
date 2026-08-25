@@ -117,7 +117,7 @@ const AddPurchaseForm = () => {
             <div className="w-full flex flex-col items-center gap-4 relative">
                 <BarScanner onScan={handleBarcodeScan} />
                 
-                <div className="w-full flex flex-row items-center justify-between gap-4 border-b-2 p-4 bg-white z-20">
+                <div className="w-full flex flex-row items-center justify-between gap-4 border-b-2 p-4  z-20">
                     <p className='font-bold'>Find item</p>
                     <div  className='w-auto flex flex-row items-center justify-between px-2 border border-sky-400'>
                         <FaBarcode className='text-2xl text-sky-600'/>
@@ -137,7 +137,7 @@ const AddPurchaseForm = () => {
                             <div  onClick={() => {
                                         addToPurchase(product);
                                         setSearchTerm('');
-                                    }} key={product.product_id} className="w-full flex flex-row even:bg-gray-200 items-center justify-center p-1">
+                                    }} key={product.product_id} className="w-full flex flex-row even:bg-slate-200 items-center justify-center p-1">
                                 <div className="flex-1">
                                     <p className="font-bold text-gray-800">{product.name}</p>
                                     <p className="text-xs text-gray-500 font-mono">{product.barcode || 'No Barcode'}</p>
@@ -150,8 +150,8 @@ const AddPurchaseForm = () => {
                 )}
             </div>
 
-            <form onSubmit={handleSubmit} className="w-full mx-auto p-4 flex flex-col gap-6 bg-white min-h-screen">
-                {/* Header Section */}
+            <form onSubmit={handleSubmit} className="w-full mx-auto p-4 flex flex-col gap-6  min-h-screen">
+                
                 <div className="flex items-center gap-3 border-b pb-4">
                     <div className="p-3 bg-blue-50 text-blue-600 rounded-2xl"><FaFileInvoiceDollar size={24} /></div>
                     <div>
@@ -160,7 +160,6 @@ const AddPurchaseForm = () => {
                     </div>
                 </div>
 
-                {/* Supplier and Invoice Section */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-2xl border border-gray-100">
                     <div className="flex flex-col gap-1">
                         <label className="text-[10px] font-black text-gray-400 uppercase ml-1">Supplier</label>
@@ -178,7 +177,6 @@ const AddPurchaseForm = () => {
                     </div>
                 </div>
 
-                {/* Purchase Items List */}
                 <div className="flex flex-col gap-3">
                     <h3 className="text-sm font-bold text-gray-700 flex justify-between px-1">
                         Items List
@@ -212,33 +210,31 @@ const AddPurchaseForm = () => {
                     )}
                 </div>
 
-                {/* Checkout Footer */}
-                {/* Checkout Footer */}
-                <div className="w-full md:w-80 ml-auto flex flex-col gap-3 p-6 bg-slate-900 rounded-3xl mt-6 shadow-xl shadow-slate-900/20 text-white">
-                    <div className="flex justify-between items-center text-sm text-slate-300 font-medium">
+                <div className="w-full  ml-auto flex flex-col gap-3 p-4  mt-6 ">
+                    <div className="flex justify-between items-center text-sm  font-medium">
                         <span>Subtotal</span>
                         <span className="font-mono">৳{totals.subtotal.toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between items-center text-sm text-slate-300 font-medium">
+                    <div className="flex justify-between items-center text-sm  font-medium">
                         <span>Discount</span>
                         <div className="relative">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-bold">৳</span>
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2  font-bold">৳</span>
                             <input 
                                 type="number" 
                                 name="extra_discount" 
                                 value={formData.extra_discount} 
                                 onChange={handleChange} 
-                                className="w-24 bg-slate-800 border border-slate-700 text-right rounded-xl pl-6 pr-3 py-1.5 text-white font-mono outline-none focus:border-sky-500 transition-colors" 
+                                className="w-24 text-right rounded-xl pl-6 pr-3 py-1.5  font-mono outline-none focus:border-sky-500 transition-colors" 
                                 onFocus={(e) => e.target.select()} 
                             />
                         </div>
                     </div>
                     <div className="h-px bg-slate-800 my-1"></div>
                     <div className="flex justify-between items-end">
-                        <span className="font-bold text-slate-200">Grand Total</span>
+                        <span className="font-bold ">Grand Total</span>
                         <span className="text-3xl font-black text-sky-400 font-mono tracking-tight">৳{totals.total.toFixed(2)}</span>
                     </div>
-                    <button type="submit" className="w-full bg-sky-500 hover:bg-sky-400 text-white p-3.5 rounded-xl font-bold text-sm mt-2 transition-all shadow-lg shadow-sky-500/20 active:scale-[0.98] flex justify-center items-center gap-2">
+                    <button type="submit" className="w-full bg-sky-500 hover:bg-sky-400  p-2 text-white cursor-pointer rounded-xl font-bold text-sm mt-2 transition-all shadow-lg shadow-sky-500/20 active:scale-[0.98] flex justify-center items-center gap-2">
                         Complete Purchase
                     </button>
                 </div>
