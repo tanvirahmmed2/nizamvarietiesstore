@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast'
 import { Context } from '../helper/Context'
 import axios from 'axios'
 import BarScanner from '../helper/BarcodeScanner'
+import TiptapEditor from '../helper/TiptapEditor'
 
 const AddProductForm = () => {
     const { setIsCategoryBox, setIsBrandBox, categories, brands } = useContext(Context)
@@ -183,7 +184,11 @@ const AddProductForm = () => {
 
                 <div className='flex flex-col gap-1.5'>
                     <label htmlFor="description" className='text-xs font-bold text-slate-500 uppercase tracking-wider ml-1'>Product Description *</label>
-                    <textarea name="description" id="description" required value={formData.description} onChange={handleChange} className='w-full border border-slate-200 bg-slate-50/30 px-4 py-3 rounded-xl outline-none focus:border-primary focus:bg-white transition-all text-sm h-32 resize-none' placeholder='Write details about the product...'></textarea>
+                    <TiptapEditor 
+                        value={formData.description} 
+                        onChange={(content) => setFormData(prev => ({ ...prev, description: content }))} 
+                        placeholder='Write details about the product...' 
+                    />
                 </div>
 
                 <div className='flex flex-col gap-1.5'>

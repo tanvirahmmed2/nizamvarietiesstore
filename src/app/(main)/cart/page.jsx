@@ -116,45 +116,50 @@ const CartPage = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, x: -10 }}
-                  className='group bg-white rounded-lg border border-slate-100 p-2 flex flex-col md:flex-row items-center gap-4 hover:shadow-md transition-all duration-300'
+                  className='group bg-white rounded-lg border border-slate-100 p-3 flex flex-col md:flex-row md:items-center gap-3 md:gap-4 hover:shadow-md transition-all duration-300'
                 >
-                  <div className='w-20 h-20 rounded-lg bg-slate-50 shrink-0 overflow-hidden border border-slate-100 flex items-center justify-center'>
-                    {item?.image ? (
-                      <Image width={500} height={500} src={item?.image} alt={item?.name} className='w-full h-full object-cover group-hover:scale-105 transition-transform' />
-                    ) : (
-                      <ShoppingBag size={24} className='text-slate-200' />
-                    )}
+                  {/* Line 1 on mobile: Image and Title */}
+                  <div className='flex items-center gap-3 flex-1 min-w-0'>
+                    <div className='w-14 h-14 md:w-20 md:h-20 rounded-lg bg-slate-50 shrink-0 overflow-hidden border border-slate-100 flex items-center justify-center'>
+                      {item?.image ? (
+                        <Image width={500} height={500} src={item?.image} alt={item?.name} className='w-full h-full object-cover group-hover:scale-105 transition-transform' />
+                      ) : (
+                        <ShoppingBag size={24} className='text-slate-200' />
+                      )}
+                    </div>
+
+                    <div className='flex-1 min-w-0'>
+                      <h3 className='text-sm md:text-base font-semibold text-slate-800 line-clamp-2 md:line-clamp-1'>{item?.name}</h3>
+                      <p className='text-xs font-medium text-slate-400 mt-0.5'>৳{parseFloat(item?.sale_price).toFixed(2)} / unit</p>
+                    </div>
                   </div>
 
-                  <div className='flex-1 text-center md:text-left'>
-                    <h3 className='text-base font-semibold text-slate-800 line-clamp-1'>{item?.name}</h3>
-                    <p className='text-xs font-medium text-slate-400 mt-1'>৳{parseFloat(item?.sale_price).toFixed(2)} / unit</p>
-                  </div>
+                  {/* Line 2 on mobile: Price, Quantity & Delete button */}
+                  <div className='flex items-center justify-between md:justify-end gap-3 w-full md:w-auto pt-2 md:pt-0 border-t border-slate-100 md:border-t-0'>
+                    <div className='text-left md:text-right min-w-[70px]'>
+                      <p className='text-sm md:text-base font-black text-slate-900'>৳{(parseFloat(item.sale_price) * item.quantity).toFixed(2)}</p>
+                    </div>
 
-                  <div className='flex flex-wrap items-center justify-center gap-4'>
-                    <div className='flex items-center gap-3 bg-slate-50 p-1 rounded-lg border border-slate-100'>
+                    <div className='flex items-center gap-2 md:gap-3 bg-slate-50 p-1 rounded-lg border border-slate-100'>
                       <button
                         onClick={() => decreaseQuantity(item?.product_id)}
-                        className='w-7 h-7 rounded-lg bg-white flex items-center justify-center text-slate-600 hover:text-primary transition-all active:scale-90'
+                        className='w-7 h-7 rounded-lg bg-white flex items-center justify-center text-slate-600 hover:text-primary transition-all active:scale-90 cursor-pointer'
                       >
                         <Minus size={14} />
                       </button>
                       <span className='font-semibold text-slate-800 min-w-4 text-center text-sm'>{item?.quantity}</span>
                       <button
                         onClick={() => addToCart(item)}
-                        className='w-7 h-7 rounded-lg bg-white flex items-center justify-center text-slate-600 hover:text-primary transition-all active:scale-90'
+                        className='w-7 h-7 rounded-lg bg-white flex items-center justify-center text-slate-600 hover:text-primary transition-all active:scale-90 cursor-pointer'
                       >
                         <Plus size={14} />
                       </button>
                     </div>
 
-                    <div className='text-right min-w-20'>
-                      <p className='text-base font-black text-slate-900'>৳{(parseFloat(item.sale_price) * item.quantity).toFixed(2)}</p>
-                    </div>
-
                     <button
                       onClick={() => removeFromCart(item?.product_id)}
-                      className='p-2.5 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 transition-all active:scale-90'
+                      className='p-2 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 transition-all active:scale-90 cursor-pointer'
+                      title="Remove Item"
                     >
                       <Trash2 size={18} />
                     </button>

@@ -1,20 +1,19 @@
 'use client'
 import Link from 'next/link'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import { 
   RiHome5Line, RiProductHuntLine, RiShoppingCart2Line, 
   RiRefund2Line, RiAlertLine, RiUser3Line, RiTruckLine, 
-  RiSettings3Line, RiFileChartLine, RiArchiveLine, 
+  RiFileChartLine, RiArchiveLine, 
   RiPriceTag3Line, RiShoppingBag3Line, RiUserAddLine, 
-  RiUserCommunityLine, RiSuperscript, RiMenuLine, RiCloseLine 
+  RiSuperscript, RiCloseLine, RiGlobeLine 
 } from "react-icons/ri"
-import { TbReport, TbMoneybag, TbReportMoney, TbReportAnalytics, TbReportSearch } from "react-icons/tb"
+import { TbReport, TbReportAnalytics, TbReportSearch } from "react-icons/tb"
 import { usePathname } from 'next/navigation'
 import { BiPurchaseTagAlt } from "react-icons/bi"
 import { BsFillHouseGearFill } from "react-icons/bs"
 import { toast } from 'react-hot-toast'
 import axios from 'axios'
-import { FaChevronDown } from 'react-icons/fa6'
 import { Context } from '../helper/Context'
 import Image from 'next/image'
 
@@ -24,42 +23,29 @@ const MenuItem = ({ href, icon: Icon, label, isOpen }) => {
   return (
     <Link 
       href={href} 
-      className={`group flex flex-row gap-4 items-center px-3 py-2.5 transition-all rounded-xl mx-2 ${
+      className={`group flex flex-row gap-3.5 items-center px-3 py-2 transition-all rounded-xl mx-2 ${
         isActive 
-          ? 'bg-gradient-to-r from-sky-500 to-indigo-500 text-white shadow-md shadow-sky-500/20 font-medium' 
+          ? 'bg-linear-to-r from-sky-500 to-indigo-500 text-white shadow-md shadow-sky-500/20 font-medium' 
           : 'text-slate-300 hover:bg-white/10 hover:text-white font-medium'
       }`}
     >
-      <Icon size={20} className={`shrink-0 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-white transition-colors'}`} />
-      {isOpen && <span className="whitespace-nowrap text-sm tracking-wide">{label}</span>}
+      <Icon size={18} className={`shrink-0 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-white transition-colors'}`} />
+      {isOpen && <span className="whitespace-nowrap text-xs tracking-wide">{label}</span>}
     </Link>
+  )
+}
+
+const SectionHeader = ({ title, isOpen }) => {
+  if (!isOpen) return <div className="h-2" />
+  return (
+    <p className="font-bold text-[10px] px-5 mb-1.5 uppercase tracking-wider text-slate-500 mt-4">
+      {title}
+    </p>
   )
 }
 
 const DashboardSidebar = () => {
   const { isDashboardSidebar: isOpen, setIsDashboardSidebar } = useContext(Context)
-  const pathname = usePathname()
-  
-  const [saleMenuOpen, setSaleMenuOpen] = useState(false)
-  const [purchaseMenuOpen, setPurchaseMenuOpen] = useState(false)
-  const [productsMenuOpen, setProductsMenuOpen] = useState(false)
-  const [reportMenuOpen, setReportMenuOpen] = useState(false)
-
-  // Auto expand submenus based on active route
-  useEffect(() => {
-    if (['/dashboard/sales-list', '/dashboard/sales-transactions'].includes(pathname)) {
-      setSaleMenuOpen(true)
-    }
-    if (['/dashboard/purchase-list', '/dashboard/purchase-transactions'].includes(pathname)) {
-      setPurchaseMenuOpen(true)
-    }
-    if (['/dashboard/newproduct', '/dashboard/products'].includes(pathname)) {
-      setProductsMenuOpen(true)
-    }
-    if (['/dashboard/sales', '/dashboard/stock', '/dashboard/analytics'].includes(pathname)) {
-      setReportMenuOpen(true)
-    }
-  }, [pathname])
 
   const handleLogout = async () => {
     try {
@@ -104,9 +90,11 @@ const DashboardSidebar = () => {
       )}
       
       <aside className={`select-none fixed top-0 left-0 z-[100] text-slate-300 bg-slate-900 h-screen transition-transform duration-300 flex flex-col py-4 overflow-y-auto custom-scrollbar border-r border-slate-800 w-64 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="flex items-center justify-between h-12 mb-6 px-4 relative">
+        
+        {/* Logo Header */}
+        <div className="flex items-center justify-between h-12 mb-4 px-4 relative border-b border-slate-800 pb-3">
           <div className="flex items-center justify-center w-full">
-            <Image src={'/icon.png'} width={80} height={80} alt='icon' className="h-auto w-auto max-h-12 object-contain" />
+            <Image src={'/icon.png'} width={80} height={80} alt='icon' className="h-auto w-auto max-h-10 object-contain" />
           </div>
           <button 
             onClick={() => setIsDashboardSidebar(false)}
@@ -117,136 +105,65 @@ const DashboardSidebar = () => {
           </button>
         </div>
 
-      <div className="pb-4 border-b border-slate-800 mb-2">
-        <MenuItem href="/dashboard" icon={RiHome5Line} label="Management" isOpen={isOpen} />
-      </div>
+        {/* Menu Items List */}
+        <div className="flex flex-col gap-0.5">
+          <MenuItem href="/dashboard" icon={RiHome5Line} label="Dashboard" isOpen={isOpen} />
+          <MenuItem href="/dashboard/pos" icon={RiShoppingCart2Line} label="POS Register" isOpen={isOpen} />
+          <MenuItem href="/dashboard/pendingorders" icon={RiShoppingBag3Line} label="Pending Orders" isOpen={isOpen} />
 
-      <div className="flex flex-col gap-1">
-        {(isOpen) && (
-          <p className="font-bold text-[10px] flex items-center gap-2 px-4 mb-2 uppercase tracking-wider text-slate-500 mt-2">
-            <TbMoneybag size={14} /> Purchase & Transaction
-          </p>
-        )}
-        <MenuItem href="/dashboard/pos" icon={RiShoppingCart2Line} label="POS" isOpen={isOpen} />
-        <MenuItem href="/dashboard/pendingorders" icon={RiShoppingCart2Line} label="Pending Orders" isOpen={isOpen} />
-        
-        <div className="flex flex-col gap-1">
-          {(isOpen) && (
-            <div onClick={() => setSaleMenuOpen(!saleMenuOpen)} className="flex items-center gap-4 px-4 py-2 cursor-pointer text-[13px] font-medium text-slate-400 hover:text-white transition-colors">
-              <BiPurchaseTagAlt size={18} /> Sale Menu 
-              <FaChevronDown size={10} className={`ml-auto transition-transform ${saleMenuOpen ? 'rotate-180' : ''}`} />
-            </div>
-          )}
-          <div className={`${(isOpen && saleMenuOpen) ? 'flex' : 'hidden'} pl-4 flex-col gap-1 border-l-2 border-slate-800 ml-6 my-1`}>
-            <MenuItem href="/dashboard/sales-list" icon={RiShoppingBag3Line} label="Sales List" isOpen={isOpen} />
-            <MenuItem href="/dashboard/sales-transactions" icon={TbReport} label="Transaction" isOpen={isOpen} />
-          </div>
+          <SectionHeader title="Sales & Purchase" isOpen={isOpen} />
+          <MenuItem href="/dashboard/sales-list" icon={BiPurchaseTagAlt} label="Sales List" isOpen={isOpen} />
+          <MenuItem href="/dashboard/sales-transactions" icon={TbReport} label="Sales Transactions" isOpen={isOpen} />
+          <MenuItem href="/dashboard/purchase" icon={RiShoppingCart2Line} label="New Purchase" isOpen={isOpen} />
+          <MenuItem href="/dashboard/purchase-list" icon={RiShoppingBag3Line} label="Purchase List" isOpen={isOpen} />
+          <MenuItem href="/dashboard/purchase-transactions" icon={TbReport} label="Purchase Transactions" isOpen={isOpen} />
+          <MenuItem href="/dashboard/return-orders" icon={RiRefund2Line} label="Return Goods" isOpen={isOpen} />
+          <MenuItem href="/dashboard/damage" icon={RiAlertLine} label="Damaged Items" isOpen={isOpen} />
+
+          <SectionHeader title="Product Catalog" isOpen={isOpen} />
+          <MenuItem href="/dashboard/products" icon={RiProductHuntLine} label="Product List" isOpen={isOpen} />
+          <MenuItem href="/dashboard/newproduct" icon={RiPriceTag3Line} label="Add New Product" isOpen={isOpen} />
+          <MenuItem href="/dashboard/category" icon={RiArchiveLine} label="Categories" isOpen={isOpen} />
+          <MenuItem href="/dashboard/brand" icon={RiPriceTag3Line} label="Brands" isOpen={isOpen} />
+
+          <SectionHeader title="Contacts & Reports" isOpen={isOpen} />
+          <MenuItem href="/dashboard/customer" icon={RiUser3Line} label="Customers" isOpen={isOpen} />
+          <MenuItem href="/dashboard/supplier" icon={RiTruckLine} label="Suppliers" isOpen={isOpen} />
+          <MenuItem href="/dashboard/ledger" icon={RiFileChartLine} label="Ledger Book" isOpen={isOpen} />
+          <MenuItem href="/dashboard/sales" icon={TbReportSearch} label="Sales Report" isOpen={isOpen} />
+          <MenuItem href="/dashboard/stock" icon={RiFileChartLine} label="Stock Report" isOpen={isOpen} />
+          <MenuItem href="/dashboard/analytics" icon={TbReportAnalytics} label="Analytics" isOpen={isOpen} />
+
+          <SectionHeader title="System & Account" isOpen={isOpen} />
+          <MenuItem href="/dashboard/account" icon={RiUser3Line} label="My Account" isOpen={isOpen} />
+          <MenuItem href="/dashboard/rolemanagement" icon={RiUserAddLine} label="Role Management" isOpen={isOpen} />
+          <MenuItem href="/dashboard/support" icon={RiSuperscript} label="Support" isOpen={isOpen} />
         </div>
 
-        <MenuItem href="/dashboard/purchase" icon={RiShoppingCart2Line} label="Purchase" isOpen={isOpen} />
-        
-        <div className="flex flex-col gap-1">
-          {(isOpen) && (
-            <div onClick={() => setPurchaseMenuOpen(!purchaseMenuOpen)} className="flex items-center gap-4 px-4 py-2 cursor-pointer text-[13px] font-medium text-slate-400 hover:text-white transition-colors">
-              <BiPurchaseTagAlt size={18} /> Purchase Menu 
-              <FaChevronDown size={10} className={`ml-auto transition-transform ${purchaseMenuOpen ? 'rotate-180' : ''}`} />
-            </div>
+        {/* Footer Actions */}
+        <div className="mt-auto pt-4 border-t border-slate-800 flex flex-col gap-1.5">
+          {isOpen && (
+            <button 
+              onClick={downloadDB} 
+              className="flex items-center justify-center gap-2 px-3 py-2 text-xs font-semibold bg-slate-800 text-sky-400 rounded-xl hover:bg-slate-700 transition-colors mx-3 border border-slate-700 cursor-pointer"
+            >
+              <BsFillHouseGearFill size={14} />
+              <span>Backup Database</span>
+            </button>
           )}
-          <div className={`${(isOpen && purchaseMenuOpen) ? 'flex' : 'hidden'} pl-4 flex-col gap-1 border-l-2 border-slate-800 ml-6 my-1`}>
-            <MenuItem href="/dashboard/purchase-list" icon={RiShoppingBag3Line} label="Purchase List" isOpen={isOpen} />
-            <MenuItem href="/dashboard/purchase-transactions" icon={TbReport} label="Transaction" isOpen={isOpen} />
-          </div>
+          
+          <MenuItem href="/" icon={RiGlobeLine} label="Back to Website" isOpen={isOpen} />
+          
+          {isOpen && (
+            <button 
+              onClick={handleLogout} 
+              className="flex items-center justify-center w-[calc(100%-1.5rem)] bg-rose-500/10 text-rose-400 text-xs py-2 rounded-xl mx-3 my-1 cursor-pointer font-bold hover:bg-rose-500 hover:text-white transition-colors border border-rose-500/20 shadow-xs"
+            >
+              Logout
+            </button>
+          )}
         </div>
 
-        <MenuItem href="/dashboard/return-orders" icon={RiRefund2Line} label="Return Goods" isOpen={isOpen} />
-        <MenuItem href="/dashboard/damage" icon={RiAlertLine} label="Damage" isOpen={isOpen} />
-      </div>
-
-      <div className="flex flex-col gap-1">
-        {(isOpen) && (
-          <p className="font-bold text-[10px] mb-2 px-4 uppercase tracking-wider text-slate-500 mt-4">
-            Product Information
-          </p>
-        )}
-        <MenuItem href="/dashboard/category" icon={RiArchiveLine} label="Category" isOpen={isOpen} />
-        <div className="flex flex-col gap-1">
-          {(isOpen) && (
-            <div onClick={() => setProductsMenuOpen(!productsMenuOpen)} className="flex items-center gap-4 px-4 py-2 cursor-pointer text-[13px] font-medium text-slate-400 hover:text-white transition-colors">
-              <RiProductHuntLine size={18} /> Products 
-              <FaChevronDown size={10} className={`ml-auto transition-transform ${productsMenuOpen ? 'rotate-180' : ''}`} />
-            </div>
-          )}
-          <div className={`${(isOpen && productsMenuOpen) ? 'flex' : 'hidden'} pl-4 flex-col gap-1 border-l-2 border-slate-800 ml-6 my-1`}>
-            <MenuItem href="/dashboard/newproduct" icon={RiPriceTag3Line} label="New Product" isOpen={isOpen} />
-            <MenuItem href="/dashboard/products" icon={RiShoppingBag3Line} label="Product List" isOpen={isOpen} />
-          </div>
-        </div>
-        <MenuItem href="/dashboard/brand" icon={RiPriceTag3Line} label="Brand" isOpen={isOpen} />
-      </div>
-
-      <div className="flex flex-col gap-1">
-        {(isOpen) && (
-          <p className="font-bold text-[10px] mb-2 px-4 uppercase tracking-wider text-slate-500 mt-4">
-            Customer & Supplier
-          </p>
-        )}
-        <MenuItem href="/dashboard/customer" icon={RiUser3Line} label="Customer" isOpen={isOpen} />
-        <MenuItem href="/dashboard/supplier" icon={RiTruckLine} label="Supplier" isOpen={isOpen} />
-      </div>
-
-      <div className="flex flex-col gap-1">
-        {(isOpen) && (
-          <p className="font-bold text-[10px] flex items-center gap-2 px-4 mb-2 uppercase tracking-wider text-slate-500 mt-4">
-            <TbReportMoney size={14} /> Report & Ledger
-          </p>
-        )}
-        <MenuItem href="/dashboard/ledger" icon={RiFileChartLine} label="Ledger" isOpen={isOpen} />
-        <div className="flex flex-col gap-1">
-          {(isOpen) && (
-            <div onClick={() => setReportMenuOpen(!reportMenuOpen)} className="flex items-center gap-4 px-4 py-2 cursor-pointer text-[13px] font-medium text-slate-400 hover:text-white transition-colors">
-              <TbReportSearch size={18} /> Report 
-              <FaChevronDown size={10} className={`ml-auto transition-transform ${reportMenuOpen ? 'rotate-180' : ''}`} />
-            </div>
-          )}
-          <div className={`${(isOpen && reportMenuOpen) ? 'flex' : 'hidden'} pl-4 flex-col gap-1 border-l-2 border-slate-800 ml-6 my-1`}>
-            <MenuItem href="/dashboard/sales" icon={TbReport} label="Sales" isOpen={isOpen} />
-            <MenuItem href="/dashboard/stock" icon={RiFileChartLine} label="Stock" isOpen={isOpen} />
-            <MenuItem href="/dashboard/analytics" icon={TbReportAnalytics} label="Analytics" isOpen={isOpen} />
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-auto pt-6 border-t border-slate-800 flex flex-col gap-1">
-        {(isOpen) && (
-          <p className="font-bold text-[10px] flex items-center gap-2 px-4 mb-2 uppercase tracking-wider text-slate-500">
-            <BsFillHouseGearFill size={14} /> Settings
-          </p>
-        )}
-        <MenuItem href="/dashboard/account" icon={RiUser3Line} label="Account" isOpen={isOpen} />
-        <MenuItem href="/dashboard/rolemanagement" icon={RiUserAddLine} label="Role Management" isOpen={isOpen} />
-        <MenuItem href="/dashboard/support" icon={RiSuperscript} label="Support" isOpen={isOpen} />
-        
-        {(isOpen) && (
-          <button 
-            onClick={downloadDB} 
-            className="flex items-center justify-center gap-2 px-2 py-2.5 text-sm font-semibold bg-slate-800 text-sky-400 rounded-xl hover:bg-slate-700 transition-colors mx-4 my-2 border border-slate-700 cursor-pointer"
-          >
-            <BsFillHouseGearFill size={16} />
-            <span>Backup Data</span>
-          </button>
-        )}
-        
-        <MenuItem href="/" icon={TbReport} label="Website" isOpen={isOpen} />
-        
-        {(isOpen) && (
-          <button 
-            onClick={handleLogout} 
-            className="flex items-center justify-center w-[calc(100%-2rem)] bg-rose-500/10 text-rose-500 py-2.5 rounded-xl mx-4 mt-4 cursor-pointer font-bold hover:bg-rose-500 hover:text-white transition-colors border border-rose-500/20 shadow-sm"
-          >
-            Logout
-          </button>
-        )}
-      </div>
       </aside>
     </>
   )

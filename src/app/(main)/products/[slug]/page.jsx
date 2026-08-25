@@ -61,9 +61,10 @@ const SingleProduct = async ({ params }) => {
             </div>
 
 
-            <p className='text-slate-600 leading-relaxed'>
-              {product.description}
-            </p>
+            <div 
+              className='text-slate-600 leading-relaxed tiptap-content'
+              dangerouslySetInnerHTML={{ __html: product?.description || '' }}
+            />
           </div>
         </div>
       </div>

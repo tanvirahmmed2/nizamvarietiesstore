@@ -55,22 +55,77 @@ export async function POST(req) {
 export async function GET() {
   try {
     const data = await pool.query('SELECT * FROM brands ORDER BY created_at DESC')
-    const result = data.rows
-
-    if (!result || result.length === 0) {
-      return NextResponse.json(
-        { success: false, message: 'No brand found' },
-        { status: 404 }
-      )
-    }
+    const result = data.rows || []
 
     return NextResponse.json(
-      { success: true, message: 'Successfully fetched brands', payload: result },
+      { success: true, message: result.length > 0 ? 'Successfully fetched brands' : 'No brand found', payload: result },
       { status: 200 }
     )
   } catch (error) {
     return NextResponse.json(
       { success: false, message: error.message },
+      { status: 500 }
+    )
+  }
+}
+
+export async function PUT(req) {
+  try {
+    const { id, name, description, is_active } = await req.json()
+
+    if (!id) {
+      return NextResponse.json(
+        { success: false, message: 'Brand ID is required' },
+        { status: 400 }
+      )
+    }
+
+    if (!name || name.trim() === '') {
+      return NextResponse.json(
+        { success: false, message: 'Please provide brand name' },
+        { status: 400 }
+      )
+    }
+
+    const brandName = name.trim()
+
+    const existBrand = await pool.query(
+      'SELECT 1 FROM brands WHERE LOWER(name) = LOWER($1) AND brand_id != $2',
+      [brandName, id]
+    )
+
+    if (existBrand.rowCount > 0) {
+      return NextResponse.json(
+        { success: false, message: 'Brand with this name already exists' },
+        { status: 409 }
+      )
+    }
+
+    const activeStatus = is_active !== undefined ? is_active : true
+
+    const updatedBrand = await pool.query(
+      'UPDATE brands SET name = $1, description = $2, is_active = $3 WHERE brand_id = $4 RETURNING *',
+      [brandName, description || null, activeStatus, id]
+    )
+
+    if (updatedBrand.rowCount === 0) {
+      return NextResponse.json(
+        { success: false, message: 'Brand not found' },
+        { status: 404 }
+      )
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Successfully updated brand',
+        data: updatedBrand.rows[0],
+      },
+      { status: 200 }
+    )
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, message: error.message || 'Internal server error' },
       { status: 500 }
     )
   }

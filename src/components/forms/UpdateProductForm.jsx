@@ -3,6 +3,7 @@ import React, { useContext, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Context } from '../helper/Context'
 import axios from 'axios'
+import TiptapEditor from '../helper/TiptapEditor'
 
 const UpdateProductForm = ({ product }) => {
     const { categories, brands } = useContext(Context)
@@ -150,7 +151,11 @@ const UpdateProductForm = ({ product }) => {
 
                 <div className='w-full flex flex-col gap-1'>
                     <label htmlFor="description">Description *</label>
-                    <textarea name="description" id="description" required value={formData.description} onChange={handleChange} className='w-full border border-sky-400 px-4 p-1 rounded-sm outline-none min-h-[80px]'></textarea>
+                    <TiptapEditor 
+                        value={formData.description} 
+                        onChange={(content) => setFormData(prev => ({ ...prev, description: content }))} 
+                        placeholder='Write details about the product...' 
+                    />
                 </div>
 
                 <button
