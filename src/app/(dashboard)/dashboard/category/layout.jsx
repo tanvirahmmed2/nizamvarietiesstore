@@ -1,16 +1,8 @@
-import React from 'react'
-
-export const metadata={
-    title:'Category | Dashboard',
-    description:'Category Page'
+export const metadata = {
+  title: 'Category Management | Dashboard',
+  description: 'Manage store categories and product classifications.'
 }
 
-const layout = ({children}) => {
-  return (
-    <div className='w-full'>
-      {children}
-    </div>
-  )
+export default function CategoryLayout({ children }) {
+  return <>{children}</>
 }
-
-export default layout

@@ -1,16 +1,8 @@
-import React from 'react'
-
-export const metadata={
-    title:'New Product | Dashboard',
-    description:'New Product Page'
+export const metadata = {
+  title: 'General Ledger | Dashboard',
+  description: 'Financial transactions, accounts, and ledger reports.'
 }
 
-const layout = ({children}) => {
-  return (
-    <div className='w-full'>
-      {children}
-    </div>
-  )
+export default function LedgerLayout({ children }) {
+  return <>{children}</>
 }
-
-export default layout

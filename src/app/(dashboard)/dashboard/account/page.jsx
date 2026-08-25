@@ -6,9 +6,9 @@ import toast from "react-hot-toast";
 import axios from "axios";
 
 const roleBadge = {
-    manager: "bg-indigo-100 text-indigo-800 border-indigo-200",
+    manager: "bg-sky-100 text-sky-800 border-sky-200",
     sales:   "bg-emerald-100 text-emerald-800 border-emerald-200",
-    user:    "bg-gray-100 text-gray-700 border-gray-200",
+    staff:   "bg-indigo-100 text-indigo-800 border-indigo-200",
 };
 
 export default function AccountPage() {
@@ -89,7 +89,7 @@ export default function AccountPage() {
         );
     }
 
-    const role = staffInfo?.role || "user";
+    const role = staffInfo?.role || "staff";
 
     return (
         <div className="w-full min-h-screen bg-slate-50 p-4 sm:p-8">

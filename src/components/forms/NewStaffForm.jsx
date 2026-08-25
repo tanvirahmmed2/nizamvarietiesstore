@@ -68,6 +68,7 @@ const NewStaffForm = ({ onSuccess, onCancel }) => {
                             <option value="">Select Role</option>
                             <option value="manager">Manager</option>
                             <option value="sales">Sales</option>
+                            <option value="staff">Staff</option>
                         </select>
                     </div>
                 </div>

@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import React, { useContext } from 'react'
 import Image from 'next/image';
-import { SearchIcon, ShoppingCart, User, Tag, Package, ShoppingBag, Settings, LogOut } from 'lucide-react';
+import { SearchIcon, ShoppingCart, User, Tag, Package, ShoppingBag, Settings, LogOut, LayoutDashboard } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Context } from '../helper/Context';
 import axios from 'axios';
@@ -152,10 +152,15 @@ const UserMenu = ({ userData, handleLogout }) => {
               <p className='text-xs text-slate-400 truncate'>{userData?.email}</p>
             </div>
 
-            {/* Menu items */}
             <div className='py-1.5'>
               <DropdownLink
-                href='/profile'
+                href='/user'
+                icon={<LayoutDashboard size={15} />}
+                label='Dashboard'
+                onClick={() => setOpen(false)}
+              />
+              <DropdownLink
+                href='/user/profile'
                 icon={<User size={15} />}
                 label='My Profile'
                 onClick={() => setOpen(false)}

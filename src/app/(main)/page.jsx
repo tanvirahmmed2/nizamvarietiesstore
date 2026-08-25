@@ -10,9 +10,9 @@ const MainPage = () => {
   return (
     <div className='w-full min-h-screen flex flex-col'>
       <Intro />
-      <PopularItems />
       <Offer/>
       <StoreVisit/>
+      <PopularItems />
       <Support />
     </div>
   )

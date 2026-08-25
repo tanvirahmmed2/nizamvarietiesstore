@@ -2,20 +2,20 @@
 import { pool } from "@/lib/database/db";
 import { NextResponse } from "next/server";
 import bcrypt from 'bcryptjs';
-import { sendEmail } from "@/lib/database/brevo"; // Adjusted path to your setup file
+import { sendEmail } from "@/lib/database/brevo";
 import { BASE_URL } from "@/lib/database/secret";
 
 export async function POST(req) {
     try {
-        const { name, email, password, role } = await req.json();
+        const { name, email, password, role, is_active } = await req.json();
 
         if (!name || !email || !password || !role) {
             return NextResponse.json({
-                success: false, message: 'Please provide all information'
+                success: false, message: 'Please provide all required fields'
             }, { status: 400 });
         }
 
-        const existsStaff = await pool.query(`SELECT * FROM staffs WHERE email=$1`, [email]);
+        const existsStaff = await pool.query(`SELECT * FROM staffs WHERE email=$1`, [email.toLowerCase().trim()]);
 
         if (existsStaff.rowCount > 0) {
             return NextResponse.json({
@@ -24,10 +24,11 @@ export async function POST(req) {
         }
 
         const hashPass = await bcrypt.hash(password, 10);
+        const activeStatus = is_active !== undefined ? Boolean(is_active) : true;
 
         const newStaff = await pool.query(
-            `INSERT INTO staffs(name, email, password, role) VALUES($1, $2, $3, $4) RETURNING *`,
-            [name, email, hashPass, role]
+            `INSERT INTO staffs(name, email, password, role, is_active) VALUES($1, $2, $3, $4, $5) RETURNING staff_id, name, email, role, is_active, created_at`,
+            [name.trim(), email.toLowerCase().trim(), hashPass, role, activeStatus]
         );
 
         if (newStaff.rowCount === 0) {
@@ -73,7 +74,8 @@ export async function POST(req) {
 
         return NextResponse.json({
             success: true, 
-            message: 'Successfully added new staff and dispatched credentials'
+            message: 'Successfully added new staff and dispatched credentials',
+            payload: newStaff.rows[0]
         }, { status: 200 });
 
     } catch (error) {
@@ -83,80 +85,100 @@ export async function POST(req) {
     }
 }
 
-
 export async function GET() {
     try {
-        const data= await pool.query(`SELECT * FROM staffs ORDER BY created_at`)
-        const result= data.rows
-        if(!result || result.length===0){
-            return NextResponse.json({
-                success:false, message:'No staff found'
-            },{status:400})
-        }
+        const data = await pool.query(`SELECT staff_id, name, email, role, is_active, created_at FROM staffs ORDER BY staff_id ASC`);
+        const result = data.rows;
 
         return NextResponse.json({
-            success:true, message:'Successfully fetched data', payload:result
-        },{status:200})
+            success: true, 
+            message: 'Successfully fetched staff members', 
+            payload: result || []
+        }, { status: 200 });
     } catch (error) {
         return NextResponse.json({
-            success:false, message:error.message
-        },{status:500})
-        
+            success: false, message: error.message
+        }, { status: 500 });
     }
-    
 }
-
 
 export async function DELETE(req) {
     try {
-        const {id}= await req.json()
-        if(!id){
+        const body = await req.json();
+        const id = body.id || body.staff_id;
+        
+        if (!id) {
             return NextResponse.json({
-                success:false, message:'ID not recieved'
-            },{status:400})
+                success: false, message: 'ID not received'
+            }, { status: 400 });
         }
 
-        const result = await pool.query(`DELETE FROM staffs WHERE staff_id=$1  RETURNING *`,[id])
-        if(result.rowCount===0){
+        const result = await pool.query(`DELETE FROM staffs WHERE staff_id=$1 RETURNING staff_id, name, email`, [id]);
+        if (result.rowCount === 0) {
             return NextResponse.json({
-                success:false, message:'Failed to delete staff'
-            })
+                success: false, message: 'Staff member not found or failed to delete'
+            }, { status: 404 });
         }
+        
         return NextResponse.json({
-            success:true, message:'Successfully deleted staff'
-        },{status:200})
+            success: true, message: 'Successfully deleted staff member'
+        }, { status: 200 });
     } catch (error) {
         return NextResponse.json({
-            success:false, message:error.message
-        },{status:500})
+            success: false, message: error.message
+        }, { status: 500 });
     }
 }
 
 export async function PUT(req) {
     try {
-        const { staff_id, name, email, password } = await req.json();
+        const body = await req.json();
+        const { staff_id, name, email, role, is_active, password } = body;
         
-        if (!staff_id || !name || !email) {
-            return NextResponse.json({ success: false, message: 'Missing required fields' }, { status: 400 });
+        if (!staff_id) {
+            return NextResponse.json({ success: false, message: 'Staff ID is required' }, { status: 400 });
+        }
+
+        const existing = await pool.query(`SELECT * FROM staffs WHERE staff_id=$1`, [staff_id]);
+        if (existing.rowCount === 0) {
+            return NextResponse.json({ success: false, message: 'Staff not found' }, { status: 404 });
+        }
+
+        const current = existing.rows[0];
+
+        const updatedName = name !== undefined ? name.trim() : current.name;
+        const updatedEmail = email !== undefined ? email.toLowerCase().trim() : current.email;
+        const updatedRole = role !== undefined ? role : current.role;
+        
+        let updatedActive = current.is_active;
+        if (is_active !== undefined) {
+            if (typeof is_active === 'boolean') {
+                updatedActive = is_active;
+            } else if (typeof is_active === 'string') {
+                updatedActive = is_active === 'true';
+            }
+        }
+
+        if (email && email.toLowerCase().trim() !== current.email.toLowerCase()) {
+            const emailCheck = await pool.query(`SELECT staff_id FROM staffs WHERE email=$1 AND staff_id != $2`, [email.toLowerCase().trim(), staff_id]);
+            if (emailCheck.rowCount > 0) {
+                return NextResponse.json({ success: false, message: 'Another staff member already uses this email' }, { status: 400 });
+            }
         }
 
         let query;
         let values;
 
-        if (password) {
+        if (password && password.trim() !== '') {
             const hashPass = await bcrypt.hash(password, 10);
-            query = `UPDATE staffs SET name=$1, email=$2, password=$3 WHERE staff_id=$4 RETURNING staff_id, name, email, role`;
-            values = [name, email, hashPass, staff_id];
+            query = `UPDATE staffs SET name=$1, email=$2, role=$3, is_active=$4, password=$5 WHERE staff_id=$6 RETURNING staff_id, name, email, role, is_active, created_at`;
+            values = [updatedName, updatedEmail, updatedRole, updatedActive, hashPass, staff_id];
         } else {
-            query = `UPDATE staffs SET name=$1, email=$2 WHERE staff_id=$3 RETURNING staff_id, name, email, role`;
-            values = [name, email, staff_id];
+            query = `UPDATE staffs SET name=$1, email=$2, role=$3, is_active=$4 WHERE staff_id=$5 RETURNING staff_id, name, email, role, is_active, created_at`;
+            values = [updatedName, updatedEmail, updatedRole, updatedActive, staff_id];
         }
 
         const result = await pool.query(query, values);
-
-        if (result.rowCount === 0) {
-            return NextResponse.json({ success: false, message: 'Staff not found' }, { status: 404 });
-        }
 
         return NextResponse.json({
             success: true, 
@@ -168,3 +190,5 @@ export async function PUT(req) {
         return NextResponse.json({ success: false, message: error.message }, { status: 500 });
     }
 }
+
+export { PUT as PATCH };

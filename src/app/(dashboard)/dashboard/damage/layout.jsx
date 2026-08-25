@@ -1,16 +1,8 @@
-import React from 'react'
-
-export const metadata={
-    title:'New Product | Dashboard',
-    description:'New Product Page'
+export const metadata = {
+  title: 'Damage Control | Dashboard',
+  description: 'Track and manage damaged stock and product withdrawals.'
 }
 
-const layout = ({children}) => {
-  return (
-    <div className='w-full'>
-      {children}
-    </div>
-  )
+export default function DamageLayout({ children }) {
+  return <>{children}</>
 }
-
-export default layout

@@ -1,16 +1,8 @@
-import React from 'react'
-
-export const metadata={
-    title:'Help | Dashboard',
-    description:'Help Page'
+export const metadata = {
+  title: 'Help & Documentation | Dashboard',
+  description: 'System guides, documentation, and operational support.'
 }
 
-const layout = ({children}) => {
-  return (
-    <div className='w-full'>
-      {children}
-    </div>
-  )
+export default function HelpLayout({ children }) {
+  return <>{children}</>
 }
-
-export default layout

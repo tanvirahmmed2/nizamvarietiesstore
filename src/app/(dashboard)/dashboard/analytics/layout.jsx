@@ -1,16 +1,8 @@
-import React from 'react'
-
-export const metadata={
-    title:'New Product | Dashboard',
-    description:'New Product Page'
+export const metadata = {
+  title: 'Analytics & Insights | Dashboard',
+  description: 'Business performance, sales analytics, and metrics reports.'
 }
 
-const layout = ({children}) => {
-  return (
-    <div className='w-full'>
-      {children}
-    </div>
-  )
+export default function AnalyticsLayout({ children }) {
+  return <>{children}</>
 }
-
-export default layout

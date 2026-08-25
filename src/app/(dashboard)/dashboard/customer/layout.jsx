@@ -1,16 +1,8 @@
-import React from 'react'
-
-export const metadata={
-    title:'Customer | Dashboard',
-    description:'Customer Page'
+export const metadata = {
+  title: 'Customer Directory | Dashboard',
+  description: 'Manage store customers, contact details, and purchase records.'
 }
 
-const layout = ({children}) => {
-  return (
-    <div className='w-full'>
-      {children}
-    </div>
-  )
+export default function CustomerLayout({ children }) {
+  return <>{children}</>
 }
-
-export default layout

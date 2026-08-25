@@ -1,16 +1,8 @@
-import React from 'react'
-
-export const metadata={
-    title:'New Product | Dashboard',
-    description:'New Product Page'
+export const metadata = {
+  title: 'Add New Product | Dashboard',
+  description: 'Create new product listings, set pricing, inventory, and imagery.'
 }
 
-const layout = ({children}) => {
-  return (
-    <div className='w-full'>
-      {children}
-    </div>
-  )
+export default function NewProductLayout({ children }) {
+  return <>{children}</>
 }
-
-export default layout
